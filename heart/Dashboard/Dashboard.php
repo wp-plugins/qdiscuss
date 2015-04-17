@@ -132,17 +132,15 @@ class Dashboard  {
 
 	public static function qdiscuss_notices() {
 		
-		if ( get_option('permalink_structure') == '' ) {
-			$type = 'error';
-			$message = __( 'To make QDiscuss work, you must <a href="'  .  admin_url('options-permalink.php') . '">enable pretty links</a>', 'qdiscuss' );
+		if ( get_option('permalink_structure') == '' ) { 
+			//$type = 'error';
+			$message = __( 'One more step to make QDiscuss work, you need <a href="'  .  admin_url('options-permalink.php') . '">enable Pretty Permalinks</a>, see more details about <a href="https://codex.wordpress.org/Using_Permalinks">Pretty Permalink</a>', 'qdiscuss' );
+			?>
 
-
-			add_settings_error(
-				'qdiscuss',
-				esc_attr( 'qdiscuss_enable_prettylinks' ),
-				$message,
-				$type
-				);
+			 <div class="error">
+			        <p><?php echo $message; ?></p>
+			 </div>
+			 <?php
 		}
 
 	}
