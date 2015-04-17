@@ -11,8 +11,6 @@ An amazing forum WordPress Plugin which help you create modern forum on your wor
 
 == Description ==
 
-<h3><a href="http://colorvila.com/about-qdiscuss">QDiscuss Live Demo</a></h3>
-
 QDiscuss is a modern designed, well-architected, powerful forum plugin that is easy to use,  with which you can easily add a forum to your site and allow your members to start their own conversations. 
 
 QDiscuss is a WordPress native plugin, all data  and code run on your WordPress site, and the users in WordPress will be default set as the members of QDiscuss.
@@ -67,6 +65,13 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 == Changelog ==
 
+= v0.0.2 =
+
+code clean
+
+= v0.0.1 =
+
+code structure change
 
 
 
