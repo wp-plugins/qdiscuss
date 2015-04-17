@@ -1,0 +1,5 @@
+---
+suites:
+  event_suite:
+    namespace: League\Flysystem
+formatter.name: pretty

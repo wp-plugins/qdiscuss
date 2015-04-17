@@ -1,0 +1,36 @@
+* {
+    margin:0;
+    padding:0;
+}
+.box {
+    float: left;
+    width: 150px;
+    height: 180px;
+    text-align: center;
+    margin-left: 20px;
+    border: 5px solid #999;
+}
+.slot {
+    position:relative;
+    width: 120px;
+    height: 15px;
+    margin-top: 2px;
+    margin: 0 auto;
+    border: 1px dotted;
+}
+.item {
+    width: 110px;
+    height: 14px;
+    margin: 0 auto;
+    z-index:1;
+    background-color: #CCC;
+}
+.ui-selecting {
+    background: #FECA40;
+}
+.ui-selected {
+    background-color: #F90;
+}
+.green3 {
+    background-color: #D9FFE2;
+}
