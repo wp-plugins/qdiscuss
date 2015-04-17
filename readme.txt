@@ -62,6 +62,7 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 == Screenshots ==
 
+<a href="http://colorvila.com/about-qdiscuss/">Click to see Live Demo</a>
 
 == Changelog ==
 
