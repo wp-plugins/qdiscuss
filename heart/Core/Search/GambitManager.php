@@ -1,7 +1,6 @@
 <?php namespace Qdiscuss\Core\Search;
 
-// use Illuminate\Contracts\Container\Container;
-use Illuminate\Container\Container;
+use Illuminate\Contracts\Container\Container;
 
 class GambitManager
 {

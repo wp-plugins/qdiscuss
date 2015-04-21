@@ -31,10 +31,11 @@ class ShowAction extends BaseAction
      *
      * @param PostRepository $posts
      */
-    public function __construct(ApiParams $params, Actor $actor, DiscussionRepository $discussions, PostRepository $posts)
+    public function __construct(DiscussionRepository $discussions, PostRepository $posts)
     {
-        $this->params = $params;
-        $this->actor = $actor;
+        global $qdiscuss_params, $qdiscuss_actor;
+        $this->params = $qdiscuss_params;
+        $this->actor = $qdiscuss_actor;
         $this->discussions = $discussions;
         $this->posts = $posts;
     }

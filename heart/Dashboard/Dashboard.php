@@ -168,9 +168,13 @@ class Dashboard  {
 	public static function qdiscuss_users_page()
 	{
 		global $wpdb;
+		$search_name = $_POST['search_name'];
+		if($search_name)
+			$wpdb->query("select * from " . $wpdb->prefix . "users where user_login like '%" . $search_name . "%'");
+		else
+			$wpdb->query("select * from " . $wpdb->prefix . "users");
 
-		$wpdb->query("select * from " . $wpdb->prefix . "users");
-		$total = $wpdb->num_rows;
+		$total = $wpdb->num_rows; 
 		$per_page = 20;
 		$page = isset( $_GET['pagination'] ) ? abs( (int) $_GET['pagination'] ) : 1;
 		$pagination = paginate_links( array(
@@ -183,7 +187,11 @@ class Dashboard  {
 					));
 		$start_page = ($page-1) * $per_page;
 
-		$wp_users = $wpdb->get_results('select ID, user_login from ' . $wpdb->prefix . 'users LIMIT ' . $start_page . ',' . $per_page, ARRAY_A ); 
+		if($search_name)
+			$wp_users = $wpdb->get_results("select ID, user_login from " . $wpdb->prefix . "users  where user_login like '%" . $search_name . "%' LIMIT " . $start_page . "," . $per_page , ARRAY_A ); 
+		else 
+			$wp_users = $wpdb->get_results("select ID, user_login from " . $wpdb->prefix . "users LIMIT " . $start_page . "," . $per_page, ARRAY_A ); 
+		
 		foreach ($wp_users as &$wp_user) {
 			if($user = User::where('wp_user_id', $wp_user["ID"])->with('groups')->first()){
 				$wp_user['group'] = $user->groups[0]->name;

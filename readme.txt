@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.0.1
+Stable tag: 0.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,7 +68,10 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 = v0.0.2 =
 
-code clean
+1.  compress js for speeding up page load
+2.  fix logout url error
+3.  add user search in QDiscuss Dashboard users page
+4.  add full text search in search form
 
 = v0.0.1 =
 

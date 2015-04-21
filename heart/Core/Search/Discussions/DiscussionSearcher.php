@@ -3,10 +3,8 @@
 use Qdiscuss\Core\Models\Discussion;
 use Qdiscuss\Core\Search\SearcherInterface;
 use Qdiscuss\Core\Search\GambitManager;
-// use Qdiscuss\Core\Repositories\DiscussionRepositoryInterface;
-// use Qdiscuss\Core\Repositories\PostRepositoryInterface;
-use Qdiscuss\Core\Repositories\EloquentDiscussionRepository;
-use Qdiscuss\Core\Repositories\EloquentPostRepository;
+use Qdiscuss\Core\Repositories\DiscussionRepositoryInterface;
+use Qdiscuss\Core\Repositories\PostRepositoryInterface;
 
 class DiscussionSearcher implements SearcherInterface
 {
@@ -26,7 +24,7 @@ class DiscussionSearcher implements SearcherInterface
 
     protected $discussions;
 
-    public function __construct(GambitManager $gambits, EloquentDiscussionRepository $discussions, EloquentPostRepository $posts)
+    public function __construct(GambitManager $gambits, DiscussionRepositoryInterface $discussions, PostRepositoryInterface $posts)
     {
         $this->gambits = $gambits;
         $this->discussions = $discussions;
@@ -55,8 +53,7 @@ class DiscussionSearcher implements SearcherInterface
     {
         $this->user = $criteria->user;
 
-        $this->query = $this->discussions->query();
-        // ->whereCan($criteria->user, 'view');//neychang??
+        $this->query = $this->discussions->query()->whereCan($criteria->user, 'view');
         $this->gambits->apply($criteria->query, $this);
 
         $total = $this->query->count();

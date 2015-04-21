@@ -7,16 +7,12 @@ class Qdiscuss {
 
 		$qdiscuss_app = new \Illuminate\Container\Container;
 		$qdiscuss_bus = new \Illuminate\Bus\Dispatcher($qdiscuss_app);
-
 		$qdiscuss_event = new \Illuminate\Events\Dispatcher;
 		$qdiscuss_params = new \Qdiscuss\Core\Actions\ApiParams($_GET);
 		$qdiscuss_actor = new \Qdiscuss\Core\Support\Actor;
-
 		$qdiscuss_formatter = new \Qdiscuss\Core\Formatter\FormatterManager($qdiscuss_app);
-		$qdiscuss_formatter->add('basic', '\Qdiscuss\Core\Formatter\BasicFormatter');
 
 		\Qdiscuss\Api\Serializers\BaseSerializer::setActor($qdiscuss_actor);
-		\Qdiscuss\Core\Models\User::setFormatter($qdiscuss_formatter);
 		
 		// Setup the Class and other Core function  binding
 		self::register_binding();
@@ -77,7 +73,16 @@ class Qdiscuss {
 		    		// return $app->make('Illuminate\Contracts\Filesystem\Factory')->disk('qdiscuss-avatars')->getDriver();
 		    		// return $qdiscuss_file->disk('qdiscuss-avatars')->getDriver();
 		    	}
-		 );
+		);
+		$qdiscuss_app->singleton('qdiscuss.extensions', 'Qdiscuss\Core\Support\Extensions\Manager');
+		$qdiscuss_app->bind('qdiscuss.discussionFinder', 'Qdiscuss\Core\Discussions\DiscussionFinder');
+
+		$qdiscuss_app->singleton('qdiscuss.formatter', function () use ($qdiscuss_app) {
+			// global $qdiscuss_formatter;
+			$qdiscuss_formatter = new \Qdiscuss\Core\Formatter\FormatterManager($qdiscuss_app);
+			$qdiscuss_formatter->add('basic', 'Qdiscuss\Core\Formatter\BasicFormatter');
+		    	return $qdiscuss_formatter;
+		});
 	              $qdiscuss_app->bind(
 	                            'Qdiscuss\Core\Repositories\DiscussionRepositoryInterface',
 	                            'Qdiscuss\Core\Repositories\EloquentDiscussionRepository'
@@ -104,12 +109,6 @@ class Qdiscuss {
 	              );
 	              $qdiscuss_app->singleton('Qdiscuss\Core\Notifications\Notifier');
 	              $qdiscuss_app->singleton('qdiscuss.forum', 'Qdiscuss\Core\Models\Forum');
-	              $qdiscuss_app->singleton('qdiscuss.formatter', function ()  use ($qdiscuss_app){
-	            		global $qdiscuss_formatter;
-	             		$qdiscuss_formatter = new \Qdiscuss\Core\Formatter\FormatterManager($qdiscuss_app);
-	            		$qdiscuss_formatter->add('basic', 'Qdiscuss\Core\Formatter\BasicFormatter');
-	             		return $qdiscuss_formatter;
-            		});
 	}
 
 	public static  function register_post_types()
@@ -122,30 +121,27 @@ class Qdiscuss {
 
       	public static  function register_gambits()
       	{
-		global $qdiscuss_gambits, $qdiscuss_app;
-		$qdiscuss_app->when('Qdiscuss\Core\Search\Discussions\DiscussionSearcher')
-              			->needs('Qdiscuss\Core\Search\GambitManager')
-              			->give(function () {
-                  			$qdiscuss_gambits = new \Qdiscuss\Core\Search\GambitManager($qdiscuss_app);
-                  			$qdiscuss_gambits->add('Qdiscuss\Core\Search\Discussions\Gambits\AuthorGambit');
-                  			$qdiscuss_gambits->add('Qdiscuss\Core\Search\Discussions\Gambits\UnreadGambit');
-                  			$qdiscuss_gambits->setFulltextGambit('Qdiscuss\Core\Search\Discussions\Gambits\FulltextGambit');
-                  			return $qdiscuss_gambits;
-              			});
+		global $qdiscuss_app;
 
-              		$qdiscuss_app->when('Qdiscuss\Core\Search\Users\UserSearcher')
-              			->needs('Qdiscuss\Core\Search\GambitManager')
-              			->give(function () {
-              				$qdiscuss_gambits = new \Qdiscuss\Core\Search\GambitManager($qdiscuss_app);
-               			$qdiscuss_gambits->setFulltextGambit('Qdiscuss\Core\Search\Users\Gambits\FulltextGambit');
-                  			return $qdiscuss_gambits;
-              			});
+		$qdiscuss_app->bind("qdiscuss.discussions.gambits", function() use($qdiscuss_app){
+			$qdiscuss_gambits = new  \Qdiscuss\Core\Search\GambitManager($qdiscuss_app);
+			$qdiscuss_gambits->add('Qdiscuss\Core\Search\Discussions\Gambits\AuthorGambit');
+	                  	$qdiscuss_gambits->add('Qdiscuss\Core\Search\Discussions\Gambits\UnreadGambit');
+	                  	$qdiscuss_gambits->setFulltextGambit('Qdiscuss\Core\Search\Discussions\Gambits\FulltextGambit');
+	                  	return $qdiscuss_gambits;
+		});
+		$qdiscuss_app->bind("qdiscuss.users.gambits", function() use($qdiscuss_app){
+			$qdiscuss_gambits = new  \Qdiscuss\Core\Search\GambitManager($qdiscuss_app);
+			$qdiscuss_gambits->setFulltextGambit('Qdiscuss\Core\Search\Users\Gambits\FulltextGambit');
+	                  	return $qdiscuss_gambits;
+		});
+
       	}
 
 	public  static function setup_permission()
               {
             		\Qdiscuss\Core\Models\Forum::grantPermission(function ($grant, $user, $permission) {
-            		    return $user->hasPermission($permission, 'forum');
+            			return $user->hasPermission($permission, 'forum');
             		});
 
             		\Qdiscuss\Core\Models\Post::grantPermission(function ($grant, $user, $permission) {

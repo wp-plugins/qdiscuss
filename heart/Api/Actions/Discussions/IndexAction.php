@@ -2,9 +2,7 @@
 
 use Qdiscuss\Core\Search\Discussions\DiscussionSearchCriteria;
 use Qdiscuss\Core\Search\Discussions\DiscussionSearcher;
-use Qdiscuss\Core\Support\Actor;
 use Qdiscuss\Api\Serializers\DiscussionSerializer;
-use Qdiscuss\Core\Actions\ApiParams;
 use Qdiscuss\Core\Actions\BaseAction;
 
 class IndexAction extends BaseAction {
@@ -13,10 +11,11 @@ class IndexAction extends BaseAction {
 	 * Constructor
 	 *
 	 */
-	public function __construct(ApiParams $params, Actor $actor, DiscussionSearcher $searcher)
+	public function __construct(DiscussionSearcher $searcher)
 	{
-		$this->params = $params;
-		$this->actor = $actor;
+		global $qdiscuss_params, $qdiscuss_actor;
+		$this->params = $qdiscuss_params;
+		$this->actor = $qdiscuss_actor;
 		$this->searcher = $searcher;
 	}
 

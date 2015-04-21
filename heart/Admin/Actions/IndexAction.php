@@ -52,7 +52,7 @@ class IndexAction extends BaseAction{
 			'welcomeDescription' => $qdiscuss_desc,
 	              );
 
-	              $js_url = plugins_url('public/web/aforum.js', __DIR__.'/../../../../');
+	              $js_url = plugins_url('public/web/aforum.min.js', __DIR__.'/../../../../');
 	              $css_url = plugins_url('public/web/aforum.css',  __DIR__.'/../../../../');
 
 	             header("Content-Type: text/html; charset=utf-8");

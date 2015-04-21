@@ -3,7 +3,7 @@
 Plugin Name: QDiscuss
 Plugin URI: 
 Description: An Amazing Forum WordPress Plugin
-Version: 0.0.1
+Version: 0.0.2
 Author: ColorVila Team
 Author URI: http://colorvila.com/about-qdiscuss
 */
@@ -30,7 +30,7 @@ require __DIR__.'/bootstrap/init.php';
 
 /*
 |--------------------------------------------------------------------------
-| Register Some Helper Funcitons
+| Register Some Helper Functions
 |--------------------------------------------------------------------------
 |
 */
