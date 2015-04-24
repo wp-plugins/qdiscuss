@@ -27,6 +27,16 @@ Because of using the Javascript Framework Ember.js, QDiscuss is  a one page foru
 7.  Reply while you read
 8.  Real time updates
 
+<h3>To Do List</h3>
+1. Category
+2. User profile
+3. Attachment when post
+4. Extension system
+5. ...
+
+<h3>Contributing</h3>
+The QDiscuss is now at the early development stage, we'd love to hear general feedback on the <a href="http://colorvila.com/qdiscuss">QDiscuss Development Forum</a>, and on <a href="https://wordpress.org/support/topic/qdiscuss-need-feedback?replies=1#post-6864335">WordPress Support forum</a>
+
 And thanks to tobscure and his Flarum Forum, the qdiscuss was based on his work.
 
 == Installation ==
@@ -62,7 +72,7 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 == Screenshots ==
 
-<a href="http://colorvila.com/about-qdiscuss/">Click to see Live Demo</a>
+<a href="http://colorvila.com/qdiscuss-plugin/">Click to see Live Demo</a>
 
 == Changelog ==
 
