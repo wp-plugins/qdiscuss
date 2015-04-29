@@ -1,7 +1,7 @@
 <?php namespace Qdiscuss\Api\Actions\Activity;
 
-use Qdiscuss\Core\Repositories\UserRepositoryInterface;
-use Qdiscuss\Core\Repositories\ActivityRepositoryInterface;
+use Qdiscuss\Core\Repositories\EloquentUserRepository as UserRepositoryInterface;
+use Qdiscuss\Core\Repositories\EloquentActivityRepository as ActivityRepositoryInterface;
 use Qdiscuss\Core\Actions\BaseAction;
 use Qdiscuss\Api\Serializers\ActivitySerializer;
 
@@ -17,13 +17,13 @@ class IndexAction extends BaseAction
      *
      * @param  \Qdiscuss\Search\Discussions\UserSearcher  $searcher
      */
-    public function __construct(UserRepositoryInterface $user, ActivityRepositoryInterface $activity)
+    public function __construct()
     {
         global $qdiscuss_actor, $qdiscuss_params;
         $this->actor = $qdiscuss_actor;
         $this->params = $qdiscuss_params;
-        $this->users = $user;
-        $this->activity = $activity;
+        $this->users = new UserRepositoryInterface;
+        $this->activity = new ActivityRepositoryInterface;
     }
 
     /**
@@ -31,7 +31,7 @@ class IndexAction extends BaseAction
      *
      * @return \Illuminate\Http\Response
      */
-    public  function run()
+    public  function get()
     {
         $params = $this->params;
         $start = $params->start();

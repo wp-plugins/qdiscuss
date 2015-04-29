@@ -241,37 +241,6 @@ class Qdiscuss {
             		$qdiscuss_event->subscribe('Qdiscuss\Core\Handlers\Events\DiscussionRenamedNotifier');
             }
 
-	/**
-	 * Activate the plugin, Just do the database setup and copy the wp'users table datas into QDiscuss's users table
-	 *
-	 * @return  void
-	 */
-	public static function activate()
-	{
-		\Qdiscuss\Dashboard\Bridge::qdiscuss_register_required_plugins();
-		\Qdiscuss\Dashboard\Bridge::create_tables();
-	} 
-
-	/**
-	 * Deactivate the plugin
-	 *
-	 * @return  void
-	 */     
-	public static function deactivate()
-	{
-                    	// nothing to do
-	}
-
-	/**
-	 *  Uninstall the plugin hook, just remove all the data tables of QDiscuss
-	 *  
-	 * @return void
-	 */
-	public static function uninstall()
-	{
-		\Qdiscuss\Dashboard\Bridge::drop_tables();
-	}
-
 }
 
 

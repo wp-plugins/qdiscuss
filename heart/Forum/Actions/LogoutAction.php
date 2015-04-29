@@ -5,7 +5,7 @@ use Qdiscuss\Forum\Actions\BaseAction;
 class LogoutAction
 {
 
-	public function run()
+	public function get()
 	{
 		global $qdiscuss_actor, $qdiscuss_endpoint;
 		
@@ -18,6 +18,6 @@ class LogoutAction
 		unset($_COOKIE['qdiscuss_remember']);
 		setcookie('qdiscuss_remember', null, -1, '/');
 		wp_logout();
-		header("Location: " . get_site_url() . "/" . $qdiscuss_endpoint);
+		header("Location: " . get_site_url() . "/" . $qdiscuss_endpoint);exit();
 	}
 }

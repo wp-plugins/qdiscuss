@@ -2,6 +2,7 @@
 
 use Qdiscuss\Core\Models\User;
 use Qdiscuss\Core\Repositories\UserRepositoryInterface;
+use Qdiscuss\Core\Repositories\EloquentUserRepository;
 use Qdiscuss\Api\Serializers\UserSerializer;
 use Qdiscuss\Dashboard\Bridge;
 use Qdiscuss\Core\Actions\BaseAction;
@@ -9,18 +10,20 @@ use Qdiscuss\Core\Models\Setting;
 
 class IndexAction extends BaseAction{
 
-	public function __construct(UserRepositoryInterface $user)
+
+	public function __construct()
 	{
-		$this->user = $user;
-                          global $qdiscuss_actor;
-                          $qdiscuss_actor->setUser($this->current_user());
+		global $qdiscuss_actor;
+		$this->user = new EloquentUserRepository;
+		$qdiscuss_actor->setUser($this->current_user());
                           \Qdiscuss\Api\Serializers\BaseSerializer::setActor($qdiscuss_actor);
 	}
 
-	public function run()
+	public function get()
 	{
-		global $qdiscuss_actor, $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_desc;
+		global $qdiscuss_actor, $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_welcome_title, $qdiscuss_desc;
 		$qdiscuss_title = Setting::getForumTitle();
+		$qdiscuss_welcome_title = Setting::getWelcomeTitle();
 		$qdiscuss_desc = Setting::getForumDescription();
 
 		if($user = $this->is_logined()){
@@ -35,7 +38,7 @@ class IndexAction extends BaseAction{
 		                
 		             $data_new = array();
 		             array_push($data_new, $data["data"], $data["included"][0]);
-	             	$data = json_encode($data_new);
+	             		$data = json_encode($data_new);
 			$session = json_encode(array('userId' => $user->id, 'token' => $_COOKIE['qdiscuss_remember']));
 		} else {
 		    	$data = json_encode([]);
@@ -50,6 +53,7 @@ class IndexAction extends BaseAction{
 		        'EmberENV' => [],
 		        'APP' => [],
 		        'forumTitle' => $qdiscuss_title,
+		        'welcomeTitle' => $qdiscuss_welcome_title,
 		        'welcomeDescription' => $qdiscuss_desc,
 		);
 
@@ -60,4 +64,5 @@ class IndexAction extends BaseAction{
 		echo include(__DIR__ . '/../Views/index.php');
 		exit();
 	}
+	
 }

@@ -11,7 +11,7 @@ return array(
 		'password'   => DB_PASSWORD,
 		'charset'      => DB_CHARSET,
 		//'collation'    => 'utf8_unicode_ci',
-		'prefix'        => $wpdb->prefix .  QD_PREFIX,
+		'prefix'        => $wpdb->prefix .  'qd_',
 	),
 );
 

@@ -13,7 +13,7 @@ class UploadAvatarAction extends BaseAction
             $this->actor = $qdiscuss_actor;
     }
 
-    public function run($id)
+    public function post($id)
     {
         $userId = $id;
         $file = $_FILES['avatar'];

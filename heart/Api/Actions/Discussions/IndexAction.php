@@ -2,7 +2,11 @@
 
 use Qdiscuss\Core\Search\Discussions\DiscussionSearchCriteria;
 use Qdiscuss\Core\Search\Discussions\DiscussionSearcher;
+use Qdiscuss\Core\Repositories\EloquentDiscussionRepository;
+use Qdiscuss\Core\Repositories\EloquentPostRepository;
 use Qdiscuss\Api\Serializers\DiscussionSerializer;
+use Qdiscuss\Core\Commands\StartDiscussionCommand;
+use Qdiscuss\Core\Commands\ReadDiscussionCommand;
 use Qdiscuss\Core\Actions\BaseAction;
 
 class IndexAction extends BaseAction {
@@ -11,15 +15,15 @@ class IndexAction extends BaseAction {
 	 * Constructor
 	 *
 	 */
-	public function __construct(DiscussionSearcher $searcher)
+	public function __construct()
 	{
-		global $qdiscuss_params, $qdiscuss_actor;
+		global $qdiscuss_params, $qdiscuss_actor, $qdiscuss_app;
 		$this->params = $qdiscuss_params;
 		$this->actor = $qdiscuss_actor;
-		$this->searcher = $searcher;
+		$this->searcher = new DiscussionSearcher($qdiscuss_app['qdiscuss.discussions.gambits'], new EloquentDiscussionRepository,  new EloquentPostRepository);
 	}
 
-	public function run()
+	public function get()
 	{
 		$query   = $this->params->get('q');
 		$start     = $this->params->start();
@@ -53,4 +57,34 @@ class IndexAction extends BaseAction {
 
 		echo $this->respondWithDocument($document);exit();
 	}
+
+	/**
+	 * Start a new discussion.
+	 *
+	 * @return Response
+	 */
+	public function post()
+	{
+
+		$params = $this->post_data();
+
+		$title = $params->get('data.title');
+		$content = $params->get('data.content');
+		$user = $this->actor->getUser();
+
+		$command = new StartDiscussionCommand($title, $content, $user, app('qdiscuss.forum'));
+		$discussion = $this->dispatch($command, $params);
+
+		if ($user->exists) {
+		    $command = new ReadDiscussionCommand($discussion->id, $user, 1);
+		    $this->dispatch($command, $params);
+		}
+
+		$serializer = new DiscussionSerializer(['posts']);
+		$document = $this->document()->setData($serializer->resource($discussion));
+
+		echo $this->respondWithDocument($document);exit;
+		
+	}
+
 }

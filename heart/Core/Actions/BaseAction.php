@@ -106,6 +106,7 @@ abstract class BaseAction extends Action{
 	protected function respondWithArray($array, $statusCode = 200, $headers = [])
 	{
 		// return Response::json($array, $statusCode, $headers);
+		header("Content-type: application/json");
 		return json_encode($array);
 	}
 
@@ -135,4 +136,11 @@ abstract class BaseAction extends Action{
 		return $this->respondWithErrors([$error], $httpCode);
 		
 	}
+
+	protected function respondJson($data)
+	{
+		header("Content-type: application/json");
+		echo json_encode($data);exit;
+	}
+
 }

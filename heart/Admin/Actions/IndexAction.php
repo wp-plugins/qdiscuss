@@ -8,17 +8,17 @@ use Qdiscuss\Core\Actions\BaseAction;
 
 class IndexAction extends BaseAction{
 
-	public function __construct(UserRepositoryInterface $user)
+	public function __construct()
 	{
-		$this->user = $user;
+		$this->user = new UserRepositoryInterface;
 		global $qdiscuss_actor;
 		$qdiscuss_actor->setUser($this->current_user());
 		\Qdiscuss\Api\Serializers\BaseSerializer::setActor($qdiscuss_actor);
 	}
 
-	public function run()
+	public function get()
 	{
-		global $qdiscuss_actor, $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_desc;
+		global $qdiscuss_actor, $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_welcome_title, $qdiscuss_desc;
 
 		if($user = $this->is_logined()){
 		              $user = explode('|', $user);
@@ -49,6 +49,7 @@ class IndexAction extends BaseAction{
 			'EmberENV' => [],
 			'APP' => [],
 			'forumTitle' => $qdiscuss_title,
+			'welcomeTitle' => $qdiscuss_welcome_title,
 			'welcomeDescription' => $qdiscuss_desc,
 	              );
 

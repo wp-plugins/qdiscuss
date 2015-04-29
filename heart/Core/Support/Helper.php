@@ -1,5 +1,7 @@
 <?php  namespace Qdiscuss\Core\Support;
 
+use Qdiscuss\Core\Models\User;
+
 trait Helper
 {
 	public  static function validate_email($email)
@@ -22,6 +24,15 @@ trait Helper
 			$user = explode('|', $user);
 			$user_name = $user[0];
 			return get_user_by('login', $user_name);
+		}
+	}
+
+	public static function current_forum_user()
+	{
+		if($user = self::is_logined()){
+			$user = explode('|', $user);
+			$user_name = $user[0];
+			return User::where('username', $user_name)->first();
 		}
 	}
 

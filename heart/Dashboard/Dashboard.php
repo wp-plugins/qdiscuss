@@ -12,9 +12,7 @@ use Qdiscuss\Core\Support\Helper;
  */
 class Dashboard  {
 
-	use Helper;
-
-	const QDISCUSS_VERSION = '0.0.2';
+	use Helper;	
 	
 	public static function qdiscuss_enqueue_admin()
 	{		
@@ -105,10 +103,7 @@ class Dashboard  {
 
 			if($key == 'forum_endpoint') {
 				if(self::validate_endpoint(trim($value))){		
-					Setting::setValue($key, $value);			
-					// just for some reasons, it's not the besr the solution, need change
-					deactivate_plugins(array('qdiscuss/qdiscuss.php', 'json-rest-api/plugin.php'));
-					activate_plugin( 'qdiscuss/qdiscuss.php' );					
+					Setting::setValue($key, $value);				
 				}else{
 					die('2'); 
 				}
@@ -126,14 +121,14 @@ class Dashboard  {
 	}
 
 	public static function qdiscuss_admin_init()
-	{	
-		add_action( 'admin_notices',  '\Qdiscuss\Dashboard\Dashboard::qdiscuss_notices' );
+	{			
+		add_action( 'admin_notices',  '\Qdiscuss\Dashboard\Dashboard::qdiscuss_notices' );		
 	}
 
 	public static function qdiscuss_notices() {
 		
 		if ( get_option('permalink_structure') == '' ) { 
-			//$type = 'error';
+			
 			$message = __( 'One more step to make QDiscuss work, you need <a href="'  .  admin_url('options-permalink.php') . '">enable Pretty Permalinks</a>, see more details about <a href="https://codex.wordpress.org/Using_Permalinks">Pretty Permalink</a>', 'qdiscuss' );
 			?>
 
@@ -153,7 +148,7 @@ class Dashboard  {
 
 		$value = Setting::getValueByKey($key);
 
-		include __DIR__ . "/dashboard-config-settings.php";
+		include __DIR__ . "/views/html-config-settings.php";
 	}
 
 	
@@ -162,7 +157,7 @@ class Dashboard  {
 		$settings = Setting::all();
 		$endpoint = Setting::getEndPoint();
 		
-		include __DIR__ . "/settings-page.php";
+		include __DIR__ . "/views/html-settings-page.php";
 	}
 
 	public static function qdiscuss_users_page()
@@ -202,7 +197,7 @@ class Dashboard  {
 			}
 		}
 
-		include __DIR__ . "/users-page.php";
+		include __DIR__ . "/views/html-users-page.php";
 	}
 
 
@@ -235,7 +230,7 @@ class Dashboard  {
 			}
 			
 
-			include __DIR__ . "/dashboard-roles-settings.php";exit();
+			include __DIR__ . "/views/html-roles-settings.php";exit();
 
 		}
 
@@ -246,7 +241,7 @@ class Dashboard  {
 		}
 		
 
-		include __DIR__ . "/dashboard-roles-settings.php";
+		include __DIR__ . "/views/html-roles-settings.php";
 
 	}
 

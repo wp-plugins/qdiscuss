@@ -1,6 +1,7 @@
 <?php namespace Qdiscuss\Api\Actions\Notifications;
 
-use Qdiscuss\Core\Repositories\NotificationRepositoryInterface;
+use Qdiscuss\Core\Commands\ReadNotificationCommand;
+use Qdiscuss\Core\Repositories\EloquentNotificationRepository as NotificationRepositoryInterface;
 use Qdiscuss\Core\Exceptions\PermissionDeniedException;
 use Qdiscuss\Core\Actions\BaseAction;
 use Qdiscuss\Api\Serializers\NotificationSerializer;
@@ -12,12 +13,12 @@ class IndexAction extends BaseAction
      *
      * @param  \Qdiscuss\\Search\Discussions\UserSearcher  $searcher
      */
-    public function __construct(NotificationRepositoryInterface $notifications)
+    public function __construct()
     {
         global $qdiscuss_params, $qdiscuss_actor;
         $this->actor = $qdiscuss_actor;
         $this->params = $qdiscuss_params;
-        $this->notifications = $notifications;
+        $this->notifications = new NotificationRepositoryInterface;
     }
 
     /**
@@ -25,7 +26,7 @@ class IndexAction extends BaseAction
      *
      * @return \Illuminate\Http\Response
      */
-    public function run()
+    public function get()
     {
         $params = $this->params;
         $start = $params->start();
@@ -45,5 +46,22 @@ class IndexAction extends BaseAction
         $document = $this->document()->setData($serializer->collection($notifications));
 
         echo $this->respondWithDocument($document);exit();
+    }
+
+    public function put()
+    {
+            $notificationId = $id;
+            $user = $this->actor->getUser();
+            $params = $this->post_data();
+
+            if ($params->get('notifications.isRead')) {
+                $command = new ReadNotificationCommand($notificationId, $user);
+                $notification = $this->dispatch($command, $params);
+            }
+
+            $serializer = new NotificationSerializer;
+            $document = $this->document()->setData($serializer->resource($notification));
+
+            echo  $this->respondWithDocument($document);exit();
     }
 }

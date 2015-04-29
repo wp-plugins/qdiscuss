@@ -381,7 +381,8 @@ class User extends BaseModel
         if (isset(static::$preferences[$key])) {
             $preferences = $this->preferences;
 
-            if (! is_null($transformer = static::$preferences[$key]['transformer'])) {
+            // if (! is_null($transformer = static::$preferences[$key]['transformer'])) {// fix the php5.4 warning
+            if (is_callable($transformer = static::$preferences[$key]['transformer'])) {
                 $preferences[$key] = call_user_func($transformer, $value);
             } else {
                 $preferences[$key] = $value;

@@ -1,5 +1,6 @@
 <?php namespace Qdiscuss\Api\Actions\Users;
 
+use Qdiscuss\Core\Repositories\EloquentUserRepository;
 use Qdiscuss\Core\Search\Users\UserSearchCriteria;
 use Qdiscuss\Core\Search\Users\UserSearcher;
 use Qdiscuss\Core\Actions\BaseAction;
@@ -19,12 +20,12 @@ class IndexAction extends BaseAction
      *
      * @param  \Qdiscuss\Search\Discussions\UserSearcher  $searcher
      */
-    public function __construct(UserSearcher $searcher)
+    public function __construct()
     {
-        global $qdiscuss_actor, $qdiscuss_params;
+        global $qdiscuss_actor, $qdiscuss_params, $qdiscuss_app;
         $this->actor = $qdiscuss_actor;
         $this->params = $qdiscuss_params;
-        $this->searcher = $searcher;
+        $this->searcher = new UserSearcher($qdiscuss_app['qdiscuss.discussions.gambits'], new EloquentUserRepository);
     }
 
     /**
@@ -32,7 +33,7 @@ class IndexAction extends BaseAction
      *
      * @return \Illuminate\Http\Response
      */
-    public function run()
+    public function get()
     {
         $params = $this->params;
         $query   = $params->get('q');

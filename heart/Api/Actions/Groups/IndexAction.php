@@ -1,18 +1,24 @@
 <?php namespace Qdiscuss\Actions\Groups;
 
 use Qdiscuss\Core\Models\Group;
-use Qdiscuss\Actions\Base;
 use Qdiscuss\Api\Serializers\GroupSerializer;
+use Qdiscuss\Core\Actions\BaseAction;
 
-class Index extends Base
+class IndexAction extends BaseAction
 {
-    protected function run()
-    {
-        $groups = Group::get();
+	public function __construct()
+	{
+		# code...
+	}
 
-        $serializer = new GroupSerializer;
-        $this->document->setData($serializer->collection($groups));
+	public function get()
+	{
+	    $groups = Group::get();
 
-        return $this->respondWithDocument();
-    }
+	    $serializer = new GroupSerializer;
+	    $this->document->setData($serializer->collection($groups));
+
+	    header("Content-type: application/json");
+	    echo $this->respondWithDocument();exit;
+	}
 }

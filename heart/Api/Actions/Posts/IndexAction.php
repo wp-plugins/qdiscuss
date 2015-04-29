@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Qdiscuss\Core\Repositories\EloquentPostRepository as PostRepositoryInterface;
+use Qdiscuss\Core\Commands\PostReplyCommand;
+use Qdiscuss\Core\Commands\ReadDiscussionCommand;
 use Qdiscuss\Core\Support\Actor;
 use Qdiscuss\Core\Actions\BaseAction;
 use Qdiscuss\Core\Actions\ApiParams;
@@ -23,11 +25,12 @@ class IndexAction extends BaseAction
      *
      * @param Post $posts
      */
-    public function __construct(ApiParams $params, Actor $actor, PostRepositoryInterface $posts)
+    public function __construct()
     {
-        $this->params = $params;
-        $this->actor = $actor;
-        $this->posts = $posts;
+        global $qdiscuss_actor, $qdiscuss_params;
+        $this->params = $qdiscuss_params;
+        $this->actor = $qdiscuss_actor;
+        $this->posts = new PostRepositoryInterface;
     }
 
     /**
@@ -35,7 +38,7 @@ class IndexAction extends BaseAction
      *
      * @return Response
      */
-    public function run()
+    public function get()
     {
         $postIds = (array) $this->params->get('ids');
         $include = ['user', 'user.groups', 'editUser', 'hideUser', 'discussion'];
@@ -64,5 +67,33 @@ class IndexAction extends BaseAction
         $document = $this->document()->setData($serializer->collection($posts->load($include)));
 
         echo $this->respondWithDocument($document);exit;
+    }
+
+    /**
+     * Reply to a discussion.
+     *
+     * @return Response
+     */
+    public function post()
+    {
+        $params = $this->post_data();
+        $user = $this->actor->getUser();
+        
+        $discussionId = $params->get('data.links.discussion.linkage.id');
+        $content = $params->get('data.content');
+        
+        $command = new PostReplyCommand($discussionId, $content, $user);
+        $post = $this->dispatch($command, $params);
+
+        
+        if ($user->exists) {
+            $command = new ReadDiscussionCommand($discussionId, $user, $post->number);
+            $this->dispatch($command, $params);
+        }
+
+        $serializer = new PostSerializer;
+        $document = $this->document()->setData($serializer->resource($post));
+
+        echo $this->respondWithDocument($document, 201);exit();
     }
 }

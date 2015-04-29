@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bb757e60e7199a58b91bdcc3ca3de9c6",
+    "hash": "8202eac8b69cc9534d6eb494d41d726b",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -135,12 +135,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/bus.git",
-                "reference": "bdbcee69eab2dc0716c30e5e8c5ed57b49a91c15"
+                "reference": "b8fe388e72025ae7bc62603a93cfd0e9536ea7c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/bus/zipball/bdbcee69eab2dc0716c30e5e8c5ed57b49a91c15",
-                "reference": "bdbcee69eab2dc0716c30e5e8c5ed57b49a91c15",
+                "url": "https://api.github.com/repos/illuminate/bus/zipball/b8fe388e72025ae7bc62603a93cfd0e9536ea7c3",
+                "reference": "b8fe388e72025ae7bc62603a93cfd0e9536ea7c3",
                 "shasum": ""
             },
             "require": {
@@ -172,7 +172,7 @@
             ],
             "description": "The Illuminate Bus package.",
             "homepage": "http://laravel.com",
-            "time": "2015-04-09 10:47:12"
+            "time": "2015-03-07 15:07:05"
         },
         {
             "name": "illuminate/config",
@@ -267,12 +267,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "2c24bb720e37e36773e17edfe4181799f02caaab"
+                "reference": "5cda7e58df704a224828491b90f6d86bb49c6b97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/2c24bb720e37e36773e17edfe4181799f02caaab",
-                "reference": "2c24bb720e37e36773e17edfe4181799f02caaab",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/5cda7e58df704a224828491b90f6d86bb49c6b97",
+                "reference": "5cda7e58df704a224828491b90f6d86bb49c6b97",
                 "shasum": ""
             },
             "require": {
@@ -301,7 +301,7 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "http://laravel.com",
-            "time": "2015-04-10 10:44:36"
+            "time": "2015-03-24 23:11:34"
         },
         {
             "name": "illuminate/database",
@@ -309,12 +309,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "132cd418464dc56933fd5fccd4b22230a42d0a74"
+                "reference": "eac5aaf9fbd193001863281d1bc3a5542fa58afa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/132cd418464dc56933fd5fccd4b22230a42d0a74",
-                "reference": "132cd418464dc56933fd5fccd4b22230a42d0a74",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/eac5aaf9fbd193001863281d1bc3a5542fa58afa",
+                "reference": "eac5aaf9fbd193001863281d1bc3a5542fa58afa",
                 "shasum": ""
             },
             "require": {
@@ -359,7 +359,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2015-04-12 19:56:29"
+            "time": "2015-04-04 14:35:54"
         },
         {
             "name": "illuminate/events",
@@ -506,12 +506,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "4af9f9ccc5d2b0b6d77a5c3357e9a37e1038f5ff"
+                "reference": "efe9fd789bb89c1d0a3af2e0d29ef34abd79ddeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/4af9f9ccc5d2b0b6d77a5c3357e9a37e1038f5ff",
-                "reference": "4af9f9ccc5d2b0b6d77a5c3357e9a37e1038f5ff",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/efe9fd789bb89c1d0a3af2e0d29ef34abd79ddeb",
+                "reference": "efe9fd789bb89c1d0a3af2e0d29ef34abd79ddeb",
                 "shasum": ""
             },
             "require": {
@@ -550,7 +550,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
-            "time": "2015-04-13 03:21:59"
+            "time": "2015-04-02 16:49:24"
         },
         {
             "name": "league/flysystem",
@@ -791,12 +791,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Translation.git",
-                "reference": "3166541ec7107264270c3e85d4d42f2396a50ce6"
+                "reference": "bd939f05cdaca128f4ddbae1b447d6f0203b60af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/3166541ec7107264270c3e85d4d42f2396a50ce6",
-                "reference": "3166541ec7107264270c3e85d4d42f2396a50ce6",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/bd939f05cdaca128f4ddbae1b447d6f0203b60af",
+                "reference": "bd939f05cdaca128f4ddbae1b447d6f0203b60af",
                 "shasum": ""
             },
             "require": {
@@ -841,7 +841,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "http://symfony.com",
-            "time": "2015-04-09 12:33:02"
+            "time": "2015-03-30 15:54:10"
         },
         {
             "name": "tobscure/json-api",
@@ -915,6 +915,81 @@
             ],
             "description": "Powerful, flexible, relational permissions using Eloquent.",
             "time": "2015-03-24 09:00:05"
+        },
+        {
+            "name": "torophp/torophp",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/anandkunal/ToroPHP.git",
+                "reference": "4e5f5388b2967754cbf57079acccdbac7467160b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/anandkunal/ToroPHP/zipball/4e5f5388b2967754cbf57079acccdbac7467160b",
+                "reference": "4e5f5388b2967754cbf57079acccdbac7467160b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Toro.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Bean",
+                    "email": "martin@martinbean.co.uk",
+                    "homepage": "http://www.martinbean.co.uk",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Kunal Anand",
+                    "email": "kunal.r.anand@gmail.com",
+                    "homepage": "http://kunalanand.com/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Danillo César de O. Melo",
+                    "email": "danillos@gmail.com",
+                    "homepage": "http://www.danillocesar.com.br/",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Robbie Coleman",
+                    "homepage": "http://robbie.robnrob.com",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "John Kurkowski",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Berker Peksag",
+                    "homepage": "http://berkerpeksag.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Jason Mooberry",
+                    "homepage": "http://jasonmooberry.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Toro is a PHP router for developing RESTful web applications and APIs.",
+            "homepage": "http://github.com/anandkunal/ToroPHP",
+            "keywords": [
+                "framework",
+                "php",
+                "router"
+            ],
+            "time": "2015-04-15 21:01:31"
         }
     ],
     "packages-dev": [],
@@ -923,7 +998,8 @@
     "stability-flags": {
         "tobscure/json-api": 20,
         "tobscure/permissible": 20,
-        "misd/linkify": 20
+        "misd/linkify": 20,
+        "torophp/torophp": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

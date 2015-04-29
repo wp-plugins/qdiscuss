@@ -1,7 +1,6 @@
 <?php namespace Qdiscuss\Forum\Actions;
 
 use Qdiscuss\Forum\Events\UserLoggedIn;
-use Qdiscuss\Core\Repositories\EloquentUserRepository as UserRepositoryInterface;
 use Qdiscuss\Forum\Actions\WebAction;
 use Qdiscuss\Core\Models\User;
 use Illuminate\Database\Capsule\Manager as DB; 
@@ -10,14 +9,17 @@ use Qdiscuss\Core\Models\AccessToken;
 class LoginAction extends WebAction
 {
 
-    protected $users;
-
-    public function __construct(UserRepositoryInterface $users)
+    public function __construct()
     {
-        $this->users = $users;
+        
     }
 
     public function handle()
+    {
+      # code...
+    }
+
+    public function post()
     {
         global $wpdb;
 
@@ -40,7 +42,7 @@ class LoginAction extends WebAction
         	$access_token = AccessToken::generate($user->id);
               $access_token->save();
         	setcookie("qdiscuss_remember",  $access_token->id, time() + 60*60*24*365*5, '/');
-        	echo json_encode(array('userId' => $access_token->user_id, 'token' => $access_token->id));exit();
+        	return $this->respondJson(array('userId' => $access_token->user_id, 'token' => $access_token->id));
       }
 }
 }

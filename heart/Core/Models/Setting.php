@@ -34,6 +34,20 @@ class Setting extends BaseModel
 	}
 
 	/**
+	 *  Get the welcome title setting value 
+	 *  
+	 * @return string
+	 */
+	public static function getWelcomeTitle()
+	{
+		$forum_welcome_title  = self::getValueByKey('forum_welcome_title');
+
+		if (!$forum_welcome_title) return 'Welcome To QDiscuss';
+
+		return $forum_welcome_title;
+	}
+
+	/**
 	 *  Get the forum description setting value 
 	 *  
 	 * @return string

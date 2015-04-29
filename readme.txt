@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.0.2
+Stable tag: 0.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,10 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 == Changelog ==
 
+= v0.0.3 =
+1. integrated json api, no need WP Rest API any more
+2. add forum welcome title 
+
 = v0.0.2 =
 
 1.  compress js for speeding up page load
@@ -88,6 +92,3 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 = v0.0.1 =
 
 code structure change
-
-
-

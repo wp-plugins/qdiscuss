@@ -84140,7 +84140,7 @@ define('qdiscuss/controllers/application', ['exports', 'ember', 'qdiscuss/config
     // TODO: Preload this value in the index.html payload from Laravel config.
     // forumTitle: "QDiscuss",
     forumTitle: config['default'].forumTitle,
-
+    welcomeTitle: config['default'].welcomeTitle,//neychang add
     // The title of the current page. This should be set as appropriate in
     // controllers/views.
     pageTitle: "",
@@ -84387,7 +84387,8 @@ define('qdiscuss/controllers/discussion', ['exports', 'ember', 'qdiscuss/compone
             });
           });
         } else {
-          this.send("signup");
+          // this.send("signup");//neychang comment
+          this.send("login");//neychang add
         }
       },
 
@@ -84485,7 +84486,8 @@ define('qdiscuss/controllers/index', ['exports', 'ember', 'qdiscuss/models/discu
             });
           });
         } else {
-          this.send("signup");
+          // this.send("signup");//neychang comment
+          this.send("login");//neychang add
         }
       },
 
@@ -85886,7 +85888,8 @@ define('qdiscuss/router', ['exports', 'ember', 'qdiscuss/config/environment'], f
 
   Router.map(function () {
     this.resource("index", { path: "/" }, function () {
-      this.resource("discussion", { path: "/:id/:slug" }, function () {
+     this.resource("discussion", { path: "/:id" }, function () {//neychang add
+      // this.resource("discussion", { path: "/:id/:slug" }, function () {//neychang comment
         this.route("near", { path: "/:near" });
       });
     });
@@ -85924,7 +85927,10 @@ define('qdiscuss/routes/application', ['exports', 'ember', 'simple-auth/mixins/a
         this.controllerFor("login").set("error", null);
         this.send("showModal", "login");
       },
-
+      // neychang add
+      backToSite: function backToSite() {
+        window.location = './';
+      },
       signup: function signup() {
         this.controllerFor("signup").set("error", null).set("welcomeUser", null);
         this.send("showModal", "signup");
@@ -89263,7 +89269,7 @@ define('qdiscuss/templates/components/index/welcome-hero', ['exports'], function
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("h2");
-        var el4 = dom.createTextNode("Welcome to ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
@@ -92921,7 +92927,7 @@ define('qdiscuss/templates/signup', ['exports'], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("h3");
         dom.setAttribute(el4,"class","title-control");
-        var el5 = dom.createTextNode("Sign Up");
+        // var el5 = dom.createTextNode("Sign Up");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
@@ -94411,7 +94417,7 @@ define('qdiscuss/views/application', ['exports', 'ember', 'qdiscuss/mixins/has-i
           controller.send("search", value);
         }
       }), "search");
-
+      
       if (this.get("controller.session.isAuthenticated")) {
         items.pushObjectWithTag(UserNotifications['default'].extend({
           user: this.get("controller.session.user"),
@@ -94423,9 +94429,10 @@ define('qdiscuss/views/application', ['exports', 'ember', 'qdiscuss/mixins/has-i
           parentController: controller
         }), "user");
       } else {
-        // this.addActionItem(items, "signup", "Sign Up").reopen({ className: "btn btn-link" });
+        // this.addActionItem(items, "signup", "Sign Up").reopen({ className: "btn btn-link" });neychang comment
         this.addActionItem(items, "login", "Log In").reopen({ className: "btn btn-link" });
       }
+      this.addActionItem(items, "backToSite", "Back To Site").reopen({ className: "btn btn-primary" });//neychang add
     },
 
     populateFooterPrimary: function populateFooterPrimary(items) {
@@ -94808,7 +94815,8 @@ define('qdiscuss/views/index', ['exports', 'ember', 'qdiscuss/components/ui/drop
 
     didInsertElement: function didInsertElement() {
       this.set("hero", WelcomeHero['default'].extend({
-        title: this.get("controller.controllers.application.forumTitle"),
+        // title: this.get("controller.controllers.application.forumTitle"),//neychang comment
+        title: this.get("controller.controllers.application.welcomeTitle"),//neychang add
         description: config['default'].welcomeDescription
       }));
 
