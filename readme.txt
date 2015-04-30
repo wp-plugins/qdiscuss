@@ -17,7 +17,7 @@ QDiscuss is a WordPress native plugin, all data  and code run on your WordPress 
 
 Because of using the Javascript Framework Ember.js, QDiscuss is  a one page forum app, ajax loading all the data, it's easy, elegant and user-friendly. 
 
-<a href="http://colorvila.com/plugin-qdiscuss/">Click to see Live Demo</a>
+<a href="http://colorvila.com/qdiscuss-plugin">Click to see Live Demo</a>
 
 <h3>Features:</h3>
 1. WordPress native plugin, your data belongs to you
@@ -71,7 +71,7 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 == Screenshots ==
 
-<a href="http://colorvila.com/plugin-qdiscuss/">Click to see Live Demo</a>
+<a href="http://colorvila.com/qdiscuss-plugin">Click to see Live Demo</a>
 
 == Changelog ==
 

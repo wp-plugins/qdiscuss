@@ -5,7 +5,7 @@ Plugin URI:
 Description: An Amazing Forum WordPress Plugin
 Version: 0.0.3
 Author: ColorVila Team
-Author URI: http://colorvila.com/plugin-qdiscuss
+Author URI: http://colorvila.com/qdiscuss-plugin
 */
 if(PHP_VERSION < '5.4') die(' PHP_VERSION need >= 5.4, please upgrade your PHP');
 
