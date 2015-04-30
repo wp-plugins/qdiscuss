@@ -60,7 +60,7 @@ class Qdiscuss {
 		  $qdiscuss_app->singleton('filesystem', function() use ($qdiscuss_app) {
 		  		$qdiscuss_app['config']->set("filesystems.default", "local");
 		  		$qdiscuss_app['config']->set("filesystems.cloud", "s3");
-		  		$qdiscuss_app['config']->set("filesystems.disks.qdiscuss-avatars", array("driver" => "local", "root" => ABSPATH .  'wp-content/uploads/qdiscuss/avatars'));
+		  		$qdiscuss_app['config']->set("filesystems.disks.qdiscuss-avatars", array("driver" => "local", "root" => rtrim(ABSPATH, '/') . DIRECTORY_SEPARATOR .  'wp-content' . DIRECTORY_SEPARATOR  . 'uploads'  . DIRECTORY_SEPARATOR . 'qdiscuss' . DIRECTORY_SEPARATOR . 'avatars'));
 				return new \Illuminate\Filesystem\FilesystemManager($qdiscuss_app);
 			});
 		  $qdiscuss_app->singleton('filesystem.disk', function() use ($qdiscuss_app) {

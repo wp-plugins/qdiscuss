@@ -1,5 +1,9 @@
 ### Changelog
 
+#### v0.0.4
+
+1. Fix user avatar upload error
+
 #### v0.0.3
 
 1. Remove wp-rest-api plugin from qdiscuss

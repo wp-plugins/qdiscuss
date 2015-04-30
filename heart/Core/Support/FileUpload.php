@@ -10,7 +10,7 @@ class FileUpload {
 	public function getFilename()
 	{
 		$originalName = $this->getOriginName($this->data['tmp_name']);
-		$pos = strrpos($originalName, '/');
+		$pos = strrpos($originalName, DIRECTORY_SEPARATOR);
 		$originalName = false === $pos ? $originalName : substr($originalName, $pos + 1);
 		return $originalName;
 	}
@@ -18,13 +18,13 @@ class FileUpload {
 	public function getPath()
 	{
 		$originalName = $this->getOriginName($this->data['tmp_name']);
-		$pos = strrpos($originalName, '/');
+		$pos = strrpos($originalName, DIRECTORY_SEPARATOR);
 		$path = false === $pos ? '' : substr($originalName, 0, $pos);
-		return '/' . $path;
+		return $path;
 	}
 
 	protected function getOriginName($name)
 	{
-		return str_replace('\\', '/', $name);
+		return str_replace(array('\\', '/'), DIRECTORY_SEPARATOR, $name);
 	}
 }

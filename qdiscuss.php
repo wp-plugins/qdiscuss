@@ -3,7 +3,7 @@
 Plugin Name: QDiscuss
 Plugin URI: 
 Description: An Amazing Forum WordPress Plugin
-Version: 0.0.3
+Version: 0.0.4
 Author: ColorVila Team
 Author URI: http://colorvila.com/qdiscuss-plugin
 */
