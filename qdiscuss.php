@@ -38,8 +38,6 @@ require __DIR__.'/bootstrap/init.php';
 */
 require __DIR__.'/bootstrap/helper.php';
 
-require __DIR__.'/bootstrap/helper.php';
-
 /*
 |--------------------------------------------------------------------------
 | Hook-ups into WordPress Core
@@ -54,27 +52,19 @@ register_uninstall_hook(__FILE__,  array('\Qdiscuss\Dashboard\Bridge', 'uninstal
 // QDiscuss Hook-ups
 add_action('wp_login', '\Qdiscuss\Dashboard\Bridge::hook_user_login');
 add_action('user_register', '\Qdiscuss\Dashboard\Bridge::hook_user_register');
+add_action( 'wp_loaded', array('\Qdiscuss\Dashboard\Notices', 'hide_notices' ) );			
+add_action( 'admin_print_styles', array('\Qdiscuss\Dashboard\Notices', 'add_notices' ) );
 add_action('delete_user', '\Qdiscuss\Dashboard\Bridge::hook_user_delete');
 add_action('profile_update', '\Qdiscuss\Dashboard\Bridge::hook_profile_update');
 add_action('edit_user_profile_update', '\Qdiscuss\Dashboard\Bridge::hook_user_profile_update');
 
 // Dashboard Setting hook-ups
-add_action( 'admin_init', array('\Qdiscuss\Dashboard\QdInstall', 'check_version'), 5 );
-add_action( 'admin_init',  array('\Qdiscuss\Dashboard\QdInstall', 'install_actions'));
-add_action( 'wp_loaded', array('\Qdiscuss\Dashboard\AdminNotices', 'hide_notices' ) );		
-add_action( 'admin_print_styles', array('\Qdiscuss\Dashboard\AdminNotices', 'add_notices' ) );
+add_action( 'admin_init', array('\Qdiscuss\Dashboard\Install', 'check_version'), 5 );
+add_action( 'admin_init',  array('\Qdiscuss\Dashboard\Install', 'install_actions'));
 add_action( 'admin_enqueue_scripts', '\Qdiscuss\Dashboard\Dashboard::qdiscuss_enqueue_admin');
 add_action( 'admin_menu',     '\Qdiscuss\Dashboard\Dashboard::qdiscuss_admin_menu', 999 );
 add_action('wp_ajax_qdiscuss_ajax_config_settings_save', '\Qdiscuss\Dashboard\Dashboard::qdiscuss_ajax_config_settings_save');
 add_action('admin_init',   '\Qdiscuss\Dashboard\Dashboard::qdiscuss_admin_init', 999 );
-
-// function json_api_init() {
-// 	\Qdiscuss\Router::register_rewrite();
-// 	global $wp;
-// 	$wp->add_query_var( 'json_route' );
-// }
-// add_action( 'init', 'json_api_init' );
-
 
 /*
 |--------------------------------------------------------------------------

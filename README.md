@@ -31,15 +31,11 @@ And thanks to tobscure and his [Flarum Forum](https://github.com/flarum), the qd
 
 2. WordPress 3.9 or higher
 
-3. [WP REST API WordPress Plugin](https://wordpress.org/plugins/json-rest-api/) 1.2.1
-
 ### Official Plugin Installation
 
 Dowload Official Plugin from [here](https://wordpress.org/plugins/qdiscuss/)
 
 Using pretty permalinks, as QDiscuss uses custom rewrite rules to power the API.
-
-Drop this directory in and activate QDiscuss. QDiscuss will auto install the WP REST API Plugin for you.
 
 
 ### Pay  Attention

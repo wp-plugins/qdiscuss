@@ -1,61 +1,36 @@
 <?php namespace Qdiscuss;
 
-/** Include the bootstrap for setting up WordPress environment */
-// include( ABSPATH . '/wp-load.php' );
-
 class Toro
 {
     public static function serve($routes)
     {
         ToroHook::fire('before_request', compact('routes'));
-        // var_dump($_SERVER);exit;
         $request_method = strtolower($_SERVER['REQUEST_METHOD']);
         $path_info = '/';
         $site_url = get_site_url();
-        // echo "http://" . $_SERVER['SERVER_NAME'];exit;
         $sub_site = '';
         if($site_url != "http://" . $_SERVER['HTTP_HOST']){
 	$url_string = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
               $url_array = parse_url($url_string);
-              // var_dump($url_array);exit;
               $path = explode('/', $url_array['path']);
               $sub_site = $path[1];
         }
-
-        
-
-        // echo $url;exit;
-         // var_dump($_SERVER);exit;
-        // var_dump($path);exit;
-        // if (empty( $GLOBALS['wp']->query_vars['json_route'])){
-
-        //     return;
-        // }
-// echo 'ss';exit;
-// var_dump($GLOBALS['wp']);exit;
-        // echo $GLOBALS['wp']->query_vars['json_route'] ;exit;
-    // var_dump(get_site_url());exit;
-    //  var_dump($_SERVER);exit;
             if (! empty($_SERVER['PATH_INFO'])) {
                 $path_info = $_SERVER['PATH_INFO'];
            
             } elseif (! empty($_SERVER['ORIG_PATH_INFO']) && $_SERVER['ORIG_PATH_INFO'] !== '/index.php') {
                 $path_info = $_SERVER['ORIG_PATH_INFO'];
-                // echo 'sf';
             }else {
                 if (! empty($_SERVER['REQUEST_URI'])) {
                     $path_info = (strpos($_SERVER['REQUEST_URI'], '?') > 0) ? strstr($_SERVER['REQUEST_URI'], '?', true) : $_SERVER['REQUEST_URI'];
-                    // echo $path_info;
-                    // echo 'qq';
                 }
             }
-            // echo $sub_site;exit;
-        if($sub_site){
-        	$path_info = str_replace('/' . $sub_site, '', $path_info);
 
-        	// echo $path_info;exit;
+        if($sub_site){
+        	$path_info = preg_replace('/\/' . $sub_site . '/', '', $path_info, 1);
+
         }
-        // echo $path_info;exit;
+   
         $discovered_handler = null;
         $regex_matches = array();
 
@@ -110,11 +85,9 @@ class Toro
                 ToroHook::fire('404', compact('routes', 'discovered_handler', 'request_method', 'regex_matches'));
             }
         } else {
-            // ToroHook::fire('404', compact('routes', 'discovered_handler', 'request_method', 'regex_matches'));
+            ToroHook::fire('404', compact('routes', 'discovered_handler', 'request_method', 'regex_matches'));
         }
-        // echo 'ss';exit;
-        // ToroHook::fire('after_request', compact('routes', 'discovered_handler', 'request_method', 'regex_matches', 'result'));
-          // echo 'ss';exit;
+        ToroHook::fire('after_request', compact('routes', 'discovered_handler', 'request_method', 'regex_matches', 'result'));
     }
 
     private static function is_xhr_request()

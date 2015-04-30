@@ -52,7 +52,7 @@ And thanks to tobscure and his Flarum Forum, the qdiscuss was based on his work.
 
 1. Visit 'Plugins > Add New'
 2. Search for 'QDiscuss'
-3. Activate QDiscuss from your Plugins page. .
+3. Activate QDiscuss from your Plugins page. 
 4. Visit 'Settings > Permalinks', set your permalink as pretty links.
 5. Visit http://your-site-url/qdiscuss, to enjoy your forum.
 
@@ -76,8 +76,11 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 == Changelog ==
 
 = v0.0.3 =
-1. integrated json api, no need WP Rest API any more
-2. add forum welcome title 
+
+1. Remove wp-rest-api plugin from qdiscuss
+2. Fix the php warning in php5.4 when set user's profile
+3. Add an new config field named forum_welcome_title for displaying some welcome words
+4. Add version check and upgrade process 
 
 = v0.0.2 =
 
@@ -89,3 +92,6 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 = v0.0.1 =
 
 code structure change
+
+
+
