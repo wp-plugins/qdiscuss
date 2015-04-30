@@ -47,24 +47,21 @@ And thanks to tobscure and his Flarum Forum, the qdiscuss was based on his work.
 
 1. PHP 5.4 above
 2. WordPress 3.9 or higher
-3. WP REST API WordPress Plugin 1.2.1
 
 <h3>From your WordPress dashboard</h3>
 
 1. Visit 'Plugins > Add New'
 2. Search for 'QDiscuss'
-3. Activate QDiscuss from your Plugins page. 
-4. Install <a href="https://wordpress.org/plugins/json-rest-api/">WP REST API</a> plugin, QDiscuss need this plugin to supply rest api support.
-5. Visit 'Settings > Permalinks', set your permalink as pretty links.
-6. Visit http://your-site-url/qdiscuss, to enjoy your forum.
+3. Activate QDiscuss from your Plugins page. .
+4. Visit 'Settings > Permalinks', set your permalink as pretty links.
+5. Visit http://your-site-url/qdiscuss, to enjoy your forum.
 
 <h3>Manual installation</h3>
 1. Upload qdiscuss.zip to the /wp-content/plugins/ directory
 2. Unzip the compressed plugin
 3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Install <a href="https://wordpress.org/plugins/json-rest-api/">WP REST API</a> plugin, QDiscuss need this plugin to supply rest api support.
-5. Visit 'Settings > Permalinks', set your permalink as pretty links.
-6. Visit http://your-site-url/qdiscuss, to enjoy your forum.
+4. Visit 'Settings > Permalinks', set your permalink as pretty links.
+5. Visit http://your-site-url/qdiscuss, to enjoy your forum.
 
 == Frequently Asked Questions ==
 
