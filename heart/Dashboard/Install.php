@@ -1,12 +1,9 @@
 <?php  namespace Qdiscuss\Dashboard;
 
-/**
- * QdInstall Class
- */
-class QdInstall {
+class Install {
 
 	/**
-	 * check_version function.
+	 * Check_version function.
 	 */
 	public static function check_version() {
 		
@@ -19,37 +16,35 @@ class QdInstall {
 	/**
 	 * Install actions.
 	 */
-	public static function install_actions() {
+	public static function install_actions() 
+	{
 
 		if ( ! empty( $_GET['do_update_qdiscuss'] ) ) {
 
 			self::update();
 
 			// Update complete
-			AdminNotices::remove_notice( 'update' );
+			Notices::remove_notice( 'update' );
 
 			// What's new redirect
-			// if ( ! AdminNotices::has_notice( 'install' ) ) {
-			// 	delete_transient( '_qd_activation_redirect' );
-			// 	wp_redirect( admin_url( 'index.php?page=qd-about&qd-updated=true' ) );
+			// if ( ! WC_Admin_Notices::has_notice( 'install' ) ) {
+			// 	delete_transient( '_wc_activation_redirect' );
+			// 	wp_redirect( admin_url( 'index.php?page=wc-about&wc-updated=true' ) );
 			// 	exit;
 			// }
 		}
 	}
 
 	/**
-	 * Install WC
+	 * Install 
 	 */
-	public static function install() {
+	public static function install() 
+	{
 		
-		// Ensure needed classes are loaded
-		include_once( 'AdminNotices.php' );
-		
-		// Queue upgrades
 		$current_db_version = get_option( 'qdiscuss_db_version', null );
 
-		if ( version_compare( $current_db_version, QDISCUSS_VERSION, '<' )  || null == $current_db_version ) {
-			AdminNotices::add_notice( 'update' );
+		if ( $current_db_version &&  version_compare( $current_db_version, QDISCUSS_VERSION, '<' )  ) {
+			Notices::add_notice( 'update' );
 		} else {
 			delete_option( 'qdiscuss_db_version' );
 			add_option( 'qdiscuss_db_version', QDISCUSS_VERSION );
@@ -66,7 +61,8 @@ class QdInstall {
 	/**
 	 * Handle updates
 	 */
-	private static function update() {
+	protected static function update() 
+	{
 		$current_db_version = get_option( 'qdiscuss_db_version' );
 		$db_updates         = array(
 			'0.0.3' => 'updates/qdiscuss-update-0.0.3.php',			

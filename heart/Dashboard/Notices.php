@@ -1,12 +1,10 @@
 <?php namespace Qdiscuss\Dashboard;
 
-/**
- * QD_Admin_Notices Class
- */
-class AdminNotices {
+class Notices {
 
 	/**
 	 * Array of notices - name => callback
+	 * 
 	 * @var array
 	 */
 	static  $notices = array(
@@ -17,35 +15,42 @@ class AdminNotices {
 	
 	/**
 	 * Show a notice
+	 * 
 	 * @param  string $name
 	 */
-	public static function add_notice( $name ) {
+	public static function add_notice( $name ) 
+	{
 		$notices = array_unique( array_merge( get_option( 'qdiscuss_admin_notices', array() ), array( $name ) ) );
 		update_option( 'qdiscuss_admin_notices', $notices );
 	}
 
 	/**
 	 * Remove a notice from being displayed
+	 * 
 	 * @param  string $name
 	 */
-	public static function remove_notice( $name ) {
+	public static function remove_notice( $name ) 
+	{
 		$notices = array_diff( get_option( 'qdiscuss_admin_notices', array() ), array( $name ) );
 		update_option( 'qdiscuss_admin_notices', $notices );
 	}
 
 	/**
 	 * See if a notice is being shown
+	 * 
 	 * @param  string  $name
-	 * @return boolean
+	 * @return   boolean
 	 */
-	public static function has_notice( $name ) {
+	public static function has_notice( $name ) 
+	{
 		return in_array( $name, get_option( 'qdiscuss_admin_notices', array() ) );
 	}
 
 	/**
 	 * Hide a notice if the GET variable is set.
 	 */
-	public function hide_notices() {
+	public function hide_notices() 
+	{
 		if ( isset( $_GET['qd-hide-notice'] ) ) {
 			$hide_notice = sanitize_text_field( $_GET['qd-hide-notice'] );
 			self::remove_notice( $hide_notice );
@@ -69,18 +74,20 @@ class AdminNotices {
 	/**
 	 * Add notices + styles if needed.
 	 */
-	public function add_notices() {
+	public function add_notices() 
+	{
 		$notices = get_option( 'qdiscuss_admin_notices', array() );
 
 		foreach ( $notices as $notice ) {			
-			add_action( 'admin_notices', array('\Qdiscuss\Dashboard\AdminNotices', self::$notices[ $notice ]));
+			add_action( 'admin_notices', array('\Qdiscuss\Dashboard\Notices', self::$notices[ $notice ]));
 		}
 	}
 
 	/**
 	 * If we need to update, include a message with the update button
 	 */
-	public function update_notice() {
+	public function update_notice() 
+	{
 		include( 'views/html-notice-update.php' );
 	}
 
