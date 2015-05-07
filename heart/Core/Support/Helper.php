@@ -1,6 +1,7 @@
 <?php  namespace Qdiscuss\Core\Support;
 
 use Qdiscuss\Core\Models\User;
+use Qdiscuss\Core\Models\Guest;
 
 trait Helper
 {
@@ -25,6 +26,7 @@ trait Helper
 			$user_name = $user[0];
 			return get_user_by('login', $user_name);
 		}
+
 	}
 
 	public static function current_forum_user()
@@ -33,6 +35,8 @@ trait Helper
 			$user = explode('|', $user);
 			$user_name = $user[0];
 			return User::where('username', $user_name)->first();
+		}else{
+			return new Guest;
 		}
 	}
 
@@ -73,6 +77,44 @@ trait Helper
 		$roles = is_array($rarr) ? array_keys($rarr) : array('non-user');
 		
 		return $roles[0];
+	}
+
+ 	/**
+ 	 *  Register user
+ 	 *  
+ 	 * @param  [object]    $user  wp_user
+ 	 * @return   [object]    Core\Models\User
+ 	 */
+	public static function register_user($user)
+	{
+		$role = self::get_user_role($user->ID);
+		$member  =User::register($user->user_login, $user->user_email, '', $user->ID);
+		$member->save();
+		$member->activate();
+		switch ($role) {
+			case 'administrator':
+				$member->groups()->sync([1]);
+				break;
+			case 'editor':
+				$member->groups()->sync([3]);
+				break;
+			case 'author':
+				$member->groups()->sync([3]);
+				break;
+			case 'contributor':
+				$member->groups()->sync([3]);
+				break;
+			case 'subscriber':
+				$member->groups()->sync([3]);
+				break;
+			default:
+				$member->groups()->sync([3]);
+				break;
+		}
+
+		$member->save();
+
+		return $member;
 	}
 
 	/**

@@ -118,7 +118,7 @@ class Bridge {
 	{
 	 	global $wpdb, $qdiscuss_config;
 
-		$prefix = $wpdb->prefix . $qdiscuss_config['database']['prefix'];
+		$prefix = $qdiscuss_config['database']['prefix'];
 	 	$tables = self::$table_names;
 	 	
 	 	foreach ($tables as $table) {

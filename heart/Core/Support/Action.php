@@ -24,25 +24,6 @@ abstract class Action
     }
 
     /**
-      * Check whether the user is logined or not
-      *
-      * @return boolean
-      */
-    protected function is_logined()
-    {
-        if (count($_COOKIE)) {
-            foreach ($_COOKIE as $key => $val) {
-                        if (substr($key, 0, 19) === "wordpress_logged_in") {
-                            return $val;
-                        }
-            }
-        }
-
-        return false;
-
-    }
-
-    /**
      *  Check whether the user has the auth by token
      *  
      * @return boolean 
@@ -50,22 +31,6 @@ abstract class Action
     protected function is_auth()
     {
         return true;
-    }
-
-    /**
-     * Get the current user instance
-     *
-     * @return [type] [description]
-     */
-    protected function current_user()
-    {
-        if($user = $this->is_logined()){
-            $user = explode('|', $user);
-            $user_name = $user[0];
-            return User::where('username', $user_name)->first();
-        }
-
-        return new Guest;
     }
 
 }

@@ -5,7 +5,8 @@ class Install {
 	/**
 	 * Check_version function.
 	 */
-	public static function check_version() {
+	public static function check_version() 
+	{
 		
 		if ( ( get_option( 'qdiscuss_version' ) != QDISCUSS_VERSION || get_option( 'qdiscuss_db_version' ) != QDISCUSS_VERSION ) ) {
 			self::install();
@@ -40,10 +41,15 @@ class Install {
 	 */
 	public static function install() 
 	{
-		
-		$current_db_version = get_option( 'qdiscuss_db_version', null );
+		global $wpdb;
 
-		if ( $current_db_version &&  version_compare( $current_db_version, QDISCUSS_VERSION, '<' )  ) {
+		$table_name = $wpdb->prefix . 'qd_config';
+		$current_db_version = get_option( 'qdiscuss_db_version', null );
+		$is_new_install = ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name);
+
+		if(!$is_new_install && is_null($current_db_version)){
+			Notices::add_notice( 'update' );
+		}elseif ($current_db_version &&  version_compare( $current_db_version, QDISCUSS_VERSION, '<' )  ) {
 			Notices::add_notice( 'update' );
 		} else {
 			delete_option( 'qdiscuss_db_version' );

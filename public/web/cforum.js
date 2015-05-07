@@ -80817,8 +80817,8 @@ define('qdiscuss/components/application/powered-by', ['exports', 'ember'], funct
       build: function build(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("a");
-        dom.setAttribute(el1,"href","#");
-        //dom.setAttribute(el1,"target","_blank");
+        dom.setAttribute(el1,"href","http://colorvila.com");
+        dom.setAttribute(el1,"target","_blank");
         var el2 = dom.createTextNode("Powered by QDiscuss");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);

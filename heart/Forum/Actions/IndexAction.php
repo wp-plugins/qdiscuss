@@ -7,31 +7,42 @@ use Qdiscuss\Api\Serializers\UserSerializer;
 use Qdiscuss\Dashboard\Bridge;
 use Qdiscuss\Core\Actions\BaseAction;
 use Qdiscuss\Core\Models\Setting;
+use Qdiscuss\Core\Support\Helper;
 
-class IndexAction extends BaseAction{
-
+class IndexAction extends BaseAction
+{
+	use Helper;
 
 	public function __construct()
 	{
 		global $qdiscuss_actor;
 		$this->user = new EloquentUserRepository;
-		$qdiscuss_actor->setUser($this->current_user());
-                          \Qdiscuss\Api\Serializers\BaseSerializer::setActor($qdiscuss_actor);
+		$qdiscuss_actor->setUser(self::current_forum_user());
+                            \Qdiscuss\Api\Serializers\BaseSerializer::setActor($qdiscuss_actor);
 	}
 
 	public function get()
 	{
+		$user_info = User::where('username', 'dd')->first();
+
 		global $qdiscuss_actor, $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_welcome_title, $qdiscuss_desc;
 		$qdiscuss_title = Setting::getForumTitle();
 		$qdiscuss_welcome_title = Setting::getWelcomeTitle();
 		$qdiscuss_desc = Setting::getForumDescription();
 
-		if($user = $this->is_logined()){
+		if($user = self::is_logined()){
 			$user = explode('|', $user);
 			$user_name = $user[0];
-			$user_info = User::where('username', $user_name)->first();
 
-		             $user = $this->user->findOrFail($user_info->id, $qdiscuss_actor->getUser());
+			if($user_info = User::where('username', $user_name)->first()){
+				$user = $this->user->findOrFail($user_info->id, $qdiscuss_actor->getUser());
+			}else{
+				global $qdiscuss_actor;
+				$user = self::register_user(get_user_by('login', $user_name));
+				$qdiscuss_actor->setUser($user);
+				\Qdiscuss\Api\Serializers\BaseSerializer::setActor($qdiscuss_actor);
+			}
+
 		             $serializer = new UserSerializer(['groups']);
 		             $document = $this->document()->setData($serializer->resource($user));
 		             $data = json_decode($this->respondWithDocument($document), true);
@@ -44,6 +55,7 @@ class IndexAction extends BaseAction{
 		    	$data = json_encode([]);
 		    	$session = json_encode([]);
 		}
+
 		$config = array(
 		        'modulePrefix' => 'qdiscuss',
 		        'environment' => 'production',

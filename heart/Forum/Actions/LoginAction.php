@@ -33,7 +33,7 @@ class LoginAction extends WebAction
         $user_verify = wp_signon($login_data, false ); 
 
         if ( is_wp_error($user_verify) ) {
-	       header("HTTP/1.1 401 Unauthorized");
+	header("HTTP/1.1 401 Unauthorized");
               echo json_encode(array('errors' => array(array('code' => 'invalidCredentials'))));exit();
         } else {
               $wp_user = DB::select('select * from ' . $wpdb->prefix . 'users' . ' where `ID` = ?', array($user_verify->ID)); 

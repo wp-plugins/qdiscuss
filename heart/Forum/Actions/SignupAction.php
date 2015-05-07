@@ -3,9 +3,11 @@
 use Qdiscuss\Forum\Models\User;
 use Qdiscuss\Forum\Serializers\UserSerializer;
 use Qdiscuss\Forum\Actions\BaseAction;
+use Qdiscuss\Core\Support\Helper;
 
 class SignupAction extends BaseAction
 {
+    use Helper;
 
     public function __construct()
     {
@@ -22,7 +24,7 @@ class SignupAction extends BaseAction
             require_once(ABSPATH . WPINC . '/registration.php');
             global $wpdb;
    
-            if ($this->is_logined()) {
+            if (self::is_logined()) {
             		header( 'Location: /qdiscuss');
             } else {
 		$errors = array();

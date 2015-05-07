@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.0.4
+Stable tag: 0.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,10 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 <a href="http://colorvila.com/qdiscuss-plugin">Click to see Live Demo</a>
 
 == Changelog ==
+
+= v0.0.5 =
+
+1. Fix the uninstall error
 
 = v0.0.4 =
 
