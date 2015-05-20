@@ -15,26 +15,24 @@ QDiscuss is a modern designed, well-architected, powerful forum plugin that is e
 
 QDiscuss is a WordPress native plugin, all data  and code run on your WordPress site, and the users in WordPress will be default set as the members of QDiscuss.
 
-Because of using the Javascript Framework Ember.js, QDiscuss is  a one page forum app, ajax loading all the data, it's easy, elegant and user-friendly. 
-
 <a href="http://colorvila.com/qdiscuss-plugin">Click to see Live Demo</a>
 
 <h3>Features:</h3>
 1. WordPress native plugin, your data belongs to you
-2.  One page app
-3.  Three levels roles: Administrator, Moderator, Members
-4.  Forum avatar upload
-5.  Dynamic notifications
-6.  Born mobile, born to touch
-7.  Reply while you read
-8.  Real time updates
+2.   One page app
+3.   Three levels roles: Administrator, Moderator, Members
+4.   Forum avatar upload
+5.   Dynamic notifications
+6.   Born mobile, born to touch
+7.   Reply while you read
+8.   Real time updates
+9.   Categories extensions
+10. Sticky extensions
 
 <h3>To Do List</h3>
-1. Category
-2. User profile
-3. Attachment when post
-4. Extension system
-5. ...
+1. User profile
+2. Attachment when post
+3. ...
 
 <h3>Contributing</h3>
 The QDiscuss is now at the early development stage, we'd love to hear general feedback on the <a href="http://colorvila.com/qdiscuss">QDiscuss Development Forum</a>, and on <a href="https://wordpress.org/support/topic/qdiscuss-need-feedback?replies=1#post-6864335">WordPress Support forum</a>
