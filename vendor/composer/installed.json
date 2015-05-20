@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/tobscure/json-api.git",
-            "reference": "053b4f1fc1da9654bb6ba134da22f50a70554fea"
+            "reference": "31a74d27fd9ab6a9a9bc911614ceb696504d2c39"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/tobscure/json-api/zipball/053b4f1fc1da9654bb6ba134da22f50a70554fea",
-            "reference": "053b4f1fc1da9654bb6ba134da22f50a70554fea",
+            "url": "https://api.github.com/repos/tobscure/json-api/zipball/31a74d27fd9ab6a9a9bc911614ceb696504d2c39",
+            "reference": "31a74d27fd9ab6a9a9bc911614ceb696504d2c39",
             "shasum": ""
         },
         "require": {
@@ -20,7 +20,7 @@
         "require-dev": {
             "squizlabs/php_codesniffer": "1.5.3"
         },
-        "time": "2015-03-24 03:52:18",
+        "time": "2015-05-18 04:35:19",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -39,45 +39,47 @@
     },
     {
         "name": "symfony/translation",
-        "version": "2.6.x-dev",
-        "version_normalized": "2.6.9999999.9999999-dev",
-        "target-dir": "Symfony/Component/Translation",
+        "version": "2.8.x-dev",
+        "version_normalized": "2.8.9999999.9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Translation.git",
-            "reference": "3166541ec7107264270c3e85d4d42f2396a50ce6"
+            "reference": "a0735db452c5e592cb742333a32c6634a6d1ece1"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Translation/zipball/3166541ec7107264270c3e85d4d42f2396a50ce6",
-            "reference": "3166541ec7107264270c3e85d4d42f2396a50ce6",
+            "url": "https://api.github.com/repos/symfony/Translation/zipball/a0735db452c5e592cb742333a32c6634a6d1ece1",
+            "reference": "a0735db452c5e592cb742333a32c6634a6d1ece1",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.3.3"
+            "php": ">=5.3.9"
+        },
+        "conflict": {
+            "symfony/config": "<2.7"
         },
         "require-dev": {
             "psr/log": "~1.0",
-            "symfony/config": "~2.3,>=2.3.12",
-            "symfony/intl": "~2.3",
-            "symfony/phpunit-bridge": "~2.7",
-            "symfony/yaml": "~2.2"
+            "symfony/config": "~2.7",
+            "symfony/intl": "~2.3|~3.0.0",
+            "symfony/phpunit-bridge": "~2.7|~3.0.0",
+            "symfony/yaml": "~2.2|~3.0.0"
         },
         "suggest": {
             "psr/log": "To use logging capability in translator",
             "symfony/config": "",
             "symfony/yaml": ""
         },
-        "time": "2015-04-09 12:33:02",
+        "time": "2015-05-15 14:11:12",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "2.6-dev"
+                "dev-master": "2.8-dev"
             }
         },
         "installation-source": "source",
         "autoload": {
-            "psr-0": {
+            "psr-4": {
                 "Symfony\\Component\\Translation\\": ""
             }
         },
@@ -87,40 +89,40 @@
         ],
         "authors": [
             {
-                "name": "Symfony Community",
-                "homepage": "http://symfony.com/contributors"
-            },
-            {
                 "name": "Fabien Potencier",
                 "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
             }
         ],
         "description": "Symfony Translation Component",
-        "homepage": "http://symfony.com"
+        "homepage": "https://symfony.com"
     },
     {
         "name": "nesbot/carbon",
-        "version": "1.18.0",
-        "version_normalized": "1.18.0.0",
+        "version": "1.19.0",
+        "version_normalized": "1.19.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/briannesbitt/Carbon.git",
-            "reference": "99e2f69f7bdc2cc4334b2d00f1e0ba450623ea36"
+            "reference": "68868e0b02d2d803d0052a59d4e5003cccf87320"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/99e2f69f7bdc2cc4334b2d00f1e0ba450623ea36",
-            "reference": "99e2f69f7bdc2cc4334b2d00f1e0ba450623ea36",
+            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/68868e0b02d2d803d0052a59d4e5003cccf87320",
+            "reference": "68868e0b02d2d803d0052a59d4e5003cccf87320",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0",
-            "symfony/translation": "2.6.*"
+            "symfony/translation": "~2.6"
         },
         "require-dev": {
             "phpunit/phpunit": "~4.0"
         },
-        "time": "2015-03-26 03:05:57",
+        "time": "2015-05-09 03:23:44",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -281,18 +283,18 @@
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/contracts.git",
-            "reference": "2c24bb720e37e36773e17edfe4181799f02caaab"
+            "reference": "6d23815fee6057b29cab8094af8cbb8ce3ac82e4"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/contracts/zipball/2c24bb720e37e36773e17edfe4181799f02caaab",
-            "reference": "2c24bb720e37e36773e17edfe4181799f02caaab",
+            "url": "https://api.github.com/repos/illuminate/contracts/zipball/6d23815fee6057b29cab8094af8cbb8ce3ac82e4",
+            "reference": "6d23815fee6057b29cab8094af8cbb8ce3ac82e4",
             "shasum": ""
         },
         "require": {
             "php": ">=5.4.0"
         },
-        "time": "2015-04-10 10:44:36",
+        "time": "2015-05-15 07:22:28",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -325,12 +327,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
-            "reference": "4af9f9ccc5d2b0b6d77a5c3357e9a37e1038f5ff"
+            "reference": "5bb17da79b8c16e370e2bd87a65b3394cdf0ee89"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/support/zipball/4af9f9ccc5d2b0b6d77a5c3357e9a37e1038f5ff",
-            "reference": "4af9f9ccc5d2b0b6d77a5c3357e9a37e1038f5ff",
+            "url": "https://api.github.com/repos/illuminate/support/zipball/5bb17da79b8c16e370e2bd87a65b3394cdf0ee89",
+            "reference": "5bb17da79b8c16e370e2bd87a65b3394cdf0ee89",
             "shasum": ""
         },
         "require": {
@@ -341,9 +343,10 @@
             "php": ">=5.4.0"
         },
         "suggest": {
-            "jeremeamia/superclosure": "Required to be able to serialize closures (~2.0)."
+            "jeremeamia/superclosure": "Required to be able to serialize closures (~2.0).",
+            "symfony/var-dumper": "Required to use the dd function (2.6.*)."
         },
-        "time": "2015-04-13 03:21:59",
+        "time": "2015-05-12 10:23:27",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -379,12 +382,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/container.git",
-            "reference": "a11c01c1d8b6941bd7ef2f104749ada5e34f146e"
+            "reference": "55b81cfeb20745e74957d7ade2773e2bc2510bef"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/container/zipball/a11c01c1d8b6941bd7ef2f104749ada5e34f146e",
-            "reference": "a11c01c1d8b6941bd7ef2f104749ada5e34f146e",
+            "url": "https://api.github.com/repos/illuminate/container/zipball/55b81cfeb20745e74957d7ade2773e2bc2510bef",
+            "reference": "55b81cfeb20745e74957d7ade2773e2bc2510bef",
             "shasum": ""
         },
         "require": {
@@ -424,12 +427,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/database.git",
-            "reference": "132cd418464dc56933fd5fccd4b22230a42d0a74"
+            "reference": "79ebeb4c169178a24c5eb7f17db94df01c7dd04d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/database/zipball/132cd418464dc56933fd5fccd4b22230a42d0a74",
-            "reference": "132cd418464dc56933fd5fccd4b22230a42d0a74",
+            "url": "https://api.github.com/repos/illuminate/database/zipball/79ebeb4c169178a24c5eb7f17db94df01c7dd04d",
+            "reference": "79ebeb4c169178a24c5eb7f17db94df01c7dd04d",
             "shasum": ""
         },
         "require": {
@@ -445,7 +448,7 @@
             "illuminate/events": "Required to use the observers with Eloquent (5.0.*).",
             "illuminate/filesystem": "Required to use the migrations (5.0.*)."
         },
-        "time": "2015-04-12 19:56:29",
+        "time": "2015-05-14 14:12:37",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -517,18 +520,127 @@
         "description": "Powerful, flexible, relational permissions using Eloquent."
     },
     {
+        "name": "oyejorge/less.php",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/oyejorge/less.php.git",
+            "reference": "b7f01fb8e86f8d77e0f5367715ec756418232e19"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/oyejorge/less.php/zipball/b7f01fb8e86f8d77e0f5367715ec756418232e19",
+            "reference": "b7f01fb8e86f8d77e0f5367715ec756418232e19",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2"
+        },
+        "time": "2015-05-16 18:38:34",
+        "bin": [
+            "bin/lessc"
+        ],
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Less": "lib/"
+            },
+            "classmap": [
+                "lessc.inc.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Matt Agar",
+                "homepage": "https://github.com/agar"
+            },
+            {
+                "name": "Martin Jantošovič",
+                "homepage": "https://github.com/Mordred"
+            },
+            {
+                "name": "Josh Schmidt",
+                "homepage": "https://github.com/oyejorge"
+            }
+        ],
+        "description": "PHP port of the Javascript version of LESS http://lesscss.org",
+        "homepage": "http://lessphp.gpeasy.com",
+        "keywords": [
+            "css",
+            "less",
+            "less.js",
+            "lesscss",
+            "php",
+            "stylesheet"
+        ]
+    },
+    {
+        "name": "slim/slim",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/slimphp/Slim.git",
+            "reference": "e6e2300586f909ef0e3b4017cdece27db5d6da28"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/slimphp/Slim/zipball/e6e2300586f909ef0e3b4017cdece27db5d6da28",
+            "reference": "e6e2300586f909ef0e3b4017cdece27db5d6da28",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "suggest": {
+            "ext-mcrypt": "Required for HTTP cookie encryption"
+        },
+        "time": "2015-05-14 21:04:50",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Slim": "."
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Josh Lockhart",
+                "email": "info@joshlockhart.com",
+                "homepage": "http://www.joshlockhart.com/"
+            }
+        ],
+        "description": "Slim Framework, a PHP micro framework",
+        "homepage": "http://github.com/codeguy/Slim",
+        "keywords": [
+            "microframework",
+            "rest",
+            "router"
+        ]
+    },
+    {
         "name": "illuminate/events",
         "version": "5.0.x-dev",
         "version_normalized": "5.0.9999999.9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/events.git",
-            "reference": "bf2f28157a5acba4df20980e8511850a6572f1f2"
+            "reference": "1c43c913b82521558d44a120f0735bbe84d53cbb"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/events/zipball/bf2f28157a5acba4df20980e8511850a6572f1f2",
-            "reference": "bf2f28157a5acba4df20980e8511850a6572f1f2",
+            "url": "https://api.github.com/repos/illuminate/events/zipball/1c43c913b82521558d44a120f0735bbe84d53cbb",
+            "reference": "1c43c913b82521558d44a120f0735bbe84d53cbb",
             "shasum": ""
         },
         "require": {
@@ -537,7 +649,7 @@
             "illuminate/support": "5.0.*",
             "php": ">=5.4.0"
         },
-        "time": "2015-03-26 16:16:33",
+        "time": "2015-05-11 12:49:26",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -623,12 +735,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/pipeline.git",
-            "reference": "5a67a6ae00aba65a01bc1f998e4f67224b51f6c3"
+            "reference": "902e8e2cd6bc71b43d8719effc41c2675485875d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/pipeline/zipball/5a67a6ae00aba65a01bc1f998e4f67224b51f6c3",
-            "reference": "5a67a6ae00aba65a01bc1f998e4f67224b51f6c3",
+            "url": "https://api.github.com/repos/illuminate/pipeline/zipball/902e8e2cd6bc71b43d8719effc41c2675485875d",
+            "reference": "902e8e2cd6bc71b43d8719effc41c2675485875d",
             "shasum": ""
         },
         "require": {
@@ -669,12 +781,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/bus.git",
-            "reference": "bdbcee69eab2dc0716c30e5e8c5ed57b49a91c15"
+            "reference": "aba9b6b10085d6ebb6939556dd643c5858063424"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/bus/zipball/bdbcee69eab2dc0716c30e5e8c5ed57b49a91c15",
-            "reference": "bdbcee69eab2dc0716c30e5e8c5ed57b49a91c15",
+            "url": "https://api.github.com/repos/illuminate/bus/zipball/aba9b6b10085d6ebb6939556dd643c5858063424",
+            "reference": "aba9b6b10085d6ebb6939556dd643c5858063424",
             "shasum": ""
         },
         "require": {
@@ -716,12 +828,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/config.git",
-            "reference": "d50babe28caab658bf0a1bc8b1a85e5aaf80c96e"
+            "reference": "4f5c883d4a47647166078b131b4c62f1f116747c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/config/zipball/d50babe28caab658bf0a1bc8b1a85e5aaf80c96e",
-            "reference": "d50babe28caab658bf0a1bc8b1a85e5aaf80c96e",
+            "url": "https://api.github.com/repos/illuminate/config/zipball/4f5c883d4a47647166078b131b4c62f1f116747c",
+            "reference": "4f5c883d4a47647166078b131b4c62f1f116747c",
             "shasum": ""
         },
         "require": {
@@ -762,12 +874,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/thephpleague/flysystem.git",
-            "reference": "768703274efa648ad63ac7646ad85c4e6a7f77e9"
+            "reference": "166a16f7e966d5eac46fb7a9849db21734718495"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/768703274efa648ad63ac7646ad85c4e6a7f77e9",
-            "reference": "768703274efa648ad63ac7646ad85c4e6a7f77e9",
+            "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/166a16f7e966d5eac46fb7a9849db21734718495",
+            "reference": "166a16f7e966d5eac46fb7a9849db21734718495",
             "shasum": ""
         },
         "require": {
@@ -799,7 +911,7 @@
             "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter",
             "predis/predis": "Allows you to use Predis for caching"
         },
-        "time": "2015-04-08 11:33:45",
+        "time": "2015-05-13 16:20:53",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -849,12 +961,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Finder.git",
-            "reference": "85e099efb4037e66d9f8598d90230f1f7b890534"
+            "reference": "ffedd3e0ff8155188155e9322fe21b9ee012ac14"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Finder/zipball/85e099efb4037e66d9f8598d90230f1f7b890534",
-            "reference": "85e099efb4037e66d9f8598d90230f1f7b890534",
+            "url": "https://api.github.com/repos/symfony/Finder/zipball/ffedd3e0ff8155188155e9322fe21b9ee012ac14",
+            "reference": "ffedd3e0ff8155188155e9322fe21b9ee012ac14",
             "shasum": ""
         },
         "require": {
@@ -863,7 +975,7 @@
         "require-dev": {
             "symfony/phpunit-bridge": "~2.7"
         },
-        "time": "2015-04-08 05:30:27",
+        "time": "2015-05-15 13:32:45",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -882,16 +994,16 @@
         ],
         "authors": [
             {
-                "name": "Symfony Community",
-                "homepage": "http://symfony.com/contributors"
-            },
-            {
                 "name": "Fabien Potencier",
                 "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
             }
         ],
         "description": "Symfony Finder Component",
-        "homepage": "http://symfony.com"
+        "homepage": "https://symfony.com"
     },
     {
         "name": "illuminate/filesystem",
@@ -900,12 +1012,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/filesystem.git",
-            "reference": "9c2709f553ed025378d35fa4f4f8d9254304bf4f"
+            "reference": "179770cc708cf7ac5469d4b813071226fa45686b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/filesystem/zipball/9c2709f553ed025378d35fa4f4f8d9254304bf4f",
-            "reference": "9c2709f553ed025378d35fa4f4f8d9254304bf4f",
+            "url": "https://api.github.com/repos/illuminate/filesystem/zipball/179770cc708cf7ac5469d4b813071226fa45686b",
+            "reference": "179770cc708cf7ac5469d4b813071226fa45686b",
             "shasum": ""
         },
         "require": {
@@ -919,7 +1031,7 @@
             "league/flysystem-aws-s3-v2": "Required to use the Flysystem S3 driver (~1.0).",
             "league/flysystem-rackspace": "Required to use the Flysystem Rackspace driver (~1.0)."
         },
-        "time": "2015-03-26 10:19:03",
+        "time": "2015-05-15 07:22:28",
         "type": "library",
         "extra": {
             "branch-alias": {

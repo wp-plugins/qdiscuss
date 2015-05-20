@@ -6,37 +6,39 @@ use Qdiscuss\Core\Support\DispatchesEvents;
 
 class EditPostCommandHandler
 {
-    use DispatchesEvents;
+	use DispatchesEvents;
 
-    protected $posts;
+	protected $posts;
 
-    public function __construct(PostRepository $posts)
-    {
-        $this->posts = $posts;
-    }
+	public function __construct(PostRepository $posts)
+	{
+		$this->posts = $posts;
+	}
 
-    public function handle($command)
-    {
-        $user = $command->user;
-        $post = $this->posts->findOrFail($command->postId, $user);
+	public function handle($command)
+	{
+		$user = $command->user;
+		$post = $this->posts->findOrFail($command->postId, $user);
 
-        $post->assertCan($user, 'edit');
+		$post->assertCan($user, 'edit');
 
-        if (isset($command->content)) {
-            $post->revise($command->content, $user);
-        }
+		if (isset($command->data['content'])) {
+			$post->revise($command->data['content'], $user);
+		}
 
-        if ($command->isHidden === true) {
-            $post->hide($user);
-        } elseif ($command->isHidden === false) {
-            $post->restore($user);
-        }
+		if (isset($command->data['isHidden'])) {
+			if ($command->data['isHidden']) {
+				$post->hide($user);
+			} else {
+				$post->restore($user);
+			}
+		}
 
-        event(new PostWillBeSaved($post, $command));
+		event(new PostWillBeSaved($post, $command));
 
-        $post->save();
-        $this->dispatchEventsFor($post);
+		$post->save();
+		$this->dispatchEventsFor($post);
 
-        return $post;
-    }
+		return $post;
+	}
 }

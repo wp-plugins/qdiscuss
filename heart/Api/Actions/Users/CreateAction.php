@@ -1,36 +1,59 @@
 <?php namespace Qdiscuss\Api\Actions\Users;
 
+use Qdiscuss\Core\Models\Forum;
 use Qdiscuss\Core\Commands\RegisterUserCommand;
-use Qdiscuss\Core\Actions\ApiParams;
-use Qdiscuss\Core\Actions\BaseAction;
-use Qdiscuss\Api\Serializers\UserSerializer;
+use Qdiscuss\Api\Actions\CreateAction as BaseCreateAction;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
+use Illuminate\Contracts\Bus\Dispatcher;
 
-class CreateAction extends BaseAction
+class CreateAction extends BaseCreateAction
 {
-    public function __construct()
-    {
-        global $qdiscuss_actor;
-        $this->user = $qdiscuss_actor;
-    }
     /**
-     * Register a user.
+     * The command bus.
      *
-     * @return Response
+     * @var \Illuminate\Contracts\Bus\Dispatcher
      */
-    public function run()
+    protected $bus;
+
+    /**
+     * The default forum instance.
+     *
+     * @var \Qdiscuss\Core\Models\Forum
+     */
+    protected $forum;
+
+    /**
+     * The name of the serializer class to output results with.
+     *
+     * @var string
+     */
+    public static $serializer = 'Qdiscuss\Api\Serializers\UserSerializer';
+
+    /**
+     * Instantiate the action.
+     *
+     * @param \Illuminate\Contracts\Bus\Dispatcher $bus
+     * @param \Qdiscuss\Core\Models\Forum $forum
+     */
+    public function __construct(Dispatcher $bus, Forum $forum)
     {
-        
-        $params = $this->post_data();
-        $username = $params->get('data.username');
-        $email    = $params->get('data.email');
-        $password = $params->get('data.password');
+        global $qdiscuss_bus;
+        $this->bus = $qdiscuss_bus;
+        $this->forum = $forum;
+    }
 
-        $command = new RegisterUserCommand($username, $email, $password, $this->actor->getUser(), app('qdiscuss.forum'));
-        $user = $this->dispatch($command, $params);
-
-        $serializer = new UserSerializer;
-        $document = $this->document()->setData($serializer->resource($user));
-
-        return $this->respondWithDocument($document, 201);
+    /**
+     * Register a user according to input from the API request.
+     *
+     * @param \Qdiscuss\Api\JsonApiRequest $request
+     * @param \Qdiscuss\Api\JsonApiResponse $response
+     * @return \Qdiscuss\Core\Models\User
+     */
+    protected function create(JsonApiRequest $request, JsonApiResponse $response)
+    {
+        return $this->bus->dispatch(
+            new RegisterUserCommand($request->actor->getUser(), $this->forum, $request->get('data'))
+        );
     }
 }

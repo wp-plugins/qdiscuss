@@ -1,67 +1,78 @@
 <?php namespace Qdiscuss\Api\Actions\Notifications;
 
-use Qdiscuss\Core\Commands\ReadNotificationCommand;
-use Qdiscuss\Core\Repositories\EloquentNotificationRepository as NotificationRepositoryInterface;
+use Qdiscuss\Core\Repositories\NotificationRepositoryInterface;
 use Qdiscuss\Core\Exceptions\PermissionDeniedException;
-use Qdiscuss\Core\Actions\BaseAction;
-use Qdiscuss\Api\Serializers\NotificationSerializer;
+use Qdiscuss\Api\Actions\SerializeCollectionAction;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
 
-class IndexAction extends BaseAction
+class IndexAction extends SerializeCollectionAction
 {
+    /**
+     * @var \Qdiscuss\Core\Repositories\NotificationRepositoryInterface
+     */
+    protected $notifications;
+
+    /**
+     * The name of the serializer class to output results with.
+     *
+     * @var string
+     */
+    public static $serializer = 'Qdiscuss\Api\Serializers\NotificationSerializer';
+
+    /**
+     * The relations that are included by default.
+     *
+     * @var array
+     */
+    public static $include = [
+        'sender' => true,
+        'subject' => true,
+        'subject.discussion' => true
+    ];
+
+    /**
+     * The maximum number of records that can be requested.
+     *
+     * @var integer
+     */
+    public static $limitMax = 50;
+
+    /**
+     * The number of records included by default.
+     *
+     * @var integer
+     */
+    public static $limit = 10;
+
     /**
      * Instantiate the action.
      *
-     * @param  \Qdiscuss\\Search\Discussions\UserSearcher  $searcher
+     * @param \Qdiscuss\Core\Repositories\NotificationRepositoryInterface $notifications
      */
-    public function __construct()
+    public function __construct(NotificationRepositoryInterface $notifications)
     {
-        global $qdiscuss_params, $qdiscuss_actor;
-        $this->actor = $qdiscuss_actor;
-        $this->params = $qdiscuss_params;
-        $this->notifications = new NotificationRepositoryInterface;
+        $this->notifications = $notifications;
     }
 
     /**
-     * Show a user's notifications feed.
+     * Get the notification results, ready to be serialized and assigned to the
+     * document response.
      *
-     * @return \Illuminate\Http\Response
+     * @param \Qdiscuss\Api\JsonApiRequest $request
+     * @param \Qdiscuss\Api\JsonApiResponse $response
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function get()
+    protected function data(JsonApiRequest $request, JsonApiResponse $response)
     {
-        $params = $this->params;
-        $start = $params->start();
-        $count = $params->count(10, 50);
-
-        if (! $this->actor->isAuthenticated()) {
+        if (! $request->actor->isAuthenticated()) {
             throw new PermissionDeniedException;
         }
 
-        $user = $this->actor->getUser();
-
-        $notifications = $this->notifications->findByUser($user->id, $count, $start);
+        $user = $request->actor->getUser();
 
         $user->markNotificationsAsRead()->save();
 
-        $serializer = new NotificationSerializer(['sender', 'subject', 'subject.discussion']);
-        $document = $this->document()->setData($serializer->collection($notifications));
-
-        echo $this->respondWithDocument($document);exit();
-    }
-
-    public function put()
-    {
-            $notificationId = $id;
-            $user = $this->actor->getUser();
-            $params = $this->post_data();
-
-            if ($params->get('notifications.isRead')) {
-                $command = new ReadNotificationCommand($notificationId, $user);
-                $notification = $this->dispatch($command, $params);
-            }
-
-            $serializer = new NotificationSerializer;
-            $document = $this->document()->setData($serializer->resource($notification));
-
-            echo  $this->respondWithDocument($document);exit();
+        return $this->notifications->findByUser($user->id, $request->limit, $request->offset);
     }
 }

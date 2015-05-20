@@ -1,24 +1,29 @@
-<?php namespace Qdiscuss\Actions\Groups;
+<?php namespace Qdiscuss\Api\Actions\Groups;
 
 use Qdiscuss\Core\Models\Group;
-use Qdiscuss\Api\Serializers\GroupSerializer;
-use Qdiscuss\Core\Actions\BaseAction;
+use Qdiscuss\Api\Actions\SerializeCollectionAction;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
 
-class IndexAction extends BaseAction
+class IndexAction extends SerializeCollectionAction
 {
-	public function __construct()
-	{
-		# code...
-	}
+    /**
+     * The name of the serializer class to output results with.
+     *
+     * @var string
+     */
+    public static $serializer = 'Qdiscuss\Api\Serializers\GroupSerializer';
 
-	public function get()
-	{
-	    $groups = Group::get();
-
-	    $serializer = new GroupSerializer;
-	    $this->document->setData($serializer->collection($groups));
-
-	    header("Content-type: application/json");
-	    echo $this->respondWithDocument();exit;
-	}
+    /**
+     * Get the groups, ready to be serialized and assigned to the document
+     * response.
+     *
+     * @param \Qdiscuss\Api\JsonApiRequest $request
+     * @param \Qdiscuss\Api\JsonApiResponse $response
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    protected function data(JsonApiRequest $request, JsonApiResponse $response)
+    {
+        return Group::get();
+    }
 }

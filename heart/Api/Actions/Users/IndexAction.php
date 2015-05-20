@@ -1,73 +1,78 @@
 <?php namespace Qdiscuss\Api\Actions\Users;
 
-use Qdiscuss\Core\Repositories\EloquentUserRepository;
 use Qdiscuss\Core\Search\Users\UserSearchCriteria;
 use Qdiscuss\Core\Search\Users\UserSearcher;
-use Qdiscuss\Core\Actions\BaseAction;
-use Qdiscuss\Api\Serializers\UserSerializer;
+use Qdiscuss\Api\Actions\SerializeCollectionAction;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
 
-class IndexAction extends BaseAction
+class IndexAction extends SerializeCollectionAction
 {
     /**
      * The user searcher.
      *
-     * @var \Qdiscuss\Search\Discussions\UserSearcher
+     * @var \Qdiscuss\Core\Search\Discussions\UserSearcher
      */
     protected $searcher;
 
     /**
      * Instantiate the action.
      *
-     * @param  \Qdiscuss\Search\Discussions\UserSearcher  $searcher
+     * @param  \Qdiscuss\Core\Search\Discussions\UserSearcher  $searcher
      */
-    public function __construct()
+    public function __construct(UserSearcher $searcher)
     {
-        global $qdiscuss_actor, $qdiscuss_params, $qdiscuss_app;
-        $this->actor = $qdiscuss_actor;
-        $this->params = $qdiscuss_params;
-        $this->searcher = new UserSearcher($qdiscuss_app['qdiscuss.discussions.gambits'], new EloquentUserRepository);
+        $this->searcher = $searcher;
     }
 
     /**
-     * Show a list of users.
+     * The name of the serializer class to output results with.
      *
-     * @return \Illuminate\Http\Response
+     * @var string
      */
-    public function get()
+    public static $serializer = 'Qdiscuss\Api\Serializers\UserSerializer';
+
+    /**
+     * The relationships that are available to be included, and which ones are
+     * included by default.
+     *
+     * @var array
+     */
+    public static $include = [
+        'groups' => true
+    ];
+
+    /**
+     * The fields that are available to be sorted by.
+     *
+     * @var array
+     */
+    public static $sortFields = ['username', 'postsCount', 'discussionsCount', 'lastSeenTime', 'joinTime'];
+
+    /**
+     * Get the user results, ready to be serialized and assigned to the
+     * document response.
+     *
+     * @param \Qdiscuss\Api\JsonApiRequest $request
+     * @param \Qdiscuss\Api\JsonApiResponse $response
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    protected function data(JsonApiRequest $request, JsonApiResponse $response)
     {
-        $params = $this->params;
-        $query   = $params->get('q');
-        $start   = $params->start();
-        $include = $params->included(['groups']);
-        $count   = $params->count(20, 50);
-        $sort    = $params->sort(['', 'username', 'posts', 'discussions', 'lastActive', 'created']);
+        $criteria = new UserSearchCriteria(
+            $request->actor->getUser(),
+            $request->get('q'),
+            $request->sort
+        );
 
-        $relations = array_merge(['groups'], $include);
-
-        $criteria = new UserSearchCriteria($this->actor->getUser(), $query, $sort['field'], $sort['order']);
-
-        $results = $this->searcher->search($criteria, $count, $start, $relations);
-
-        $document = $this->document();
+        $results = $this->searcher->search($criteria, $request->limit, $request->offset, $request->include);
 
         if (($total = $results->getTotal()) !== null) {
-            $document->addMeta('total', $total);
+            $response->content->addMeta('total', $total);
         }
 
-        if ($results->areMoreResults()) {
-            $start += $count;
-            $include = implode(',', $include);
-            $sort = $sort['string'];
-            $input = array_filter(compact('query', 'sort', 'start', 'count', 'include'));
-            $moreUrl = $this->buildUrl('users.index', [], $input);
-        } else {
-            $moreUrl = '';
-        }
-        $document->addMeta('moreUrl', $moreUrl);
+        static::addPaginationLinks($response, $request, route('Qdiscuss.api.users.index'), $total ?: $results->areMoreResults());
 
-        $serializer = new UserSerializer($relations);
-        $document->setData($serializer->collection($results->getUsers()));
-
-        echo $this->respondWithDocument($document);exit();
+        return $results->getUsers();
     }
 }

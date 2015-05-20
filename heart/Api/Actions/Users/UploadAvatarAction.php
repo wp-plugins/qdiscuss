@@ -1,39 +1,48 @@
 <?php namespace Qdiscuss\Api\Actions\Users;
 
-use Qdiscuss\Core\Actions\BaseAction;
 use Qdiscuss\Core\Commands\UploadAvatarCommand;
-use Qdiscuss\Api\Serializers\UserSerializer;
-use Qdiscuss\Core\Support\FileUpload;
+use Qdiscuss\Api\Actions\SerializeResourceAction;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
+use Illuminate\Contracts\Bus\Dispatcher;
 
-class UploadAvatarAction extends BaseAction
+class UploadAvatarAction extends SerializeResourceAction
 {
-    public function __construct()
-    {
-            global $qdiscuss_actor;
-            $this->actor = $qdiscuss_actor;
-    }
+	/**
+	 * @var \Illuminate\Contracts\Bus\Dispatcher
+	 */
+	protected $bus;
 
-    public function post($id)
-    {
-        $userId = $id;
-        $file = $_FILES['avatar'];
-        $routeParams = [];
-     
-        $file = new FileUpload($file);
-        
-        $user = $this->dispatch(
-               new UploadAvatarCommand($userId, $file, $this->actor->getUser()),
-               $routeParams
-        );
+	/**
+	 * The name of the serializer class to output results with.
+	 *
+	 * @var string
+	 */
+	public static $serializer = 'Qdiscuss\Api\Serializers\UserSerializer';
 
-        $serializer = new UserSerializer;
-        $document = $this->document()->setData($serializer->resource($user));
+	/**
+	 * Instantiate the action.
+	 *
+	 * @param \Illuminate\Contracts\Bus\Dispatcher $bus
+	 */
+	public function __construct(Dispatcher $bus)
+	{
+		global $qdiscuss_bus;
+		$this->bus = $qdiscuss_bus;
+	}
 
-        echo $this->respondWithDocument($document);exit();
-    }
-
-    public function handle()
-    {
-        
-    }
+	/**
+	 * Upload an avatar for a user, and return the user ready to be serialized
+	 * and assigned to the JsonApi response.
+	 *
+	 * @param \Qdiscuss\Api\JsonApiRequest $request
+	 * @param \Qdiscuss\Api\JsonApiResponse $response
+	 * @return \Qdiscuss\Core\Models\User
+	 */
+	protected function data(JsonApiRequest $request, JsonApiResponse $response)
+	{
+		return $this->bus->dispatch(
+			new UploadAvatarCommand($request->get('id'), $request->get('avatar'), $request->actor->getUser())
+		);
+	}
 }

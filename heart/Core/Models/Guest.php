@@ -2,13 +2,13 @@
 
 class Guest extends User
 {
-    public $id = 0;
+	public $id = 0;
 
-    /**
-     * Return an array containing the 'guests' group model.
-     *
-     * @return \Qdiscuss\Core\Models\Group
-     */
+	/**
+	 * Return an array containing the 'guests' group model.
+	 *
+	 * @return \Qdiscuss\Core\Models\Group
+	 */
 	public function getGroupsAttribute()
 	{
 		if (! isset($this->attributes['groups'])) {
@@ -18,13 +18,14 @@ class Guest extends User
 		return $this->attributes['groups'];
 	}
 
-    /**
-     * Check whether or not the user is a guest.
-     *
-     * @return boolean
-     */
+	/**
+	 * Check whether or not the user is a guest.
+	 *
+	 * @return boolean
+	 */
 	public function guest()
 	{
 		return true;
 	}
+
 }

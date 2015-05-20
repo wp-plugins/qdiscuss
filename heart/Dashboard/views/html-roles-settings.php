@@ -1,5 +1,8 @@
- <div class="wrap">
- 	<h2>QDiscuss Settings--Role Setting</h2>
+<?php include('html-header.php'); ?>
+
+<div class="wrap  qd-wrap">
+
+ 	<h3>Role Setting</h3>
 
  	<p><a href="<?php echo admin_url() . 'admin.php?page=qdiscuss-users';?>">Back</a></p>
  	<form id="qdiscuss-settings-form" name="qdiscuss-settings-form" action="" enctype="multipart/form-data" method="POST">
@@ -14,7 +17,7 @@
 		 		<?php endif;?>
 		 		<?php foreach($qdiscuss_roles as $role) :   ?>
 		 			<?php if($role['id'] == 2 || $role['id'] == 5)  continue; ?>
-		 			<option value ="<?php echo $role['id']; ?>" <?php if($user->groups[0]->id == $role['id']) echo 'selected="selected"'; ?>><?php echo $role['name']; ?></option>
+		 			<option value ="<?php echo $role['id']; ?>" <?php if($user->groups[0]->id == $role['id']) echo 'selected="selected"'; ?>><?php echo $role['name_singular']; ?></option>
 		 		<?php endforeach;  ?>   			
 		 	</select>
 		</p>
@@ -22,5 +25,5 @@
 	 	<p class="clear"></p>
 	 	<p class="submit"><input class="button button-primary" type="submit" value="Save" ></input></p>
 	</form>
-
 </div>
+

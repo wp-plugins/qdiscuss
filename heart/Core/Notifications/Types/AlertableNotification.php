@@ -2,7 +2,7 @@
 
 interface AlertableNotification
 {
-    public function getAlertData();
+	public function getAlertData();	
+	public static function getType();
 
-    public static function getType();
 }

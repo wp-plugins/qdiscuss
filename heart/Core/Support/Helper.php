@@ -5,6 +5,25 @@ use Qdiscuss\Core\Models\Guest;
 
 trait Helper
 {
+
+	/**
+	 *  Recompile the css and js file
+	 *  
+	 * @return  void
+	 */
+	public static function recompile()
+	{
+		// need add generate proccess
+		$version = file_get_contents(base_path() . 'public/web/forum');
+		@unlink(base_path() . 'public/web/forum-' . $version . '.js');
+		@unlink(base_path() . 'public/web/forum-' . $version . '.css');
+	}
+
+	public static function post_data()
+	{
+		return json_decode(file_get_contents("php://input"), true);
+	}
+
 	public  static function validate_email($email)
 	{
 		$v = "/[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9\-]+.[a-zA-Z]+/";
@@ -17,6 +36,24 @@ trait Helper
 		$v = "/^[a-zA-Z\-]+[a-zA-Z]+$/";
 		return (bool)preg_match($v, $endpoint) && (strlen($endpoint) <= 10);
 
+	}
+
+	public static function validate_color($color)
+	{
+		$v = "/#([a-fA-F0-9]{3}){1,2}\b/";
+		return (bool) preg_match($v, $color); 
+	}
+
+	public static function validate_number($num)
+	{
+		$v = "/^\d+$/";
+		return (bool) preg_match($v, $num); 
+	}
+
+	public static function validate_word($word)
+	{
+		$v = "/^[A-Za-z]+$/";
+		return (bool) preg_match($v, $word); 
 	}
 
 	public static function current_user()
@@ -115,6 +152,18 @@ trait Helper
 		$member->save();
 
 		return $member;
+	}
+
+	public static function runSql($sql_path)
+	{
+		global $wpdb, $qdiscuss_config;
+		$prefix = $wpdb->prefix . $qdiscuss_config['database']['qd_prefix'];
+		 	
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+		$sql = file_get_contents($sql_path);
+	 	$new_sql = preg_replace("/_qdiscuss_prefix_/", $prefix, $sql);
+	 	dbDelta($new_sql);
 	}
 
 	/**

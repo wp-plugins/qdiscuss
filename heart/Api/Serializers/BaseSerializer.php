@@ -7,93 +7,106 @@ use Qdiscuss\Core\Support\Actor;
 use Closure;
 
 /**
- * A base serializer to call Flarum events at common serialization points.
+ * A base serializer to call Qdiscuss events at common serialization points.
  */
 abstract class BaseSerializer extends SerializerAbstract
 {
-    /**
-     * The actor who is requesting the serialized objects.
-     *
-     * @var \Flarum\Support\Actor
-     */
-    protected static $actor;
+	public $actor;
 
-    /**
-     * Set the actor who is requesting the serialized objects.
-     *
-     * @param  \Flarum\Support\Actor  $actor
-     * @return void
-     */
-    public static function setActor(Actor $actor)
-    {
-        static::$actor = $actor;
-    }
+	/**
+	 * The custom relationships on this serializer.
+	 *
+	 * @var array
+	 */
+	protected static $relationships = [];
 
-    /**
-     * Fire an event to allow custom serialization of attributes.
-     *
-     * @param  mixed $model The model to serialize.
-     * @param  array $attributes Attributes that have already been serialized.
-     * @return array
-     */
-    protected function extendAttributes($model, &$attributes = [])
-    {
-        event(new SerializeAttributes($this, $model, $attributes));
+	public function __construct($actor, $include = null, $link = null)
+	{
+		parent::__construct($include, $link);
+		global $qdisuss_actor;
+		$this->actor = $qdiscuss_actor;
+	}
 
-        return $attributes;
-    }
+	/**
+	 * Fire an event to allow custom serialization of attributes.
+	 *
+	 * @param  mixed $model The model to serialize.
+	 * @param  array $attributes Attributes that have already been serialized.
+	 * @return array
+	 */
+	protected function extendAttributes($model, &$attributes = [])
+	{
+		event(new SerializeAttributes($this, $model, $attributes));
 
-    protected function relationship($serializer, Closure $callback = null, $many = false)
-    {
-        // Get the relationship name from the stack trace.
-        if (is_null($callback)) {
-            list(, , $caller) = debug_backtrace(false, 3);
-            $relation = $caller['function'];
-        }
+		return $attributes;
+	}
 
-        return function ($model, $include, $links) use ($serializer, $callback, $many, $relation) {
-            if ($callback) {
-                $data = $callback($model, $include);
-            } else {
-                if ($include) {
-                    $data = $model->$relation;
-                } elseif ($many) {
-                    $relationIds = $relation.'_ids';
-                    $data = $model->$relationIds ?: $model->$relation()->get(['id'])->fetch('id')->all();
-                } else {
-                    $relationId = $relation.'_id';
-                    $data = $model->$relationId;
-                }
-            }
+	protected function relationship($serializer, $relation = null, $many = false)
+	{
+		// Get the relationship name from the stack trace.
+		if (is_null($relation)) {
+			list(, , $caller) = debug_backtrace(false, 3);
+			$relation = $caller['function'];
+		}
 
-            if (is_array($serializer)) {
-                $class = get_class(is_object($data) ? $data : $model->$relation()->getRelated());
-                $serializer = $serializer[$class];
-            }
-            $serializer = new $serializer($links);
-            return $many ? $serializer->collection($data) : $serializer->resource($data);
-        };
-    }
+		return function ($model, $include, $links) use ($serializer, $many, $relation) {
+			if ($relation instanceof Closure) {
+				$data = $relation($model, $include);
+			} else {
+				if ($include) {
+					$data = !is_null($model->$relation) ? $model->$relation : ($many ? $model->$relation()->get() : $model->$relation()->first());
+				} elseif ($many) {
+					$relationIds = $relation.'_ids';
+					$data = $model->$relationIds ?: $model->$relation()->get(['id'])->fetch('id')->all();
+				} else {
+					$relationId = $relation.'_id';
+					$data = $model->$relationId;
+				}
+			}
 
-    public function hasOne($serializer, Closure $callback = null)
-    {
-        return $this->relationship($serializer, $callback);
-    }
+			if (is_array($serializer)) {
+				$class = get_class(is_object($data) ? $data : $model->$relation()->getRelated());
+				$serializer = $serializer[$class];
+			}
+			$serializer = new $serializer($this->actor, $links);
+			return $many ? $serializer->collection($data) : $serializer->resource($data);
+		};
+	}
 
-    public function hasMany($serializer, Closure $callback = null)
-    {
-        return $this->relationship($serializer, $callback, true);
-    }
+	public function hasOne($serializer, $relation = null)
+	{
+		return $this->relationship($serializer, $relation);
+	}
 
-    /**
-     * Fire an event to allow for custom links and includes.
-     *
-     * @param string $name
-     * @param array $arguments
-     * @return void
-     */
-    public function __call($name, $arguments)
-    {
-            return event(new SerializeRelationship($this, $name), null, true);
-    }
+	public function hasMany($serializer, $relation = null)
+	{
+		return $this->relationship($serializer, $relation, true);
+	}
+
+	/**
+	 * Add a custom relationship to the serializer.
+	 *
+	 * @param string $name The name of the relationship.
+	 * @param Closure $callback The callback to execute.
+	 * @return void
+	 */
+	public static function addRelationship($name, $callback)
+	{
+		static::$relationships[$name] = $callback;
+	}
+
+	/**
+	 * Check for and execute custom relationships.
+	 *
+	 * @param string $name
+	 * @param array $arguments
+	 * @return mixed
+	 */
+	public function __call($name, $arguments)
+	{
+		if (isset(static::$relationships[$name])) {
+			array_unshift($arguments, $this);
+			return call_user_func_array(static::$relationships[$name], $arguments);
+		}
+	}
 }

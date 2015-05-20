@@ -1,59 +1,67 @@
 <?php namespace Qdiscuss\Core\Notifications;
 
 use Qdiscuss\Core\Notifications\Types\Notification;
+use Qdiscuss\Core\Notifications\Senders\RetractableSender;
 use Qdiscuss\Core\Models\Notification as NotificationModel;
 use Qdiscuss\Core\Models\User;
 use Illuminate\Container\Container;
 
 class Notifier
 {
-    protected $methods = [];
+	protected $methods = [];
 
-    protected $types = [];
+	protected $types = [];
 
-    protected $container;
+	protected $container;
 
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
+	public function __construct(Container $container)
+	{
+		$this->container = $container;
+	}
 
-    public function send(Notification $notification)
-    {
-        foreach ($this->methods as $method => $sender) {
-            $sender = $this->container->make($sender);
-            if ($notification->getRecipient()->shouldNotify($notification::getType(), $method) && $sender->compatibleWith($notification)) {
-                $sender->send($notification);
-            }
-        }
-    }
+	public function send(Notification $notification, array $users)
+	{
+		foreach ($this->methods as $method => $sender) {
+			$sender = $this->container->make($sender);
 
-    public function registerMethod($name, $class)
-    {
-        $this->methods[$name] = $class;
-    }
+			if ($sender::compatibleWith($notification)) {
+				foreach ($users as $user) {
+					if ($user->shouldNotify($notification::getType(), $method)) {
+						$sender->send($notification, $user);
+					}
+				}
+			}
+		}
+	}
 
-    public function registerType($class, $defaultPreferences = [])
-    {
-        $this->types[] = $class;
+	public function retract(Notification $notification)
+	{
+		foreach ($this->methods as $method => $sender) {
+			$sender = $this->container->make($sender);
 
-        NotificationModel::registerType($class);
+			if ($sender instanceof RetractableSender && $sender::compatibleWith($notification)) {
+				$sender->retract($notification);
+			}
+		}
+	}
 
-        foreach ($this->methods as $method => $sender) {
-            $sender = $this->container->make($sender);
-            if ($sender->compatibleWith($class)) {
-                User::registerPreference(User::notificationPreferenceKey($class::getType(), $method), 'boolval', array_get($defaultPreferences, $method, false));
-            }
-        }
-    }
+	public function registerMethod($name, $class)
+	{
+		$this->methods[$name] = $class;
+	}
 
-    public function getMethods()
-    {
-        return $this->methods;
-    }
+	public function registerType($class)
+	{
+		$this->types[] = $class;
+	}
 
-    public function getTypes()
-    {
-        return $this->types;
-    }
+	public function getMethods()
+	{
+		return $this->methods;
+	}
+
+	public function getTypes()
+	{
+		return $this->types;
+	}
 }

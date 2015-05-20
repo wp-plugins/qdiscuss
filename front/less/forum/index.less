@@ -1,0 +1,333 @@
+// ------------------------------------
+// Sidebar
+
+@media @desktop, @desktop-hd {
+  .index-nav {
+    & .new-discussion {
+      display: block;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+// ------------------------------------
+// Results
+
+.index-toolbar {
+  margin-bottom: 15px;
+}
+.index-toolbar-view {
+  display: inline-block;
+
+  & .control-show {
+    margin-right: 10px;
+  }
+}
+.index-toolbar-action {
+  float: right;
+}
+.index-results .loading-indicator {
+  height: 46px;
+}
+
+@media @phone, @tablet {
+  .offset-content {
+    margin-top: 15px;
+  }
+}
+
+@media @desktop, @desktop-hd {
+  .offset-content {
+    margin-top: 30px;
+    margin-left: 225px;
+  }
+}
+
+// ------------------------------------
+// Discussions Pane
+
+@media @phone {
+  .index-area.paned {
+    display: none;
+  }
+}
+
+@media @tablet, @desktop, @desktop-hd {
+  .index-area {
+    left: -@index-pane-width;
+    width: 100%;
+
+    &.paned {
+      position: fixed;
+      z-index: @zindex-pane;
+      overflow: auto;
+      top: @header-height;
+      bottom: 0;
+      width: @index-pane-width;
+      background: @fl-body-bg;
+      padding-bottom: 200px;
+      border-top: 1px solid @fl-body-control-bg;
+      .box-shadow(2px 2px 6px -2px @fl-shadow-color);
+      .transition(left 0.2s);
+
+      .pane-showing & {
+        left: 0;
+      }
+      & .container {
+        width: auto;
+        margin: 0;
+        padding: 0 !important;
+      }
+      & .index-results {
+        margin: 0;
+      }
+      & .hero, & .index-nav, & .index-toolbar {
+        display: none;
+      }
+      & .discussions-list > li {
+        margin: 0;
+        padding-left: 57px + 15px;
+        padding-right: 65px + 15px;
+        &.active {
+          background: @fl-body-control-bg;
+        }
+      }
+      & .discussion-summary {
+        & .title {
+          font-size: 14px;
+        }
+        & .count strong {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+}
+
+@media @desktop-hd {
+  .index-area.paned {
+    .pane-pinned & {
+      left: 0;
+      z-index: @zindex-composer - 1;
+      .transition(none);
+    }
+  }
+  // When the pane is pinned, move the other page content inwards
+  .global-content, .global-footer {
+    .has-pane.pane-pinned & {
+      margin-left: @index-pane-width;
+      & .container {
+        max-width: 100%;
+        padding: 0 30px;
+      }
+    }
+  }
+  .global-header .container {
+    .has-pane.pane-pinned & {
+      width: 100%;
+    }
+  }
+}
+
+// ------------------------------------
+// Discussions List
+
+.discussions-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  position: relative;
+}
+
+@media @phone {
+  .discussions-list > li {
+    padding-right: 45px;
+
+    & .contextual-controls {
+      display: none;
+    }
+  }
+}
+
+@media @tablet, @desktop, @desktop-hd {
+  .discussions-list {
+    & > li {
+      margin-right: -25px;
+      padding-right: 65px + 25px;
+    }
+  }
+}
+
+.discussion-summary {
+  position: relative;
+
+  &, & .main {
+    color: @fl-body-muted-color;
+    text-decoration: none;
+  }
+  & .contextual-controls {
+    visibility: hidden;
+    position: absolute;
+    right: 0;
+    top: 13px;
+  }
+  &:hover .contextual-controls, & .contextual-controls.open {
+    visibility: visible;
+  }
+  & .author {
+    float: left;
+    margin-top: 18px;
+  }
+  & .tooltip .tooltip-inner {
+    max-width: none;
+  }
+  & .badges {
+    float: left;
+    margin-top: 13px;
+    text-align: right;
+    white-space: nowrap;
+    pointer-events: none;
+
+    & .badge {
+      margin-left: -15px;
+      position: relative;
+      pointer-events: auto;
+    }
+  }
+  & .main {
+    display: inline-block;
+    width: 100%;
+    padding: 15px 0;
+  }
+  &:hover .title {
+    text-decoration: underline;
+  }
+  & .title {
+    margin: 0 0 7px;
+    line-height: 1.3;
+    color: @fl-secondary-color;
+  }
+  &.unread .title {
+    color: @fl-body-heading-color;
+    font-weight: bold;
+  }
+  & .info {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+
+    & > li {
+      display: inline;
+    }
+  }
+  & .username {
+    font-weight: bold;
+  }
+  & .count {
+    float: right;
+    margin-top: 13px;
+    text-decoration: none;
+
+    .unread& {
+      cursor: pointer;
+    }
+  }
+}
+.load-more {
+  text-align: center;
+  margin-top: 10px;
+}
+
+@media @phone {
+  .discussion-summary {
+    padding-left: 45px;
+    padding-right: 45px;
+
+    & .author {
+      margin-left: -45px;
+    }
+    & .badges {
+      margin-left: -45px;
+      width: 38px;
+
+      & .badge {
+        .badge-size(20px);
+        margin-left: -13px;
+      }
+    }
+    & .avatar {
+      .avatar-size(32px);
+    }
+    & .main {
+      margin-right: -45px;
+    }
+    & .title {
+      font-size: 14px;
+    }
+    & .count {
+      margin-right: -45px;
+      background: @fl-body-control-bg;
+      color: @fl-body-control-color;
+      border-radius: @border-radius-base;
+      font-size: 12px;
+      padding: 1px 6px;
+
+      .unread& {
+        background: @fl-body-primary-color;
+        color: #fff;
+        font-weight: bold;
+      }
+
+      & .label {
+        display: none;
+      }
+    }
+  }
+}
+
+@media @tablet, @desktop, @desktop-hd {
+  .discussion-summary {
+    padding-left: 57px;
+    padding-right: 65px;
+
+    & .author {
+      margin-left: -57px;
+    }
+    & .badges {
+      margin-left: -57px;
+      width: 48px;
+    }
+    & .avatar {
+      .avatar-size(40px);
+    }
+    & .main {
+      margin-right: -65px;
+    }
+    & .title {
+      font-size: 15px;
+    }
+    & .count {
+      margin-right: -65px;
+      width: 60px;
+      text-align: center;
+      text-transform: uppercase;
+      color: @fl-body-muted-color;
+      font-size: 20px;
+      font-weight: 300;
+
+      & .label {
+        font-size: 11px;
+        display: block;
+        font-weight: normal;
+      }
+      .unread& {
+        color: @fl-body-heading-color;
+        font-weight: bold;
+      }
+    }
+  }
+}

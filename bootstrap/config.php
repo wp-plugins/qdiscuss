@@ -1,5 +1,16 @@
 <?php
-	$filesystem = require_once __DIR__ . "/../config/filesystems.php";
-	$database =  require_once __DIR__. "/../config/database.php";
+global $wpdb, $qdiscuss_config;
 
-	return array_merge($filesystem, $database);
+return $qdiscuss_config = array(
+	"database" => array(
+		'qd_prefix' => 'qd_',
+		'driver'         => 'mysql',
+		'host'           => DB_HOST,
+		'database'    => DB_NAME,
+		'username'  => DB_USER,
+		'password'   => DB_PASSWORD,
+		'charset'      => DB_CHARSET,
+		//'collation'    => 'utf8_unicode_ci',
+		'prefix'        => $wpdb->prefix .  'qd_',
+	),
+);

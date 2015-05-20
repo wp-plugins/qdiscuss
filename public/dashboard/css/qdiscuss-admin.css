@@ -1,36 +1,77 @@
 * {
-    margin:0;
-    padding:0;
+	margin:0;
+	padding:0;
 }
 .box {
-    float: left;
-    width: 150px;
-    height: 180px;
-    text-align: center;
-    margin-left: 20px;
-    border: 5px solid #999;
+	float: left;
+	width: 150px;
+	height: 180px;
+	text-align: center;
+	margin-left: 20px;
+	border: 5px solid #999;
 }
 .slot {
-    position:relative;
-    width: 120px;
-    height: 15px;
-    margin-top: 2px;
-    margin: 0 auto;
-    border: 1px dotted;
+	position:relative;
+	width: 120px;
+	height: 15px;
+	margin-top: 2px;
+	margin: 0 auto;
+	border: 1px dotted;
 }
 .item {
-    width: 110px;
-    height: 14px;
-    margin: 0 auto;
-    z-index:1;
-    background-color: #CCC;
+	width: 110px;
+	height: 14px;
+	margin: 0 auto;
+	z-index:1;
+	background-color: #CCC;
 }
 .ui-selecting {
-    background: #FECA40;
+	background: #FECA40;
 }
 .ui-selected {
-    background-color: #F90;
+	background-color: #F90;
 }
 .green3 {
-    background-color: #D9FFE2;
+	background-color: #D9FFE2;
+}
+.users-wrap {
+	margin-top: 5em;
+}
+.qd-wrap{
+	/*position:absolute;*/
+	margin-top:2em;
+}
+ul.subsubsub.qd-header{
+	float: none;
+	margin-top:35px;
+}
+.qd-header > li{
+	font-size:1.5em;
+}
+.qd-header > li:hover{
+	font-size:1.5em;
+}
+
+.qd-header > li > a {
+	color: #666;
+	padding: 0 1.5em;
+}
+.qd-header > li > a:hover {
+	color: #0074a2;
+}
+.qd-footer{
+}
+.qd-header > li.qd-active{
+	background: #000;
+}
+
+.qd-header > li.qd-active > a {
+	color: #fff;
+}
+
+table.background-white{
+	background-color: inherit;
+}
+.qd-fixed{
+	/*position:fixed;*/
 }

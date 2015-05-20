@@ -14,9 +14,8 @@ class StartDiscussionCommandHandler
 
     public function __construct(Dispatcher $bus)
     {
-        global $qdiscuss_bus;//neychang add
-        // $this->bus = $bus;// neycang comment
-        $this->bus =  $qdiscuss_bus; //neychang add
+        global $qdiscuss_bus;
+        $this->bus =  $qdiscuss_bus; 
     }
 
     public function handle($command)
@@ -28,7 +27,7 @@ class StartDiscussionCommandHandler
         // an opportunity to alter the discussion entity based on data in the
         // command they may have passed through in the controller.
         $discussion = Discussion::start(
-            $command->title,
+            array_get($command->data, 'title'),
             $command->user
         );
 
@@ -43,13 +42,11 @@ class StartDiscussionCommandHandler
         // will trigger a domain event that is slightly semantically incorrect
         // in this situation (PostWasPosted), we may need to reconsider someday.
         $post = $this->bus->dispatch(
-            new PostReplyCommand($discussion->id, $command->content, $command->user)
+            new PostReplyCommand($discussion->id, $command->user, $command->data)
         );
 
         // The discussion may have been updated by the PostReplyCommand; we need
         // to refresh its data.
-        $discussion = $post->discussion;
-
-        return $discussion;
+        return $post->discussion;
     }
 }

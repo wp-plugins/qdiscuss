@@ -7,10 +7,11 @@ class Install {
 	 */
 	public static function check_version() 
 	{
-		
-		if ( ( get_option( 'qdiscuss_version' ) != QDISCUSS_VERSION || get_option( 'qdiscuss_db_version' ) != QDISCUSS_VERSION ) ) {
-			self::install();
-			do_action( 'qdiscuss_updated' );
+		if(get_option( 'qdiscuss_version' )) {
+			if ( ( get_option( 'qdiscuss_version' ) != QDISCUSS_VERSION || get_option( 'qdiscuss_db_version' ) != QDISCUSS_VERSION ) ) {
+				self::install();
+				do_action( 'qdiscuss_updated' );
+			}
 		}
 	}
 
@@ -71,7 +72,8 @@ class Install {
 	{
 		$current_db_version = get_option( 'qdiscuss_db_version' );
 		$db_updates         = array(
-			'0.0.3' => 'updates/qdiscuss-update-0.0.3.php',			
+			'0.0.3' => 'updates/qdiscuss-update-0.0.3.php',	
+			'0.0.6' => 'updates/qdiscuss-update-0.0.6.php',		
 		);
 
 		foreach ( $db_updates as $version => $updater ) {

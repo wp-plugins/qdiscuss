@@ -1,86 +1,59 @@
 <?php namespace Qdiscuss\Api\Actions\Posts;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Qdiscuss\Core\Repositories\EloquentPostRepository as PostRepositoryInterface;
-use Qdiscuss\Core\Commands\EditPostCommand;
-use Qdiscuss\Core\Commands\DeletePostCommand;
-use Qdiscuss\Core\Actions\BaseAction;
-use Qdiscuss\Api\Serializers\PostSerializer;
+use Qdiscuss\Core\Repositories\PostRepositoryInterface;
+use Qdiscuss\Api\Actions\SerializeResourceAction;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
 
-class ShowAction extends BaseAction
+class ShowAction extends SerializeResourceAction
 {
-    protected $posts;
+	/**
+	 * @var \Qdiscuss\Core\Repositories\PostRepositoryInterface
+	 */
+	protected $posts;
 
-    public function __construct()
-    {
-        global $qdiscuss_actor;
-        $this->actor = $qdiscuss_actor;
-        $this->posts = new PostRepositoryInterface;
-    }
+	/**
+	 * The name of the serializer class to output results with.
+	 *
+	 * @var string
+	 */
+	public static $serializer = 'Qdiscuss\Api\Serializers\PostSerializer';
 
-    /**
-     * Show a single post by ID.
-     *
-     * @param  int $id post'id
-     * @return Response
-     */
-    public function get($id)
-    {
-         echo $this->process($id);exit;
-    }
+	/**
+	 * The relationships that are available to be included, and which ones are
+	 * included by default.
+	 *
+	 * @var array
+	 */
+	public static $include = [
+		'user' => true,
+		'user.groups' => true,
+		'editUser' => true,
+		'hideUser' => true,
+		'discussion' => false
+	];
 
-    /**
-     * Show a single post by ID.
-     *
-     * @param  int $id post'id
-     * @return Response
-     */
-    public function put($id)
-    {
-        $postId = $id;
-        $params = $this->post_data();
+	/**
+	 * Instantiate the action.
+	 *
+	 * @param \Qdiscuss\Core\Repositories\PostRepositoryInterface $posts
+	 */
+	public function __construct(PostRepositoryInterface $posts)
+	{
+		$this->posts = $posts;
+	}
 
-        $command = new EditPostCommand($postId, $this->actor->getUser());
-        $this->hydrate($command, $params->get('data'));
-        $post = $this->dispatch($command, $params);
-
-        $serializer = new PostSerializer;
-        $document = $this->document()->setData($serializer->resource($post));
-
-        echo $this->respondWithDocument($document);exit();
-        
-    }
-        
-        /**
-         * Delete a post.
-         *
-         * @param   int $id post's id
-         * @return   json
-         */
-        public function delete($id)
-        {
-            $postId = $id;
-           
-            $command = new DeletePostCommand($postId, $this->actor->getUser());
-            $this->dispatch($command, []);
-
-            echo $this->respondWithoutContent();exit();
-       
-     }
-
-    protected function process($id)
-    {
-        $params = $this->post_data();
-
-        $posts = $this->posts->findOrFail($id, $this->actor->getUser());
-
-        $include = $params->included(['discussion', 'replyTo']);
-        $relations = array_merge(['user', 'editUser', 'hideUser'], $include);
-        $posts->load($relations);
-
-        $serializer = new PostSerializer($relations);
-        $document = $this->document()->setData($serializer->resource($posts->first()));
-
-        return $this->respondWithDocument($document);
-    }
+	/**
+	 * Get a single post, ready to be serialized and assigned to the JsonApi
+	 * response.
+	 *
+	 * @param \Qdiscuss\Api\JsonApiRequest $request
+	 * @param \Qdiscuss\Api\JsonApiResponse $response
+	 * @return \Qdiscuss\Core\Models\Discussion
+	 */
+	protected function data(JsonApiRequest $request, JsonApiResponse $response)
+	{
+		return $this->posts->findOrFail($request->get('id'), $request->actor->getUser());
+	}
 }

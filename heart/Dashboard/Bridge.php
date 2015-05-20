@@ -48,7 +48,10 @@ class Bridge {
 	public static function activate()
 	{
 		self::create_tables();
-	} 
+		add_option( 'qdiscuss_db_version', QDISCUSS_VERSION );
+		add_option( 'qdiscuss_version', QDISCUSS_VERSION );
+		self::create_cache_dir();
+	}
 
 	/**
 	 * Deactivate the plugin
@@ -68,6 +71,8 @@ class Bridge {
 	public static function uninstall()
 	{
 		self::drop_tables();
+		delete_option( 'qdiscuss_db_version' );
+		delete_option( 'qdiscuss_version' );
 	}
 
 	/**
@@ -152,11 +157,24 @@ class Bridge {
 	 */
 	public static function seed_groups()
 	{
+		Group::unguard();
 		Group::truncate();
-		$groups = array('Administrator', 'Guest', 'Member', 'Moderator', 'Staff');
-		        foreach ($groups as $group) {
-		            Group::create(array('name' => $group));
-		        }
+		
+		$groups = [
+		            ['Admin', 'Admins', '#B72A2A', 'wrench'],
+		            ['Guest', 'Guests', null, null],
+		            ['Member', 'Members', null, null],
+		            ['Mod', 'Mods', '#80349E', 'bolt']
+		];
+		
+		foreach ($groups as $group) {
+			Group::create([
+		              	'name_singular' => $group[0],
+		                	'name_plural' => $group[1],
+		              	'color' => $group[2],
+		              	'icon' => $group[3]
+		            	]);
+		}
 	}
 
 	/**
@@ -168,28 +186,24 @@ class Bridge {
 	{
 		Permission::truncate();
 		
-		$permissions = array(
-		            // Guests can view the forum
-		            array('group.2' , 'forum'          , 'view'),
-		            array('group.2' , 'forum'          , 'register'),
-		            // Members can create and reply to discussions + edit their own stuff
-		            array('group.3' , 'forum'          , 'startDiscussion'),
-		            array('group.3' , 'discussion'     , 'editOwn'),
-		            array('group.3' , 'discussion'     , 'reply'),
-		            array('group.3' , 'post'           , 'editOwn'),
-		            // Moderators can edit + delete stuff and suspend users
-		            array('group.4' , 'discussion'     , 'delete'),
-		            array('group.4' , 'discussion'     , 'edit'),
-		            array('group.4' , 'post'           , 'delete'),
-		            array('group.4' , 'post'           , 'edit'),
-		            array('group.4' , 'user'           , 'suspend'),
-		);
+		$permissions = [
+		           // Guests can view the forum
+		           [2, 'forum.view'],
+		           // Members can create and reply to discussions + edit their own stuff
+		           [3, 'forum.startDiscussion'],
+		           [3, 'discussion.reply'],
+		           // Moderators can edit + delete stuff and suspend users
+		           [4, 'discussion.delete'],
+		           [4, 'discussion.rename'],
+		           [4, 'post.delete'],
+		           [4, 'post.edit'],
+		           [4, 'user.suspend'],
+		];
 
 		foreach ($permissions as &$permission) {
 			$permission = array(
-				'grantee'    => $permission[0],
-				'entity'     => $permission[1],
-				'permission' => $permission[2],
+				'group_id'    => $permission[0],
+				'permission' => $permission[1],
 			);
 		}
 
@@ -210,6 +224,7 @@ class Bridge {
 			array("key" => "forum_welcome_title", "value" => "Welcome to QDiscuss"),
 			array("key" => "forum_description", "value" => "An Amazing Forum Plugin Base On WordPress By <a href='http://colorvila.com'>ColorVila</a>"),
 			array("key" => "forum_endpoint", "value" => "qdiscuss"),
+			array("key" => "extensions_enabled", "value" => ''),
 		);
 	
 		Setting::insert($settings);
@@ -244,6 +259,13 @@ class Bridge {
 		}
 
 		$member->save();
+	}
+
+	public static function create_cache_dir()
+	{
+		if(!file_exists(qd_storage_path())){
+			mkdir(qd_storage_path(), 0777, true);
+		}
 	}
 
 	/**

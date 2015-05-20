@@ -4,6 +4,7 @@ use Qdiscuss\Core\Events\DiscussionWasRenamed;
 use Qdiscuss\Core\Models\DiscussionRenamedPost;
 use Qdiscuss\Core\Notifications\Types\DiscussionRenamedNotification;
 use Qdiscuss\Core\Notifications\Notifier;
+use Illuminate\Contracts\Events\Dispatcher;
 
 class DiscussionRenamedNotifier
 {
@@ -15,10 +16,9 @@ class DiscussionRenamedNotifier
     /**
      * Register the listeners for the subscriber.
      *
-     * @param  Illuminate\Events\Dispatcher  $events
-     * @return array
+     *  @param \Illuminate\Contracts\Events\Dispatcher $events
      */
-    public function subscribe($events)
+    public function subscribe(Dispatcher $events)
     {
         $events->listen('Qdiscuss\Events\DiscussionWasRenamed', __CLASS__.'@whenDiscussionWasRenamed');
     }
@@ -27,36 +27,26 @@ class DiscussionRenamedNotifier
     {
         $post = $this->createPost($event);
 
-        $event->discussion->postWasAdded($post);
+        $post = $event->discussion->addPost($post);
 
         if ($event->discussion->start_user_id !== $event->user->id) {
-            $this->sendNotification($event, $post);
+           $notification = new DiscussionRenamedNotification($event->discussion, $post->user, $post);
+        if ($post->exists) {
+              $this->notifier->send($notification, [$post->discussion->startUser]);
+        } else {
+              $this->notifier->retract($notification);
         }
     }
+ }
 
     protected function createPost(DiscussionWasRenamed $event)
     {
-        $post = DiscussionRenamedPost::reply(
+        return DiscussionRenamedPost::reply(
             $event->discussion->id,
             $event->user->id,
             $event->oldTitle,
             $event->discussion->title
         );
 
-        $post->save();
-
-        return $post;
-    }
-
-    protected function sendNotification(DiscussionWasRenamed $event, DiscussionRenamedPost $post)
-    {
-        $notification = new DiscussionRenamedNotification(
-            $event->discussion->startUser,
-            $event->user,
-            $post,
-            $event->oldTitle
-        );
-
-        $this->notifier->send($notification);
     }
 }

@@ -2,60 +2,64 @@
 
 class DiscussionBasicSerializer extends BaseSerializer
 {
-    /**
-     * The resource type.
-     *
-     * @var string
-     */
-    protected $type = 'discussions';
+	/**
+	 * The resource type.
+	 *
+	 * @var string
+	 */
+	protected $type = 'discussions';
 
-    /**
-     * Serialize attributes of a Discussion model for JSON output.
-     *
-     * @param Discussion $discussion The Discussion model to serialize.
-     * @return array
-     */
-    protected function attributes($discussion)
-    {
-        $attributes = [
-            'title' => $discussion->title
-        ];
+	/**
+	 * Serialize attributes of a Discussion model for JSON output.
+	 *
+	 * @param Discussion $discussion The Discussion model to serialize.
+	 * @return array
+	 */
+	protected function attributes($discussion)
+	{
+		$attributes = [
+			'title' => $discussion->title
+		];
 
-        return $this->extendAttributes($discussion, $attributes);
-    }
+		if (count($discussion->removedPosts)) {
+			$attributes['removedPosts'] = $discussion->removedPosts;
+		}
 
-    public function startUser()
-    {
-        return $this->hasOne('Qdiscuss\Api\Serializers\UserBasicSerializer');
-    }
+		return $this->extendAttributes($discussion, $attributes);
+	}
 
-    public function startPost()
-    {
-        return $this->hasOne('Qdiscuss\Api\Serializers\PostBasicSerializer');
-    }
+	public function startUser()
+	{
+		return $this->hasOne('Qdiscuss\Api\Serializers\UserBasicSerializer');
+	}
 
-    public function lastUser()
-    {
-        return $this->hasOne('Qdiscuss\Api\Serializers\UserBasicSerializer');
-    }
+	public function startPost()
+	{
+		return $this->hasOne('Qdiscuss\Api\Serializers\PostBasicSerializer');
+	}
 
-    public function lastPost()
-    {
-        return $this->hasOne('Qdiscuss\Api\Serializers\PostBasicSerializer');
-    }
+	public function lastUser()
+	{
+		return $this->hasOne('Qdiscuss\Api\Serializers\UserBasicSerializer');
+	}
 
-    public function posts()
-    {
-        return $this->hasMany('Qdiscuss\Api\Serializers\PostSerializer');
-    }
+	public function lastPost()
+	{
+		return $this->hasOne('Qdiscuss\Api\Serializers\PostBasicSerializer');
+	}
 
-    public function relevantPosts()
-    {
-        return $this->hasMany('Qdiscuss\Api\Serializers\PostBasicSerializer');
-    }
+	public function posts()
+	{
+		return $this->hasMany('Qdiscuss\Api\Serializers\PostSerializer');
+	}
 
-    public function addedPosts()
-    {
-        return $this->hasMany('Qdiscuss\Api\Serializers\PostSerializer');
-    }
+	public function relevantPosts()
+	{
+		return $this->hasMany('Qdiscuss\Api\Serializers\PostBasicSerializer');
+	}
+
+	public function addedPosts()
+	{
+		return $this->hasMany('Qdiscuss\Api\Serializers\PostSerializer');
+	}
 }

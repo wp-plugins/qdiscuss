@@ -48,6 +48,11 @@ class UploadAvatarCommandHandler
             'target' => $this->uploadDir,
         ]);
 
+
+       if ($user->avatar_path && $mount->has($file = "target://$user->avatar_path")) {
+            $mount->delete($file);
+        }
+
         $user->changeAvatarPath($uploadName);
 
         event(new AvatarWillBeUploaded($user, $command));

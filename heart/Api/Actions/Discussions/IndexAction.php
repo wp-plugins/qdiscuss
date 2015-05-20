@@ -2,89 +2,84 @@
 
 use Qdiscuss\Core\Search\Discussions\DiscussionSearchCriteria;
 use Qdiscuss\Core\Search\Discussions\DiscussionSearcher;
-use Qdiscuss\Core\Repositories\EloquentDiscussionRepository;
-use Qdiscuss\Core\Repositories\EloquentPostRepository;
-use Qdiscuss\Api\Serializers\DiscussionSerializer;
-use Qdiscuss\Core\Commands\StartDiscussionCommand;
-use Qdiscuss\Core\Commands\ReadDiscussionCommand;
-use Qdiscuss\Core\Actions\BaseAction;
+use Qdiscuss\Api\Actions\SerializeCollectionAction;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
 
-class IndexAction extends BaseAction {
+class IndexAction extends SerializeCollectionAction
+{
+	/**
+	 * The discussion searcher.
+	 *
+	 * @var \Qdiscuss\Core\Search\Discussions\DiscussionSearcher
+	 */
+	protected $searcher;
 
 	/**
-	 * Constructor
+	 * The name of the serializer class to output results with.
 	 *
+	 * @var string
 	 */
-	public function __construct()
+	public static $serializer = 'Qdiscuss\Api\Serializers\DiscussionSerializer';
+
+	/**
+	 * The relationships that are available to be included, and which ones are
+	 * included by default.
+	 *
+	 * @var array
+	 */
+	public static $include = [
+		'startUser' => true,
+		'lastUser' => true,
+		'startPost' => false,
+		'lastPost' => false,
+		'relevantPosts' => false
+	];
+
+	/**
+	 * The fields that are available to be sorted by.
+	 *
+	 * @var array
+	 */
+	public static $sortFields = ['lastTime', 'commentsCount', 'startTime'];
+
+	/**
+	 * Instantiate the action.
+	 *
+	 * @param \Qdiscuss\Core\Search\Discussions\DiscussionSearcher $searcher
+	 */
+	public function __construct(DiscussionSearcher $searcher)
 	{
-		global $qdiscuss_params, $qdiscuss_actor, $qdiscuss_app;
-		$this->params = $qdiscuss_params;
-		$this->actor = $qdiscuss_actor;
-		$this->searcher = new DiscussionSearcher($qdiscuss_app['qdiscuss.discussions.gambits'], new EloquentDiscussionRepository,  new EloquentPostRepository);
+		$this->searcher = $searcher;
 	}
 
-	public function get()
+	/**
+	 * Get the discussion results, ready to be serialized and assigned to the
+	 * document response.
+	 *
+	 * @param \Qdiscuss\Api\JsonApiRequest $request
+	 * @param \Qdiscuss\Api\JsonApiResponse $response
+	 * @return \Illuminate\Database\Eloquent\Collection
+	 */
+	protected function data(JsonApiRequest $request, JsonApiResponse $response)
 	{
-		$query   = $this->params->get('q');
-		$start     = $this->params->start();
-		$include = $this->params->included(['startUser', 'lastUser', 'startPost', 'lastPost', 'relevantPosts']);
-		$count   = $this->params->count(20, 50);
-		$sort      = $this->params->sort(['', 'lastPost', 'replies', 'created']);
-		
-		$criteria = new DiscussionSearchCriteria($this->actor->getUser(), $query, $sort['field'], $sort['order']);
+		global $qdiscuss_endpoint;
+		$criteria = new DiscussionSearchCriteria(
+			$request->actor->getUser(),
+			$request->get('q'),
+			$request->sort
+		);
 
-		$load = array_merge($include, ['state']);
-		$results = $this->searcher->search($criteria, $count, $start, $load);
-		$document = $this->document();
+		$load = array_merge($request->include, ['state']);
+		$results = $this->searcher->search($criteria, $request->limit, $request->offset, $load);
 
 		if (($total = $results->getTotal()) !== null) {
-		    $document->addMeta('total', $total);
+			$response->content->addMeta('total', $total);
 		}
 
-		
-		if ($results->areMoreResults()) {
-		    $start += $count;
-		    $sort = $sort['string'];
-		    $input = array_filter(compact('query', 'sort', 'start', 'count')) + ['include' => implode(',', $include)];
-		    $moreUrl = $this->buildUrl('discussions.index', [], $input);
-		} else {
-		    $moreUrl = '';
-		}
-		$document->addMeta('moreUrl', $moreUrl);
+		static::addPaginationLinks($response, $request, get_site_url() . '/' . $qdiscuss_endpoint . '/discussions', $total ?: $results->areMoreResults());
 
-		$serializer = new DiscussionSerializer($include);
-		$document->setData($serializer->collection($results->getDiscussions()));
-
-		echo $this->respondWithDocument($document);exit();
-	}
-
-	/**
-	 * Start a new discussion.
-	 *
-	 * @return Response
-	 */
-	public function post()
-	{
-
-		$params = $this->post_data();
-
-		$title = $params->get('data.title');
-		$content = $params->get('data.content');
-		$user = $this->actor->getUser();
-
-		$command = new StartDiscussionCommand($title, $content, $user, app('qdiscuss.forum'));
-		$discussion = $this->dispatch($command, $params);
-
-		if ($user->exists) {
-		    $command = new ReadDiscussionCommand($discussion->id, $user, 1);
-		    $this->dispatch($command, $params);
-		}
-
-		$serializer = new DiscussionSerializer(['posts']);
-		$document = $this->document()->setData($serializer->resource($discussion));
-
-		echo $this->respondWithDocument($document);exit;
+		return $results->getDiscussions();
 		
 	}
-
 }

@@ -30,4 +30,9 @@ class UserBasicSerializer extends BaseSerializer
 
         return $this->extendAttributes($user, $attributes);
     }
+
+    protected function groups()
+    {
+        return $this->hasMany('Qdiscuss\Api\Serializers\GroupSerializer');
+    }
 }

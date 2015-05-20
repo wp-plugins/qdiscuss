@@ -1,70 +1,60 @@
 <?php namespace Qdiscuss\Api\Actions\Users;
 
-use Qdiscuss\Core\Commands\EditUserCommand;
-use Qdiscuss\Core\Commands\DeleteDiscussionCommand;
-use Qdiscuss\Core\Repositories\EloquentUserRepository as UserRepositoryInterface;
-use Qdiscuss\Core\Support\Actor;
-use Qdiscuss\Core\Actions\ApiParams;
-use Qdiscuss\Core\Actions\BaseAction;
-use Qdiscuss\Api\Serializers\UserSerializer;
+use Qdiscuss\Core\Repositories\UserRepositoryInterface;
+use Qdiscuss\Api\Actions\SerializeResourceAction;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
 
-class ShowAction extends BaseAction
+class ShowAction extends SerializeResourceAction
 {
-    protected $params;
+	/**
+	 * @var \Qdiscuss\Core\Repositories\UserRepositoryInterface
+	 */
+	protected $users;
 
-    protected $actor;
+	/**
+	 * The name of the serializer class to output results with.
+	 *
+	 * @var string
+	 */
+	public static $serializer = 'Qdiscuss\Api\Serializers\UserSerializer';
 
-    protected $users;
+	/**
+	 * The relationships that are available to be included, and which ones are
+	 * included by default.
+	 *
+	 * @var array
+	 */
+	public static $include = [
+		'groups' => true
+	];
 
-    public function __construct()
-    {
-        global $qdiscuss_actor, $qdiscuss_params;
-        $this->params = $qdiscuss_params;
-        $this->actor = $qdiscuss_actor;
-        $this->users = new UserRepositoryInterface;
-    }
+	/**
+	 * Instantiate the action.
+	 *
+	 * @param \Qdiscuss\Core\Repositories\UserRepositoryInterface $users
+	 */
+	public function __construct(UserRepositoryInterface $users)
+	{
+		$this->users = $users;
+	}
 
-    /**
-     * Show a single user.
-     *
-     * @param  string id user's id
-     * @return Response
-     */
-    public function get($id)
-    { 
-       
-        if (! is_numeric($id)) {
-            $id = $this->users->getIdForUsername($id);
-        }
+	/**
+	 * Get a single user, ready to be serialized and assigned to the JsonApi
+	 * response.
+	 *
+	 * @param \Qdiscuss\Api\JsonApiRequest $request
+	 * @param \Qdiscuss\Api\JsonApiResponse $response
+	 * @return \Qdiscuss\Core\Models\Discussion
+	 */
+	protected function data(JsonApiRequest $request, JsonApiResponse $response)
+	{
+		$id = $request->get('id');
 
-        $user = $this->users->findOrFail($id, $this->actor->getUser());
+		if (! is_numeric($id)) {
+			$id = $this->users->getIdForUsername($id);
+		}
 
-        $serializer = new UserSerializer(['groups']);
-        $document = $this->document()->setData($serializer->resource($user));
-
-        echo $this->respondWithDocument($document);exit();
-    }
-
-    /**
-     * Edit a user. Allows renaming the user, changing their email, and setting
-     * their password.
-     *
-     * @return Response
-     */
-    public function put($id)
-    {
-        $params = $this->post_data();
-        $userId = $id;
-        
-        $command = new EditUserCommand($userId, $this->actor->getUser());
-        $this->hydrate($command, $params->get('data'));
-        $user = $this->dispatch($command, $params);
-
-        $serializer = new UserSerializer;
-        $document = $this->document()->setData($serializer->resource($user));
-
-        echo   $this->respondWithDocument($document); exit();
-    }
-
-
+		return $this->users->findOrFail($id, $request->actor->getUser());
+	}
 }

@@ -1,5 +1,21 @@
 ### Changelog
 
+#### v0.0.6
+
+1. Add Extension Mechanism, You can see how to add extension in your QDiscuss forum here: http://colorvila.com/qdiscuss-extensions/
+
+2. js and css auto-compile
+
+3. Add categories and sticky extension, you can download both freely in http://colorvila.com/qdiscuss-extensions/
+
+#### v0.0.5
+
+1. Fix the uninstall error
+
+= v0.0.4 =
+
+1. Fix user avatar upload error
+
 #### v0.0.4
 
 1. Fix user avatar upload error

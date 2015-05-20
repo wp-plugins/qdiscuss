@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Tobscure\\Permissible\\' => array($vendorDir . '/tobscure/permissible/src'),
     'Tobscure\\JsonApi\\' => array($vendorDir . '/tobscure/json-api/src'),
+    'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
     'Stringy\\' => array($vendorDir . '/danielstjules/stringy/src'),
     'Qdiscuss\\' => array($baseDir . '/heart'),
     'Misd\\Linkify\\' => array($vendorDir . '/misd/linkify/src/Misd/Linkify'),

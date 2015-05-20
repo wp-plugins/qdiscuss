@@ -22,12 +22,19 @@ class Document
             }
         }
 
-        // Filter out any resources that we have already added to the document.
-        $resources = $this->uniqueResources($resources);
-
-        foreach ($resources as $resource) {
+        foreach ($resources as $k => $resource) {
             foreach ($resource->getIncluded() as $link) {
                 $this->addIncluded($link);
+            }
+        }
+
+        foreach ($resources as $k => $resource) {
+            foreach ($this->included as $includedResource) {
+                if ($includedResource->getType() === $resource->getType() && $includedResource->getId() === $resource->getId()) {
+                    $includedResource->merge($resource);
+                    unset($resources[$k]);
+                    break;
+                }
             }
         }
 
@@ -37,26 +44,6 @@ class Document
 
         return $this;
     }
-
-    protected function uniqueResources($resources)
-    {
-        $ids = [];
-
-        foreach ($this->included as $resource) {
-            $included[] = [$resource->getType(), $resource->getId()];
-        }
-
-        foreach ($this->data->getResources() as $resource) {
-            $included[] = [$resource->getType(), $resource->getId()];
-        }
-
-        $resources = array_filter($resources, function ($resource) use ($included) {
-            return ! in_array([$resource->getType(), $resource->getId()], $included);
-        });
-
-        return $resources;
-    }
-
 
     public function setData($element)
     {
@@ -119,5 +106,10 @@ class Document
         }
 
         return $document;
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->toArray());
     }
 }

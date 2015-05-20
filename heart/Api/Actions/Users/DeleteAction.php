@@ -1,30 +1,42 @@
 <?php namespace Qdiscuss\Api\Actions\Users;
 
 use Qdiscuss\Core\Commands\DeleteUserCommand;
-use Qdiscuss\Core\Actions\BaseAction;
+use Qdiscuss\Api\Actions\DeleteAction as BaseDeleteAction;
+use Qdiscuss\Api\Request;
+use Illuminate\Http\Response;
+use Illuminate\Contracts\Bus\Dispatcher;
 
-class DeleteAction extends BaseAction
+class DeleteAction extends BaseDeleteAction
 {
+    /**
+     * The command bus.
+     *
+     * @var \Illuminate\Contracts\Bus\Dispatcher
+     */
+    protected $bus;
 
-    public function __construct()
+    /**
+     * Instantiate the action.
+     *
+     * @param \Illuminate\Contracts\Bus\Dispatcher $bus
+     */
+    public function __construct(Dispatcher $bus)
     {
-        global $qdiscuss_actor;
-        $this->actor = $qdiscuss_actor;
+        global $qdiscuss_bus;
+        $this->bus = $qdiscuss_bus;
     }
 
     /**
      * Delete a user.
      *
-     * @param  $id
-     * @return   json
+     * @param \Qdiscuss\Api\Request $request
+     * @param \Illuminate\Http\Response $response
+     * @return void
      */
-    public function run($id)
+    protected function delete(Request $request, Response $response)
     {
-        $userId = $id;
-
-        $command = new DeleteUserCommand($userId, $this->actor->getUser());
-        $this->dispatch($command, $params);
-
-        echo  $this->respondWithoutContent();exit();
+        $this->bus->dispatch(
+            new DeleteUserCommand($request->get('id'), $request->actor->getUser())
+        );
     }
 }

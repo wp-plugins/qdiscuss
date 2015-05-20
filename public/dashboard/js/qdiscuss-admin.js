@@ -15,7 +15,33 @@ jQuery(function ($) {
 		$.post(ajaxurl, data, function(response) {
 
 			if (response==1) {
-				window.location = params.config_settings_redirect;
+				window.location = qdiscuss_admin_params.config_settings_redirect;
+		       
+			} else if(response==2){
+				alert('Invalid input, please check and try again!');            
+				success.html('Save');    
+			}else {
+		         		success.html('Save');    
+		   	}
+		});
+
+	});
+
+	$('.save-extensions-setting').click(function() {
+		var data = {
+			type: 'post',
+			action: 'qdiscuss_ajax_extensions_settings_save',
+			//  security: nonce,
+			data: $(this).data('setting-data')
+		};
+
+		var success = $(this);
+		success.html('Saving ...');
+
+		$.post(ajaxurl, data, function(response) {
+
+			if (response==1) {
+				window.location = qdiscuss_admin_params.extensions_settings_redirect;
 		       
 			} else if(response==2){
 				alert('Invalid input, please check and try again!');            

@@ -1,52 +1,78 @@
 <?php namespace Qdiscuss\Api\Actions\Activity;
 
-use Qdiscuss\Core\Repositories\EloquentUserRepository as UserRepositoryInterface;
-use Qdiscuss\Core\Repositories\EloquentActivityRepository as ActivityRepositoryInterface;
-use Qdiscuss\Core\Actions\BaseAction;
-use Qdiscuss\Api\Serializers\ActivitySerializer;
+use Qdiscuss\Core\Repositories\UserRepositoryInterface;
+use Qdiscuss\Core\Repositories\ActivityRepositoryInterface;
+use Qdiscuss\Api\Actions\SerializeCollectionAction;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
 
-class IndexAction extends BaseAction
+class IndexAction extends SerializeCollectionAction
 {
-    protected $params;
-    protected $actor;
+    /**
+     * @var \Qdiscuss\Core\Repositories\UserRepositoryInterface
+     */
     protected $users;
+
+    /**
+     * @var \Qdiscuss\Core\Repositories\ActivityRepositoryInterface
+     */
     protected $activity;
-    
+
+    /**
+     * The name of the serializer class to output results with.
+     *
+     * @var string
+     */
+    public static $serializer = 'Qdiscuss\Api\Serializers\ActivitySerializer';
+
+    /**
+     * The relationships that are available to be included, and which ones are
+     * included by default.
+     *
+     * @var array
+     */
+    public static $include = [
+        'sender' => true,
+        'post' => true,
+        'post.user' => true,
+        'post.discussion' => true,
+        'post.discussion.startUser' => true,
+        'post.discussion.lastUser' => true
+    ];
+
+    /**
+     * The relations that are linked by default.
+     *
+     * @var array
+     */
+    public static $link = ['user'];
+
     /**
      * Instantiate the action.
      *
-     * @param  \Qdiscuss\Search\Discussions\UserSearcher  $searcher
+     * @param \Qdiscuss\Core\Repositories\UserRepositoryInterface $users
+     * @param \Qdiscuss\Core\Repositories\ActivityRepositoryInterface $activity
      */
-    public function __construct()
+    public function __construct(UserRepositoryInterface $users, ActivityRepositoryInterface $activity)
     {
-        global $qdiscuss_actor, $qdiscuss_params;
-        $this->actor = $qdiscuss_actor;
-        $this->params = $qdiscuss_params;
-        $this->users = new UserRepositoryInterface;
-        $this->activity = new ActivityRepositoryInterface;
+        $this->users = $users;
+        $this->activity = $activity;
     }
 
     /**
-     * Show a user's activity feed.
+     * Get the activity results, ready to be serialized and assigned to the
+     * document response.
      *
-     * @return \Illuminate\Http\Response
+     * @param \Qdiscuss\Api\JsonApiRequest $request
+     * @param \Qdiscuss\Api\JsonApiResponse $response
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public  function get()
+    protected function data(JsonApiRequest $request, JsonApiResponse $response)
     {
-        $params = $this->params;
-        $start = $params->start();
-        $count = $params->count(20, 50);
-        $type  = $params->get('type');
-        $id    = $params->get('users');
+        $actor = $request->actor->getUser();
 
-        $user = $this->users->findOrFail($id, $this->actor->getUser());
+        $user = $this->users->findOrFail($request->get('users'), $actor);
 
-        $activity = $this->activity->findByUser($user->id, $this->actor->getUser(), $count, $start, $type);
-
-        
-        $serializer = new ActivitySerializer(['sender', 'post', 'post.discussion', 'post.user', 'post.discussion.startUser', 'post.discussion.lastUser'], ['user']);
-        $document = $this->document()->setData($serializer->collection($activity));
-
-        echo $this->respondWithDocument($document);exit();
+        return $this->activity->findByUser($user->id, $actor, $request->limit, $request->offset, $request->get('type'));
     }
 }

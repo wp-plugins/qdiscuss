@@ -1,30 +1,26 @@
 <?php namespace Qdiscuss\Api\Actions\Posts;
 
-use Qdiscuss\Core\Models\User;
-use Qdiscuss\Core\Actions\ApiParams;
+use Qdiscuss\Api\JsonApiRequest;
 
 trait GetsPosts
 {
-    protected function getPosts(ApiParams $params, $where)
-    {
-        $sort = $params->sort(['time']);
-        $count = $params->count(20, 50);
-        $user = $this->actor->getUser();
+	protected function getPosts(JsonApiRequest $request, array $where)
+	{
+		$user = $request->actor->getUser();
 
-        if (isset($where['discussion_id']) && ($near = $params->get('near')) > 1) {
-            $start = $this->posts->getIndexForNumber($where['discussion_id'], $near, $user);
-            $start = max(0, $start - $count / 2);
-        } else {
-            $start = 0;
-        }
+		if (isset($where['discussion_id']) && ($near = $request->get('near')) > 1) {
+			$offset = $this->posts->getIndexForNumber($where['discussion_id'], $near, $user);
+			$offset = max(0, $offset - $request->limit / 2);
+		} else {
+			$offset = 0;
+		}
 
-        return $this->posts->findWhere(
-            $where,
-            $user,
-            $sort['field'],
-            $sort['order'] ?: 'asc',
-            $count,
-            $start
-        );
+		return $this->posts->findWhere(
+			$where,
+			$user,
+			$request->sort,
+			$request->limit,
+			$offset
+		);
 	}
 }

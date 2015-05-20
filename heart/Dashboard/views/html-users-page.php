@@ -1,5 +1,8 @@
- <div class="wrap">
- 	<h2>QDiscuss Settings</h2>
+<?php include('html-header.php'); ?>
+
+<div class="wrap qd-wrap">
+	
+ 	<h3>Groups Settings</h3>
  	
  	<form action="" method="post">
 	 	<p class="search-box">
@@ -7,10 +10,7 @@
 		<input type="search" id="user-search-input" name="search_name" value="">
 		<input type="submit" name="" id="search-submit" class="button" value="serach user"></p>
 
-	 	<table class="form-table">
-
-
-	 		<table class="wp-list-table widefat fixed users">
+ 		<table class="wp-list-table background-white widefat fixed users">
 			<thead>
 				<tr>
 					<th scope="col" id="userid" class="manage-column column-userid sortable desc column-posts" style="">
@@ -63,7 +63,6 @@
 				 	</tr>
 			 	<?php endforeach; ?>
 			</tbody>
-
 
 		</table>
 

@@ -1,99 +1,78 @@
 <?php namespace Qdiscuss\Api\Actions\Posts;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Qdiscuss\Core\Repositories\EloquentPostRepository as PostRepositoryInterface;
-use Qdiscuss\Core\Commands\PostReplyCommand;
-use Qdiscuss\Core\Commands\ReadDiscussionCommand;
-use Qdiscuss\Core\Support\Actor;
-use Qdiscuss\Core\Actions\BaseAction;
-use Qdiscuss\Core\Actions\ApiParams;
-use Qdiscuss\Api\Serializers\PostSerializer;
+use Qdiscuss\Core\Repositories\PostRepositoryInterface;
+use Qdiscuss\Api\Actions\SerializeCollectionAction;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
 
-class IndexAction extends BaseAction
+class IndexAction extends SerializeCollectionAction
 {
     use GetsPosts;
 
     /**
-     * The post repository.
-     *
-     * @var Post
+     * @var \Qdiscuss\Core\Repositories\PostRepositoryInterface
      */
     protected $posts;
 
     /**
+     * The name of the serializer class to output results with.
+     *
+     * @var string
+     */
+    public static $serializer = 'Qdiscuss\Api\Serializers\PostSerializer';
+
+    /**
+     * The relationships that are available to be included, and which ones are
+     * included by default.
+     *
+     * @var array
+     */
+    public static $include = [
+        'user' => true,
+        'user.groups' => true,
+        'editUser' => true,
+        'hideUser' => true,
+        'discussion' => true
+    ];
+
+    /**
      * Instantiate the action.
      *
-     * @param Post $posts
+     * @param \Qdiscuss\Core\Repositories\PostRepositoryInterface $posts
      */
-    public function __construct()
+    public function __construct(PostRepositoryInterface $posts)
     {
-        global $qdiscuss_actor, $qdiscuss_params;
-        $this->params = $qdiscuss_params;
-        $this->actor = $qdiscuss_actor;
-        $this->posts = new PostRepositoryInterface;
+        $this->posts = $posts;
     }
 
     /**
-     * Show posts from a discussion, or by providing an array of IDs.
+     * Get the post results, ready to be serialized and assigned to the
+     * document response.
      *
-     * @return Response
+     * @param \Qdiscuss\Api\JsonApiRequest $request
+     * @param \Qdiscuss\Api\JsonApiResponse $response
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function get()
+    protected function data(JsonApiRequest $request, JsonApiResponse $response)
     {
-        $postIds = (array) $this->params->get('ids');
-        $include = ['user', 'user.groups', 'editUser', 'hideUser', 'discussion'];
-        $user = $this->actor->getUser();
+        $postIds = (array) $request->get('ids');
+        $user = $request->actor->getUser();
 
         if (count($postIds)) {
             $posts = $this->posts->findByIds($postIds, $user);
         } else {
-            if ($discussionId = $this->params->get('discussions')) {
+            if ($discussionId = $request->get('discussions')) {
                 $where['discussion_id'] = $discussionId;
             }
-            if ($userId = $this->params->get('users')) {
+            if ($number = $request->get('number')) {
+                $where['number'] = $number;
+            }
+            if ($userId = $request->get('users')) {
                 $where['user_id'] = $userId;
             }
-            $posts = $this->getPosts($this->params, $where, $user);
+            $posts = $this->getPosts($request, $where);
         }
 
-        if (! count($posts)) {
-            throw new ModelNotFoundException;
-        }
-
-        // Finally, we can set up the post serializer and use it to create
-        // a post resource or collection, depending on how many posts were
-        // requested.
-        $serializer = new PostSerializer($include);
-        $document = $this->document()->setData($serializer->collection($posts->load($include)));
-
-        echo $this->respondWithDocument($document);exit;
-    }
-
-    /**
-     * Reply to a discussion.
-     *
-     * @return Response
-     */
-    public function post()
-    {
-        $params = $this->post_data();
-        $user = $this->actor->getUser();
-        
-        $discussionId = $params->get('data.links.discussion.linkage.id');
-        $content = $params->get('data.content');
-        
-        $command = new PostReplyCommand($discussionId, $content, $user);
-        $post = $this->dispatch($command, $params);
-
-        
-        if ($user->exists) {
-            $command = new ReadDiscussionCommand($discussionId, $user, $post->number);
-            $this->dispatch($command, $params);
-        }
-
-        $serializer = new PostSerializer;
-        $document = $this->document()->setData($serializer->resource($post));
-
-        echo $this->respondWithDocument($document, 201);exit();
+        return $posts;
     }
 }

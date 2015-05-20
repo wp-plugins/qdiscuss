@@ -1,42 +1,50 @@
-<?php namespace Qdiscuss\Actions;
+<?php namespace Qdiscuss\Api\Actions;
 
-use Illuminate\Contracts\Bus\Dispatcher;
+use Qdiscuss\Api\Request;
 use Qdiscuss\Core\Commands\GenerateAccessTokenCommand;
-use Qdiscuss\Core\Repositories\EloquentUserRepository as UserRepositoryInterface;
-use Qdiscuss\Core\Actions\BaseAction;
+use Qdiscuss\Core\Repositories\UserRepositoryInterface;
+use Slim\Http\JsonResponse;
+use Illuminate\Contracts\Bus\Dispatcher;
 
-class TokenAction extends BaseAction
+class TokenAction implements ActionInterface
 {
-    protected $users;
+	protected $users;
 
-    public function __construct(UserRepositoryInterface $users, Dispatcher $bus)
-    {
-        $this->users = $users;
-        $this->bus = $bus;
-    }
+	protected $bus;
 
-    /**
-     * Log in and return a token.
-     *
-     * @return Json
-     */
-    public function run(ApiParams $params)
-    {
-        $identification = $params->get('identification');
-        $password = $params->get('password');
+	public function __construct(UserRepositoryInterface $users, Dispatcher $bus)
+	{
+		$this->users = $users;
+		$this->bus = $bus;
+	}
 
-        $user = $this->users->findByIdentification($identification);
+	/**
+	 * Log in and return a token.
+	 *
+	 * @param \Qdiscuss\Api\Request $request
+	 * @return \Qdiscuss\Api\Response
+	 */
+	public function handle(Request $request)
+	{
+		$identification = $request->get('identification');
+		$password = $request->get('password');
 
-        if (! $user || ! $user->checkPassword($password)) {
-            return $this->respondWithError('invalidCredentials', 401);
-        }
+		$user = $this->users->findByIdentification($identification);
 
-        $command = new GenerateAccessTokenCommand($user->id);
-        $token = $this->dispatch($command, $params);
+		if (! $user || ! $user->checkPassword($password)) {
+			return;
+			// throw an exception
+			// return $this->respondWithError('invalidCredentials', 401);
+			return new JsonResponse(null, 401);
+		}
 
-        return json_encode(array(
-                'token' => $token->id,
-                'userId' => $user->id,
-        ));
-    }
+		$token = $this->bus->dispatch(
+			new GenerateAccessTokenCommand($user->id)
+		);
+
+		return new JsonResponse([
+			'token' => $token->id,
+			'userId' => $user->id
+		]);
+	}
 }

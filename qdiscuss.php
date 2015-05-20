@@ -3,24 +3,32 @@
 Plugin Name: QDiscuss
 Plugin URI: 
 Description: An Amazing Forum WordPress Plugin
-Version: 0.0.5
+Version: 0.0.6
 Author: ColorVila Team
 Author URI: http://colorvila.com/qdiscuss-plugin
 */
 if(PHP_VERSION < '5.4') die(' PHP_VERSION need >= 5.4, please upgrade your PHP');
 
-const QDISCUSS_VERSION = '0.0.5';
+const QDISCUSS_VERSION = '0.0.6';
 define('QDISCUSS_URI', plugin_dir_url( __FILE__));
 
 require __DIR__ . '/vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
-| Load the global config and database connection
+| Load the global config
 |--------------------------------------------------------------------------
 |
 */
-require __DIR__.'/bootstrap/load.php';
+require_once __DIR__.'/bootstrap/config.php';
+
+/*
+|--------------------------------------------------------------------------
+| Load the atabase connection
+|--------------------------------------------------------------------------
+|
+*/
+require_once __DIR__.'/bootstrap/db.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -64,7 +72,8 @@ add_action( 'admin_init', array('\Qdiscuss\Dashboard\Install', 'check_version'),
 add_action( 'admin_init',  array('\Qdiscuss\Dashboard\Install', 'install_actions'));
 add_action( 'admin_enqueue_scripts', '\Qdiscuss\Dashboard\Dashboard::qdiscuss_enqueue_admin');
 add_action( 'admin_menu',     '\Qdiscuss\Dashboard\Dashboard::qdiscuss_admin_menu', 999 );
-add_action('wp_ajax_qdiscuss_ajax_config_settings_save', '\Qdiscuss\Dashboard\Dashboard::qdiscuss_ajax_config_settings_save');
+add_action('wp_ajax_qdiscuss_ajax_config_settings_save', '\Qdiscuss\Dashboard\Dashboard::qdiscuss_ajax_config_settings_save', 999);
+add_action('wp_ajax_qdiscuss_ajax_extensions_settings_save', '\Qdiscuss\Dashboard\Dashboard::qdiscuss_ajax_extensions_settings_save', 999);
 add_action('admin_init',   '\Qdiscuss\Dashboard\Dashboard::qdiscuss_admin_init', 999 );
 
 /*
@@ -73,7 +82,7 @@ add_action('admin_init',   '\Qdiscuss\Dashboard\Dashboard::qdiscuss_admin_init',
 |--------------------------------------------------------------------------
 |
 */
-$wprestfy_class = apply_filters( 'wp_json_server_class', '\Qdiscuss\Toro' );
-add_action( 'init', $wprestfy_class::serve(\Qdiscuss\Router::routes()));
+// Load Routes
+include(__DIR__ . '/heart/routes.php');
 
 

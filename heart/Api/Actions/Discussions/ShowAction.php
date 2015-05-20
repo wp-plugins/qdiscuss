@@ -1,121 +1,109 @@
 <?php namespace Qdiscuss\Api\Actions\Discussions;
 
-use Qdiscuss\Core\Commands\EditDiscussionCommand;
-use Qdiscuss\Core\Commands\ReadDiscussionCommand;
-use Qdiscuss\Core\Commands\DeleteDiscussionCommand;
-use Qdiscuss\Core\Exceptions\PermissionDeniedException;
-use Qdiscuss\Core\Support\Actor;
-use Qdiscuss\Core\Repositories\EloquentDiscussionRepository as DiscussionRepository;
-use Qdiscuss\Core\Repositories\EloquentPostRepository as PostRepository;
-use Qdiscuss\Core\Actions\BaseAction;
-use Qdiscuss\Core\Actions\ApiParams;
+use Qdiscuss\Core\Repositories\DiscussionRepositoryInterface;
+use Qdiscuss\Core\Repositories\PostRepositoryInterface;
+use Qdiscuss\Api\Actions\SerializeResourceAction;
 use Qdiscuss\Api\Actions\Posts\GetsPosts;
-use Qdiscuss\Api\Serializers\DiscussionSerializer;
+use Qdiscuss\Api\JsonApiRequest;
+use Qdiscuss\Api\JsonApiResponse;
 
-class ShowAction extends BaseAction
+class ShowAction extends SerializeResourceAction
 {
-    use GetsPosts;
+	use GetsPosts;
 
-    /**
-     * The discussion repository.
-     *
-     * @var DiscussionRepository
-     */
-    protected $discussions;
+	/**
+	 * @var \Qdiscuss\Core\Repositories\DiscussionRepositoryInterface
+	 */
+	protected $discussions;
 
-    /**
-     * The post repository.
-     *
-     * @var PostRepository
-     */
-    protected $posts;
+	/**
+	 * @var \Qdiscuss\Core\Repositories\PostRepositoryInterface
+	 */
+	protected $posts;
 
-    /**
-     * Instantiate the action.
-     *
-     * @param PostRepository $posts
-     */
-    public function __construct()
-    {
-        global $qdiscuss_params, $qdiscuss_actor;
-        $this->params = $qdiscuss_params;
-        $this->actor = $qdiscuss_actor;
-        $this->discussions = new DiscussionRepository;
-        $this->posts = new PostRepository;
-    }
+	/**
+	 * The name of the serializer class to output results with.
+	 *
+	 * @var string
+	 */
+	public static $serializer = 'Qdiscuss\Api\Serializers\DiscussionSerializer';
 
-    /**
-     * Show a single discussion.
-     *
-     * @return Response
-     */
-    public function get($id)
-    {
-        $include = $this->params->included(['startPost', 'lastPost', 'posts']);
-        $user = $this->actor->getUser();
-        $discussion = $this->discussions->findOrFail($id, $user);
+	/**
+	 * The relationships that are available to be included, and which ones are
+	 * included by default.
+	 *
+	 * @var array
+	 */
+	public static $include = [
+		'startUser' => false,
+		'lastUser' => false,
+		'startPost' => true,
+		'lastPost' => true,
+		'posts' => true,
+		'posts.user' => true,
+		'posts.user.groups' => true,
+		'posts.editUser' => true,
+		'posts.hideUser' => true
+	];
 
-        $discussion->posts_ids = $discussion->posts()->whereCan($user, 'view')->get(['id'])->fetch('id')->all();
-        
-        if (in_array('posts', $include)) {
-            $relations = ['user', 'user.groups', 'editUser', 'hideUser'];
-            $discussion->posts = $this->getPosts($this->params, ['discussion_id' => $discussion->id])->load($relations);
+	/**
+	 * The relations that are linked by default.
+	 *
+	 * @var array
+	 */
+	public static $link = ['posts'];
 
-            $include = array_merge($include, array_map(function ($relation) {
-                return 'posts.'.$relation;
-            }, $relations));
-        }
+	/**
+	 * The fields that are available to be sorted by.
+	 *
+	 * @var array
+	 */
+	public static $sortFields = ['time'];
 
-        $serializer = new DiscussionSerializer($include, ['posts']);
+	/**
+	 * The default sort field and order to user.
+	 *
+	 * @var string
+	 */
+	public static $sort = ['time' => 'asc'];
 
-        $document = $this->document()->setData($serializer->resource($discussion));
-        
-        echo  $this->respondWithDocument($document);exit;
-    }
+	/**
+	 * Instantiate the action.
+	 *
+	 * @param \Qdiscuss\Core\Repositories\DiscussionRepositoryInterface $discussions
+	 * @param \Qdiscuss\Core\Repositories\PostRepositoryInterface $posts
+	 */
+	public function __construct(DiscussionRepositoryInterface $discussions, PostRepositoryInterface $posts)
+	{
+		$this->discussions = $discussions;
+		$this->posts = $posts;
+	}
 
-    public function put($id)
-    {
-        global $qdiscuss_params, $qdiscuss_actor;
-        $user = $qdiscuss_actor->getUser();
-        $params = $this->post_data();
-        
-        if ($data = array_except($params->get('data'), ['readNumber'])) {
-            try {
-                $command = new EditDiscussionCommand($id, $user);
-                $this->hydrate($command, $params->get('data'));
-                $discussion = $this->dispatch($command, $params);
-                } catch (PermissionDeniedException $e) {
-                // Temporary fix. See @todo below
-                $discussion = \Qdiscuss\Core\Models\Discussion::find($id);
-            }
-        }
+	/**
+	 * Get a single discussion, ready to be serialized and assigned to the
+	 * JsonApi response.
+	 *
+	 * @param \Qdiscuss\Api\JsonApiRequest $request
+	 * @param \Qdiscuss\Api\JsonApiResponse $response
+	 * @return \Qdiscuss\Core\Models\Discussion
+	 */
+	protected function data(JsonApiRequest $request, JsonApiResponse $response)
+	{
+		$user = $request->actor->getUser();
 
-        if ($readNumber = $params->get('data.readNumber')) {
-            $command = new ReadDiscussionCommand($id, $user, $readNumber);
-            $this->dispatch($command, $params);
-        }
+		$discussion = $this->discussions->findOrFail($request->get('id'), $user);
 
-        $serializer = new DiscussionSerializer(['addedPosts', 'addedPosts.user']);
-        $document = $this->document()->setData($serializer->resource($discussion));
+		$discussion->posts_ids = $discussion->posts()->whereCan($user, 'view')->get(['id'])->fetch('id')->all();
 
-        echo $this->respondWithDocument($document);exit();
-    }
+		if (in_array('posts', $request->include)) {
+			$length = strlen($prefix = 'posts.');
+			$relations = array_filter(array_map(function ($relationship) use ($prefix, $length) {
+				return substr($relationship, 0, $length) === $prefix ? substr($relationship, $length) : false;
+			}, $request->include));
 
-    /**
-     * Delete a discussion.
-     *
-     * @param  int $id discussion's id
-     * @return  Response
-     */
-    public function delete($id)
-    {
-        $discussionId = $id;
-        $params = [];
+			$discussion->posts = $this->getPosts($request, ['discussion_id' => $discussion->id])->load($relations);
+		}
 
-        $command = new DeleteDiscussionCommand($discussionId, $this->actor->getUser());
-        $this->dispatch($command, $params);
-
-        echo $this->respondWithoutContent();exit();
-
-    }
+		return $discussion;
+	}
 }

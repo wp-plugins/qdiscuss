@@ -12,7 +12,8 @@ abstract class BaseAction extends Action{
 
 	public function __construct(Actor $actor, Dispatcher $bus)
 	{
-		$this->actor = $actor;
+		global $qdiscuss_actor;
+		$this->actor = $qdiscuss_actor;
 		$this->bus = $bus;
 	}
 
@@ -21,10 +22,10 @@ abstract class BaseAction extends Action{
 	 * 
 	 * @return array
 	 */
-	protected function post_data()
-	{
-		return new ApiParams(json_decode(file_get_contents("php://input"), true));
-	}
+	// protected function post_data()
+	// {
+	// 	return new ApiParams(json_decode(file_get_contents("php://input"), true));
+	// }
 	
 	public function handle()
 	{

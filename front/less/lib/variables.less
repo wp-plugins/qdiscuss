@@ -1,0 +1,120 @@
+// ---------------------------------
+// HELPERS
+
+@fl-primary-hue: hue(@fl-primary-color);
+@fl-primary-sat: saturation(@fl-primary-color);
+
+@fl-secondary-hue: hue(@fl-secondary-color);
+@fl-secondary-sat: saturation(@fl-secondary-color);
+
+// ---------------------------------
+// BODY
+
+.define-body-variables(@fl-dark-mode);
+.define-body-variables(false) {
+  @fl-body-primary-color:             @fl-primary-color;
+  @fl-body-secondary-color:           hsl(@fl-secondary-hue, min(50%, @fl-secondary-sat), 95%);
+
+  @fl-body-bg:                        #fff;
+  @fl-body-color:                     #444;
+  @fl-body-muted-color:               hsl(@fl-secondary-hue, min(25%, @fl-secondary-sat), 68%);
+  @fl-body-muted-more-color:          #bbb;
+  @fl-shadow-color:                   rgba(0, 0, 0, 0.35);
+}
+.define-body-variables(true) {
+  @fl-body-primary-color:             mix(@fl-primary-color, #000);
+  @fl-body-secondary-color:           hsl(@fl-secondary-hue, min(20%, @fl-secondary-sat), 13%);
+
+  @fl-body-bg:                        hsl(@fl-secondary-hue, min(20%, @fl-secondary-sat), 10%);
+  @fl-body-color:                     #ccc;
+  @fl-body-muted-color:               hsl(@fl-secondary-hue, min(20%, @fl-secondary-sat), 35%);
+  @fl-body-muted-more-color:          hsl(@fl-secondary-hue, min(10%, @fl-secondary-sat), 25%);
+  @fl-shadow-color:                   rgba(0, 0, 0, 0.5);
+}
+@fl-body-heading-color:             @fl-body-color;
+@fl-body-control-bg:                @fl-body-secondary-color;
+@fl-body-control-color:             @fl-body-muted-color;
+
+// ---------------------------------
+// DRAWER
+
+@fl-drawer-bg:                   @fl-body-primary-color;
+@fl-drawer-color:                #fff;
+@fl-drawer-muted-color:          fade(#fff, 50%);
+@fl-drawer-control-bg:           fade(#000, 10%);
+@fl-drawer-control-color:        #fff;
+
+// ---------------------------------
+// HEADER
+
+.define-hdr-variables(@fl-colored-hdr);
+.define-hdr-variables(false) {
+  @fl-hdr-bg:                   @fl-body-bg;
+  @fl-hdr-color:                contrast(@fl-hdr-bg, #fff, @fl-body-primary-color);
+  @fl-hdr-muted-color:          @fl-body-muted-color;
+  @fl-hdr-control-bg:           @fl-body-control-bg;
+  @fl-hdr-control-color:        @fl-body-control-color;
+
+  @fl-body-hero-bg:             @fl-body-primary-color;
+  @fl-body-hero-color:          #fff;
+  @fl-body-hero-muted-color:    rgba(255, 255, 255, 0.6);
+}
+.define-hdr-variables(true) {
+  @fl-hdr-bg:                   @fl-drawer-bg;
+  @fl-hdr-color:                @fl-drawer-color;
+  @fl-hdr-muted-color:          @fl-drawer-muted-color;
+  @fl-hdr-control-bg:           @fl-drawer-control-bg;
+  @fl-hdr-control-color:        @fl-drawer-control-color;
+
+  @fl-body-hero-bg:             @fl-body-control-bg;
+  @fl-body-hero-color:          @fl-body-primary-color;
+  @fl-body-hero-muted-color:    @fl-body-control-color;
+}
+
+// ---------------------------------
+// LAYOUT
+
+@drawer-width: 270px;
+@index-pane-width: 400px;
+@header-height: 56px;
+@mobile-header-height: 46px;
+
+// ---------------------------------
+// BOOTSTRAP
+
+@brand-primary:         @fl-body-primary-color;
+
+@body-bg:               @fl-body-bg;
+@text-color:            @fl-body-color;
+@legend-color:          @fl-body-color;
+@font-size-base:        13px;
+@headings-line-height:  1.428571429;
+
+@font-family-sans-serif: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+@padding-base-vertical:     8px;
+@padding-base-horizontal:   13px;
+
+@btn-default-bg:  @fl-body-control-bg;
+@btn-default-color:  @fl-body-control-color;
+
+@input-bg: @fl-body-control-bg;
+@input-border: @fl-body-control-bg;
+@input-border-focus: @fl-body-control-bg;
+@input-color: @fl-body-control-color;
+@input-color-placeholder: @fl-body-control-color;
+
+@zindex-composer: @zindex-navbar-fixed + 4;
+@zindex-pane: @zindex-navbar-fixed + 5;
+@zindex-alerts: @zindex-modal + 10;
+
+@link-color: saturate(@fl-primary-color, 10%);
+@link-hover-color: @link-color;
+
+// ---------------------------------
+// MEDIA SHORTCODES
+
+@phone: ~"(max-width: @{screen-xs-max})";
+@tablet: ~"(min-width: @{screen-sm-min}) and (max-width: @{screen-sm-max})";
+@desktop: ~"(min-width: @{screen-md-min}) and (max-width: @{screen-md-max})";
+@desktop-hd: ~"(min-width: @{screen-lg-min})";

@@ -2,39 +2,42 @@
 
 class DiscussionSerializer extends DiscussionBasicSerializer
 {
-    /**
-     * Default relations to include.
-     *
-     * @var array
-     */
-    protected $include = ['startUser', 'lastUser'];
+	/**
+	 * Default relations to include.
+	 *
+	 * @var array
+	 */
+	protected $include = ['startUser', 'lastUser'];
 
-    /**
-     * Serialize attributes of a Discussion model for JSON output.
-     *
-     * @param Discussion $discussion The Discussion model to serialize.
-     * @return array
-     */
-    protected function attributes($discussion)
-    {
-        $attributes = parent::attributes($discussion);
+	/**
+	 * Serialize attributes of a Discussion model for JSON output.
+	 *
+	 * @param Discussion $discussion The Discussion model to serialize.
+	 * @return array
+	 */
+	protected function attributes($discussion)
+	{
+		global $qdiscuss_actor;
 
-        $user = static::$actor->getUser();
-        $state = $discussion->stateFor($user);
+		$attributes = parent::attributes($discussion);
 
-        $attributes += [
-            'commentsCount'  => (int) $discussion->comments_count,
-            'startTime'      => $discussion->start_time->toRFC3339String(),
-            'lastTime'       => $discussion->last_time ? $discussion->last_time->toRFC3339String() : null,
-            'lastPostNumber' => $discussion->last_post_number,
-            'canReply'       => $discussion->can($user, 'reply'),
-            'canEdit'        => $discussion->can($user, 'edit'),
-            'canDelete'      => $discussion->can($user, 'delete'),
+		$user = $qdiscuss_actor->getUser();
+		$state = $discussion->stateFor($user);
 
-            'readTime'       => $state && $state->read_time ? $state->read_time->toRFC3339String() : null,
-            'readNumber'     => $state ? (int) $state->read_number : 0
-        ];
+		$attributes += [
+			'commentsCount'  => (int) $discussion->comments_count,
+			'startTime'      => $discussion->start_time->toRFC3339String(),
+			'lastTime'       => $discussion->last_time ? $discussion->last_time->toRFC3339String() : null,
+			'lastPostNumber' => $discussion->last_post_number,
+			'canMove'  => $discussion->can($user, 'move'),// add neychang @todo to delete
+			'canReply'       => $discussion->can($user, 'reply'),
+			'canRename'      => $discussion->can($user, 'rename'),
+			'canDelete'      => $discussion->can($user, 'delete'),
+			'isSticky' =>  $discussion->is_sticky ? (bool) $discussion->is_sticky : false,// add neychang @todo to delete
+			'readTime'       => $state && $state->read_time ? $state->read_time->toRFC3339String() : null,
+			'readNumber'     => $state ? (int) $state->read_number : 0
+		];
 
-        return $this->extendAttributes($discussion, $attributes);
-    }
+		return $this->extendAttributes($discussion, $attributes);
+	}
 }

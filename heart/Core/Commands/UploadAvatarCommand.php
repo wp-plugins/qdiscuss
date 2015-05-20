@@ -1,6 +1,7 @@
 <?php namespace Qdiscuss\Core\Commands;
 
 use RuntimeException;
+use Qdiscuss\Core\Support\FileUpload;
 
 class UploadAvatarCommand
 {
@@ -24,7 +25,7 @@ class UploadAvatarCommand
         }
 
         $this->userId = $userId;
-        $this->file = $file;
+        $this->file = new FileUpload($file);
         $this->actor = $actor;
     }
 }

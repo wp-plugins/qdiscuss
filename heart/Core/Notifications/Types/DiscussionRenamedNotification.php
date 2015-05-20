@@ -1,42 +1,46 @@
 <?php namespace Qdiscuss\Core\Notifications\Types;
 
 use Qdiscuss\Core\Models\User;
+use Qdiscuss\Core\Models\Discussion;
 use Qdiscuss\Core\Models\DiscussionRenamedPost;
 
 class DiscussionRenamedNotification extends Notification implements AlertableNotification
 {
-    public $post;
+	protected $discussion;
 
-    public $oldTitle;
+	protected $sender;
 
-    public function __construct(User $recipient, User $sender, DiscussionRenamedPost $post, $oldTitle)
-    {
-        $this->post = $post;
-        $this->oldTitle = $oldTitle;
+	protected $post;
 
-        parent::__construct($recipient, $sender);
-    }
+	public function __construct(Discussion $discussion, User $sender, DiscussionRenamedPost $post = null)
+	{
+		$this->discussion = $discussion;
+		$this->sender = $sender;
+		$this->post = $post;
+	}
 
-    public function getSubject()
-    {
-        return $this->post->discussion;
-    }
+	public function getSubject()
+	{
+		return $this->discussion;
+	}
 
-    public function getAlertData()
-    {
-        return [
-            'number'   => $this->post->number,
-            'oldTitle' => $this->oldTitle
-        ];
-    }
+	public function getSender()
+	{
+		return $this->sender;
+	}
 
-    public static function getType()
-    {
-        return 'discussionRenamed';
-    }
+	public function getAlertData()
+	{
+		return ['postNumber' => $this->post->number];
+	}
 
-    public static function getSubjectModel()
-    {
-        return 'Qdiscuss\Core\Models\Discussion';
-    }
+	public static function getType()
+	{
+		return 'discussionRenamed';
+	}
+
+	public static function getSubjectModel()
+	{
+		return 'Qdiscuss\Core\Models\Discussion';
+	}
 }

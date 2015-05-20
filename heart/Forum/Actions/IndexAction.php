@@ -3,11 +3,11 @@
 use Qdiscuss\Core\Models\User;
 use Qdiscuss\Core\Repositories\UserRepositoryInterface;
 use Qdiscuss\Core\Repositories\EloquentUserRepository;
-use Qdiscuss\Api\Serializers\UserSerializer;
-use Qdiscuss\Dashboard\Bridge;
 use Qdiscuss\Core\Actions\BaseAction;
 use Qdiscuss\Core\Models\Setting;
 use Qdiscuss\Core\Support\Helper;
+use Qdiscuss\Forum\Events\RenderView;
+use Qdiscuss\Api\Request as ApiRequest;
 
 class IndexAction extends BaseAction
 {
@@ -18,18 +18,16 @@ class IndexAction extends BaseAction
 		global $qdiscuss_actor;
 		$this->user = new EloquentUserRepository;
 		$qdiscuss_actor->setUser(self::current_forum_user());
-                            \Qdiscuss\Api\Serializers\BaseSerializer::setActor($qdiscuss_actor);
 	}
 
 	public function get()
 	{
-		$user_info = User::where('username', 'dd')->first();
-
-		global $qdiscuss_actor, $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_welcome_title, $qdiscuss_desc;
+		global $qdiscuss_app, $qdiscuss_actor, $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_welcome_title, $qdiscuss_desc;
 		$qdiscuss_title = Setting::getForumTitle();
 		$qdiscuss_welcome_title = Setting::getWelcomeTitle();
 		$qdiscuss_desc = Setting::getForumDescription();
 
+		// if(($user = $qdiscuss_actor->getUser()) && $user->exists) {
 		if($user = self::is_logined()){
 			$user = explode('|', $user);
 			$user_name = $user[0];
@@ -40,38 +38,46 @@ class IndexAction extends BaseAction
 				global $qdiscuss_actor;
 				$user = self::register_user(get_user_by('login', $user_name));
 				$qdiscuss_actor->setUser($user);
-				\Qdiscuss\Api\Serializers\BaseSerializer::setActor($qdiscuss_actor);
 			}
 
-		             $serializer = new UserSerializer(['groups']);
-		             $document = $this->document()->setData($serializer->resource($user));
-		             $data = json_decode($this->respondWithDocument($document), true);
-		                
-		             $data_new = array();
-		             array_push($data_new, $data["data"], $data["included"][0]);
-	             		$data = json_encode($data_new);
-			$session = json_encode(array('userId' => $user->id, 'token' => $_COOKIE['qdiscuss_remember']));
+			$response = app('Qdiscuss\Api\Actions\Users\ShowAction')
+				->handle(new ApiRequest(['id' => $user->id], $qdiscuss_actor))
+				->content->toArray();
+
+			$data = [$response['data']];
+			
+			if (isset($response['included'])) {
+				$data = array_merge($data, $response['included']);
+			}
+
+			$data = $data;
+			$session = array('userId' => $user->id, 'token' => $_COOKIE['qdiscuss_remember']);
 		} else {
-		    	$data = json_encode([]);
-		    	$session = json_encode([]);
+		    	$data = [];
+		    	$session = [];
 		}
 
 		$config = array(
-		        'modulePrefix' => 'qdiscuss',
-		        'environment' => 'production',
-		        'baseURL' =>  get_site_url() . '/' . $qdiscuss_endpoint,
-		        'apiURL' => get_site_url() . '/' . $qdiscuss_endpoint,
-		        'locationType' => 'hash',
-		        'EmberENV' => [],
-		        'APP' => [],
-		        'forumTitle' => $qdiscuss_title,
-		        'welcomeTitle' => $qdiscuss_welcome_title,
-		        'welcomeDescription' => $qdiscuss_desc,
+			'base_url' =>  get_site_url() . '/' . $qdiscuss_endpoint,
+			'api_url' => get_site_url() . '/' . $qdiscuss_endpoint,
+			'forum_title' => $qdiscuss_title,
+			'welcome_title' => $qdiscuss_welcome_title,
+			'welcome_message' => $qdiscuss_desc,
 		);
 
-		$js_url = plugins_url('public/web/cforum.min.js', __DIR__.'/../../../../');
-		$css_url = plugins_url('public/web/cforum.css',  __DIR__.'/../../../../');
-		
+		$assetManager = app('qdiscuss.forum.assetManager');
+		$root = __DIR__.'/../../..';
+		$assetManager->addFile([
+			$root.'/front/js/forum/dist/app.js',
+			$root.'/front/less/forum/app.less'
+		]);
+
+		// event(new RenderView($view, $assetManager, $this));
+		event(new RenderView($data, $assetManager, $qdiscuss_actor));
+
+		$styles = array($assetManager->getCSSFiles());
+		$scripts =  array($assetManager->getJSFiles());
+
 		header("Content-Type: text/html; charset=utf-8");
 		echo include(__DIR__ . '/../Views/index.php');
 		exit();

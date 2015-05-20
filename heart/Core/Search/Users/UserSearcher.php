@@ -4,76 +4,84 @@ use Qdiscuss\Core\Models\User;
 use Qdiscuss\Core\Search\SearcherInterface;
 use Qdiscuss\Core\Search\GambitManager;
 use Qdiscuss\Core\Repositories\UserRepositoryInterface;
+use Qdiscuss\Core\Events\UserSearchWillBePerformed;
 
 class UserSearcher implements SearcherInterface
 {
-    public $query;
+	protected $query;
 
-    protected $sortMap = [
-        'username'    => ['username', 'asc'],
-        'posts'       => ['comments_count', 'desc'],
-        'discussions' => ['discussions_count', 'desc'],
-        'lastActive'  => ['last_seen_time', 'desc'],
-        'created'     => ['join_time', 'asc']
-    ];
+	protected $activeGambits = [];
 
-    protected $defaultSort = 'username';
+	protected $gambits;
 
-    protected $users;
+	protected $users;
 
-    public function __construct(GambitManager $gambits, UserRepositoryInterface $users)
-    {
-        $this->gambits = $gambits;
-        $this->users = $users;
-    }
+	protected $defaultSort = ['username' => 'asc'];
 
-    public function setDefaultSort($defaultSort)
-    {
-        $this->defaultSort = $defaultSort;
-    }
+	public function __construct(GambitManager $gambits, UserRepositoryInterface $users)
+	{
+		$this->gambits = $gambits;
+		$this->users = $users;
+	}
 
-    public function query()
-    {
-        return $this->query;
-    }
+	public function setDefaultSort($defaultSort)
+	{
+		$this->defaultSort = $defaultSort;
+	}
 
-    public function search(UserSearchCriteria $criteria, $count = null, $start = 0, $load = [])
-    {
-        $this->user = $criteria->user;
-        $this->query = $this->users->query()->whereCan($criteria->user, 'view');
+	public function query()
+	{
+		return $this->query->getQuery();
+	}
 
-        $this->gambits->apply($criteria->query, $this);
+	public function addActiveGambit($gambit)
+	{
+		$this->activeGambits[] = $gambit;
+	}
+	
+	public function getActiveGambits()
+	{
+		return $this->activeGambits;
+	}
 
-        $total = $this->query->count();
+	public function search(UserSearchCriteria $criteria, $limit = null, $offset = 0, $load = [])
+	{
+		$this->user = $criteria->user;
+		$this->query = $this->users->query()->whereCan($criteria->user, 'view');
 
-        $sort = $criteria->sort;
-        if (empty($sort)) {
-            $sort = $this->defaultSort;
-        }
-        if (is_array($sort)) {
-            foreach ($sort as $id) {
-                $this->query->orderByRaw('id != '.(int) $id);
-            }
-        } else {
-            list($column, $order) = $this->sortMap[$sort];
-            $this->query->orderBy($column, $criteria->order ?: $order);
-        }
+		$this->gambits->apply($criteria->query, $this);
 
-        if ($start > 0) {
-            $this->query->skip($start);
-        }
-        if ($count > 0) {
-            $this->query->take($count + 1);
-        }
+		$total = $this->query->count();
 
-        $users = $this->query->get();
+		$sort = $criteria->sort ?: $this->defaultSort;
 
-        if ($count > 0 && $areMoreResults = $users->count() > $count) {
-            $users->pop();
-        }
+		foreach ($sort as $field => $order) {
+			if (is_array($order)) {
+				foreach ($order as $value) {
+					$this->query->orderByRaw(snake_case($field).' != ?', [$value]);
+				}
+			} else {
+				$this->query->orderBy(snake_case($field), $order);
+			}
+		}
 
-        $users->load($load);
+		if ($offset > 0) {
+			$this->query->skip($offset);
+		}
+		if ($limit > 0) {
+			$this->query->take($limit + 1);
+		}
 
-        return new UserSearchResults($users, $areMoreResults, $total);
-    }
+		event(new UserSearchWillBePerformed($this, $criteria));
+
+		$users = $this->query->get();
+
+		if ($limit > 0 && $areMoreResults = $users->count() > $limit) {
+			$users->pop();
+		}
+
+		$users->load($load);
+
+		return new UserSearchResults($users, $areMoreResults, $total);
+	}
 }

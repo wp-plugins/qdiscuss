@@ -146,6 +146,7 @@ class Builder {
 	 */
 	public function firstOrFail($columns = array('*'))
 	{
+	
 		if ( ! is_null($model = $this->first($columns))) return $model;
 
 		throw (new ModelNotFoundException)->setModel(get_class($this->model));
@@ -513,6 +514,7 @@ class Builder {
 	 */
 	public function where($column, $operator = null, $value = null, $boolean = 'and')
 	{
+		
 		if ($column instanceof Closure)
 		{
 			$query = $this->model->newQueryWithoutScopes();
