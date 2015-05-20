@@ -1,5 +1,5 @@
 <?php namespace Qdiscuss\Extend;
-use Illuminate\Foundation\Application;
+
 use Closure;
 
 class SerializeAttributes implements ExtenderInterface

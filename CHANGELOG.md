@@ -1,5 +1,11 @@
 ### Changelog
 
+####  v0.07 
+
+1. New drop talbes process, include dropping the extension's table
+
+2. Add sticky button when add the sticky extension.
+
 #### v0.0.6
 
 1. Add Extension Mechanism, You can see how to add extension in your QDiscuss forum here: http://colorvila.com/qdiscuss-extensions/

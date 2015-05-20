@@ -124,12 +124,16 @@ class Bridge {
 	 	global $wpdb, $qdiscuss_config;
 
 		$prefix = $qdiscuss_config['database']['prefix'];
-	 	$tables = self::$table_names;
+	 	// $tables = self::$table_names;
+	 	// another method tp drop table, but some danger here, so not use it below
+	 	$like_name = '%' .  $qdiscuss_config['database']['qd_prefix'] .'%';
+	 	$qd_table_names = array_pluck($wpdb->get_results("SHOW TABLES LIKE '" . $like_name . "'", ARRAY_A), 'Tables_in_' . DB_NAME .' (' .  $like_name . ')');
 	 	
-	 	foreach ($tables as $table) {
-	 		$sql = "drop table `" . $prefix . $table . "`;" ;
-	 		DB::statement($sql);	
+	 	foreach ($qd_table_names as $table) {
+	 		$sql = "drop table `" . $table . "`;" ;
+	 		DB::statement($sql);
 	 	}
+	 	
 	}
 
 	/**

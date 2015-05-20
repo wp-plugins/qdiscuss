@@ -34,6 +34,7 @@ class DiscussionSerializer extends DiscussionBasicSerializer
 			'canRename'      => $discussion->can($user, 'rename'),
 			'canDelete'      => $discussion->can($user, 'delete'),
 			'isSticky' =>  $discussion->is_sticky ? (bool) $discussion->is_sticky : false,// add neychang @todo to delete
+			'canSticky' =>  (bool) $discussion->can($user, 'sticky'), // add neychang @todo to delete
 			'readTime'       => $state && $state->read_time ? $state->read_time->toRFC3339String() : null,
 			'readNumber'     => $state ? (int) $state->read_number : 0
 		];

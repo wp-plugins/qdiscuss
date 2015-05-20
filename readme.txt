@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.0.6
+Stable tag: 0.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,13 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 <a href="http://colorvila.com/qdiscuss-plugin">Click to see Live Demo</a>
 
 == Changelog ==
+
+= v0.07 =
+
+1. New drop talbes process, include dropping the extension's table
+
+2. Add sticky button when add the sticky extension.
+
 
 = v0.06 =
 
