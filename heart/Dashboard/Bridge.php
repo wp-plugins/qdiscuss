@@ -274,6 +274,7 @@ class Bridge {
             		$discussion->last_post_id     = $post->id;
             		$discussion->last_post_number = $post->number;
             		$discussion->number_index     = $post->number;
+            		$discussion->comments_count = 1;
 
             		$discussion->save();
 
