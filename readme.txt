@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.0.7
+Stable tag: 0.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,16 +73,24 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 == Changelog ==
 
+= v0.0.8 =
+
+1. Fix the post grant permission issue
+
+2. New table field size.
+
+3. Fix the extensions auto-detect issue.
+
 = v0.07 =
 
-1. New drop talbes process, include dropping the extension's table
+1. New drop tables process, include dropping the extension's table
 
 2. Add sticky button when add the sticky extension.
 
 
 = v0.06 =
 
-1. Add Extension Mechanism, You can see how to add extension in your QDiscuss forum here: http://colorvila.com/qdiscuss-extensions/
+1. Add Extension Mechanism, You can see how to add extension in your QDiscuss forum here: http://colorvila.com/docs/category/qdiscuss/
 
 2. js and css auto-compile
 

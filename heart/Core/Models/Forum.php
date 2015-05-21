@@ -4,5 +4,10 @@ use Tobscure\Permissible\Permissible;
 
 class Forum extends BaseModel
 {
-    use Permissible;
+	use Permissible;
+	
+	public function getTitleAttribute()
+	{
+		return Core::config('forum_title');
+	}
 }

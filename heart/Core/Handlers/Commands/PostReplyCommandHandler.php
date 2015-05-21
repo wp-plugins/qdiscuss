@@ -4,45 +4,52 @@ use Qdiscuss\Core\Events\PostWillBeSaved;
 use Qdiscuss\Core\Repositories\DiscussionRepositoryInterface as DiscussionRepository;
 use Qdiscuss\Core\Models\CommentPost;
 use Qdiscuss\Core\Support\DispatchesEvents;
+use Qdiscuss\Core\Notifications\Notifier;
 
 class PostReplyCommandHandler
 {
-    use DispatchesEvents;
+	use DispatchesEvents;
 
-    protected $discussions;
+	protected $discussions;
 
-    public function __construct(DiscussionRepository $discussions)
-    {
-        $this->discussions = $discussions;
-    }
+	protected $notifier;
 
-    public function handle($command)
-    {
-        $user = $command->user;
+	public function __construct(DiscussionRepository $discussions, Notifier $notifier)
+	{
+		$this->discussions = $discussions;
+		$this->notifier = $notifier;
+	}
 
-        // Make sure the user has permission to reply to this discussion. First,
-        // make sure the discussion exists and that the user has permission to
-        // view it; if not, fail with a ModelNotFound exception so we don't give
-        // away the existence of the discussion. If the user is allowed to view
-        // it, check if they have permission to reply.
-        $discussion = $this->discussions->findOrFail($command->discussionId, $user);
+	public function handle($command)
+	{
+		$user = $command->user;
 
-        $discussion->assertCan($user, 'reply');
+		// Make sure the user has permission to reply to this discussion. First,
+		// make sure the discussion exists and that the user has permission to
+		// view it; if not, fail with a ModelNotFound exception so we don't give
+		// away the existence of the discussion. If the user is allowed to view
+		// it, check if they have permission to reply.
+		$discussion = $this->discussions->findOrFail($command->discussionId, $user);
 
-        // Create a new Post entity, persist it, and dispatch domain events.
-        // Before persistance, though, fire an event to give plugins an
-        // opportunity to alter the post entity based on data in the command.
-        $post = CommentPost::reply(
-            $command->discussionId,
-            array_get($command->data, 'content'),
-            $user->id
-        );
+		$discussion->assertCan($user, 'reply');
 
-        event(new PostWillBeSaved($post, $command));
+		// Create a new Post entity, persist it, and dispatch domain events.
+		// Before persistance, though, fire an event to give plugins an
+		// opportunity to alter the post entity based on data in the command.
+		$post = CommentPost::reply(
+			$command->discussionId,
+			array_get($command->data, 'content'),
+			$user->id
+		);
 
-        $post->save();
-        $this->dispatchEventsFor($post);
+		event(new PostWillBeSaved($post, $command));
 
-        return $post;
-    }
+		$post->save();
+
+		$this->notifier->onePerUser(function () use ($post) {
+			$this->dispatchEventsFor($post);
+		});
+
+		return $post;
+	}
 }

@@ -228,7 +228,7 @@ class Bridge {
 			array("key" => "forum_welcome_title", "value" => "Welcome to QDiscuss"),
 			array("key" => "forum_description", "value" => "An Amazing Forum Plugin Base On WordPress By <a href='http://colorvila.com'>ColorVila</a>"),
 			array("key" => "forum_endpoint", "value" => "qdiscuss"),
-			array("key" => "extensions_enabled", "value" => ''),
+			array("key" => "extensions_enabled", "value" => '[]'),
 		);
 	
 		Setting::insert($settings);

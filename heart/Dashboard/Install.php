@@ -42,9 +42,9 @@ class Install {
 	 */
 	public static function install() 
 	{
-		global $wpdb;
+		global $wpdb, $qdiscuss_config;
 
-		$table_name = $wpdb->prefix . 'qd_config';
+		$table_name = $qdiscuss_config['database']['prefix'] . 'config';
 		$current_db_version = get_option( 'qdiscuss_db_version', null );
 		$is_new_install = ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name);
 
@@ -73,7 +73,8 @@ class Install {
 		$current_db_version = get_option( 'qdiscuss_db_version' );
 		$db_updates         = array(
 			'0.0.3' => 'updates/qdiscuss-update-0.0.3.php',	
-			'0.0.6' => 'updates/qdiscuss-update-0.0.6.php',		
+			'0.0.6' => 'updates/qdiscuss-update-0.0.6.php',
+			'0.0.8' => 'updates/qdiscuss-update-0.0.8.php',
 		);
 
 		foreach ( $db_updates as $version => $updater ) {

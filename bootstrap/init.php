@@ -17,6 +17,7 @@ use Qdiscuss\Core\Events\RegisterDiscussionGambits;
 use Qdiscuss\Core\Events\RegisterUserGambits;
 use Qdiscuss\Extend\Permission;
 use Qdiscuss\App;
+use Qdiscuss\Core;
 
 class Qdiscuss extends App {
 	
@@ -231,8 +232,12 @@ class Qdiscuss extends App {
               	// someone else.
               	Post::grantPermission('edit', function ($grant, $user) {
               	    $grant->where('user_id', $user->id)
-              	          ->whereNull('hide_user_id')
-              	          ->orWhere('hide_user_id', $user->id);
+              	          // ->whereNull('hide_user_id')
+              	          // ->orWhere('hide_user_id', $user->id);
+              	          ->where(function ($query) use ($user) {
+              	          		$query->whereNull('hide_user_id')
+              	          	              ->orWhere('hide_user_id', $user->id);
+             		              });
               	    // @todo add limitations to time etc. according to a config setting
               	});
 
@@ -328,7 +333,8 @@ class Qdiscuss extends App {
 
             public static function load_extensions()
             {
-            		$extensions = json_decode(\Illuminate\Database\Capsule\Manager::table('config')->where('key', 'extensions_enabled')->pluck('value'), true);
+            		$extensions = json_decode(Core::config('extensions_enabled'), true);
+
             		if($extensions){
             			foreach ($extensions as $extension) {
             				if (file_exists($file = extensions_path() . '/'. $extension . '/bootstrap.php')) {

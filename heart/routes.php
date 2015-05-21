@@ -12,9 +12,9 @@ use Qdiscuss\Dashboard\Bridge;
 
 $slim_app = new Slim;
 
-global $qdiscuss_endpoint, $qdiscuss_actor, $wpdb, $action;
+global $qdiscuss_endpoint, $qdiscuss_actor, $wpdb, $action, $qdiscuss_config;
 
-$config_table_name = $wpdb->prefix . 'qd_' . 'config';
+$config_table_name = $qdiscuss_config['database']['prefix'] . 'config';
 if($wpdb->get_var("SHOW TABLES LIKE '$config_table_name'") != $config_table_name) {
 	$qdiscuss_endpoint = 'qdiscuss';
 } else {

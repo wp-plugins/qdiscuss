@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS `_qdiscuss_prefix_discussions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `_qdiscuss_prefix_discussions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `comments_count` int(10) unsigned NOT NULL DEFAULT '0',
   `number_index` int(10) unsigned NOT NULL DEFAULT '0',
   `start_time` datetime NOT NULL,

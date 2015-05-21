@@ -5,6 +5,7 @@ use Qdiscuss\Core\Models\Setting;
 use Qdiscuss\Core\Models\Group;
 use Qdiscuss\Core\Support\Helper;
 use Illuminate\Database\Capsule\Manager as DB; 
+use Qdiscuss\Core;
 
 /*
  |--------------------------------------------------------------------------
@@ -232,22 +233,20 @@ class Dashboard  {
 
 	public  static function qdiscuss_extensions_page()
 	{
-		$activated_extensions = json_decode(DB::table('config')->where('key', 'extensions_enabled')->pluck('value'), true);
+		$activated_extensions = json_decode(Core::config('extensions_enabled'), true);
+		$extensions_dirs = glob(extensions_path() . '/*', GLOB_ONLYDIR);
+		$extensions = [];
 
-		$extensions_dirs = glob(extensions_path() . '/*');
-		
 		if($extensions_dirs){
-			$extensions = [];
 			foreach ($extensions_dirs as $dir) {
-				$extension_file = file_get_contents($dir . '/extension.json');
-				$extension_file_key = basename($dir); 
-				$extensions[$extension_file_key] =  json_decode($extension_file, true);
-				//array_push($extensions, json_decode($extension_file, true));
+				if(file_exists($dir . '/extension.json')){
+					$extension_file = file_get_contents($dir . '/extension.json');
+					$extension_file_key = basename($dir); 
+					$extensions[$extension_file_key] =  json_decode($extension_file, true);
+					//array_push($extensions, json_decode($extension_file, true));
+				}
 			}
-		}else{
-			$extensions = [];
 		}
-		global $qdiscuss_app;
 
 		if($activated_extensions){
 			foreach ($extensions as $key=>&$ext) {

@@ -33,7 +33,8 @@
 	 	<h3>Browser All Extensions</h3>
 	 	<hr>
 	 	<p>Go to our <a  target="blank" href="http://colorvila.com/qdiscuss-extensions/">official extensions gallery</a>.</p>
-	 	<p>* To INSTALL extension, just unzip the extension then move it into the <strong>wp-content/plugins/qdiscuss/extensions</strong> directory.
+	 	<p>* To INSTALL extension, just unzip the extension then move it into the <strong>wp-content/plugins/qdiscuss/extensions</strong> directory.</p>
+	 	<p>If you have some install problems, please go to <a href="http://colorvila.com/qdiscuss" target='blank'>our official QDiscuss forum</a> to start a discussion under Feedback category.</p>
 
 	 	<!-- <iframe id='qdiscuss-main' src="http://colorvila.com/themes" width="100%" height="1000px"  min-height="750px" frameborder="0" scrolling="yes"></iframe> -->
 		

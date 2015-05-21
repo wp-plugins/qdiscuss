@@ -2,17 +2,18 @@
 use Illuminate\Database\Capsule\Manager as DB; 
 	// todo upgrade the group table
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	global $wpdb;
-	$wpdb->query('drop table ' . $wpdb->prefix . 'qd_groups');
+	 global $wpdb, $qdiscuss_config;
+	$prefix = $qdiscuss_config['database']['prefix'];
+	$wpdb->query('drop table ' . $prefix . 'groups');
 	$sql = file_get_contents(__DIR__ . "/../migrations/"  . "groups-schema.sql");
-	$new_sql = preg_replace("/_qdiscuss_prefix_/", $wpdb->prefix . 'qd_', $sql);
+	$new_sql = preg_replace("/_qdiscuss_prefix_/", $prefix, $sql);
 	dbDelta($new_sql);
 	\Qdiscuss\Dashboard\Bridge::seed_groups();
 
 	// upgrade the config table for extension information
 	$plugins = '';
 	$wpdb->insert( 
-		$wpdb->prefix . 'qd_config', 
+		$prefix . 'config', 
 		array( 
 			'key' => 'extensions_enabled', 
 			'value' =>  $plugins 
@@ -24,8 +25,8 @@ use Illuminate\Database\Capsule\Manager as DB;
 	);
 
 	// simple the premission api
-	DB::statement('drop table ' . $wpdb->prefix . 'qd_permissions');
+	DB::statement('drop table ' . $prefix . 'permissions');
 	$permission_sql = file_get_contents(__DIR__."/../migrations/" . "permissions-schema.sql");
-	DB::statement(preg_replace("/_qdiscuss_prefix_/", $wpdb->prefix . 'qd_', $permission_sql));
+	DB::statement(preg_replace("/_qdiscuss_prefix_/", $prefix, $permission_sql));
 	\Qdiscuss\Dashboard\Bridge::seed_permissions();
 	\Qdiscuss\Dashboard\Bridge::create_cache_dir();

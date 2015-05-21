@@ -3,7 +3,7 @@
 use Qdiscuss\Api\Request;
 use Slim\Http\Response;
 
-abstract class DeleteAction implements ActionInterface
+abstract class DeleteAction extends JsonApiAction
 {
 	/**
 	 * Delegate deletion of the resource, and return a 204 No Content
@@ -12,7 +12,7 @@ abstract class DeleteAction implements ActionInterface
 	 * @param \Qdiscuss\Api\Request $request
 	 * @return \Qdiscuss\Api\Response
 	 */
-	public function handle(Request $request)
+	public function respond(Request $request)
 	{
 		$this->delete($request, $response = new Response('', 204));
 		return $response;

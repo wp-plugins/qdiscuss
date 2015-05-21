@@ -1,8 +1,16 @@
 ### Changelog
 
+#### v0.0.8
+
+1. Fix the post grant permission issue
+
+2. New table field size.
+
+3. Fix the extensions auto-detect issue.
+
 ####  v0.07 
 
-1. New drop talbes process, include dropping the extension's table
+1. New drop tables process, include dropping the extension's table
 
 2. Add sticky button when add the sticky extension.
 

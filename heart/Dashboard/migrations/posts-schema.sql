@@ -11,7 +11,7 @@ CREATE TABLE `_qdiscuss_prefix_posts` (
   `number` int(10) unsigned DEFAULT NULL,
   `time` datetime NOT NULL,
   `user_id` int(10) unsigned DEFAULT NULL,
-  `type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `content` text COLLATE utf8_unicode_ci,
   `content_html` text COLLATE utf8_unicode_ci,
   `edit_time` datetime DEFAULT NULL,

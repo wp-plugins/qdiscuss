@@ -1,7 +1,7 @@
 <?php
-global $wpdb;
+global $wpdb, $qdiscuss_config;
 $wpdb->insert( 
-	$wpdb->prefix . 'qd_config', 
+	$qdiscuss_config['database']['prefix'] . 'config', 
 	array( 
 		'key' => 'forum_welcome_title', 
 		'value' =>  'Welcome to QDiscuss' 
