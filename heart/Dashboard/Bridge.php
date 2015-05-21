@@ -4,6 +4,8 @@ use Qdiscuss\Core\Models\User;
 use Qdiscuss\Core\Models\Group;
 use Qdiscuss\Core\Models\Setting;
 use Qdiscuss\Core\Models\Permission;
+use Qdiscuss\Core\Models\Discussion;
+use Qdiscuss\Core\Models\CommentPost;
 use Illuminate\Database\Capsule\Manager as DB; 
 use Qdiscuss\Core\Support\Helper;
 
@@ -48,6 +50,8 @@ class Bridge {
 	public static function activate()
 	{
 		self::create_tables();
+		self::seed_groups();
+	 	self::seed_permissions();
 		add_option( 'qdiscuss_db_version', QDISCUSS_VERSION );
 		add_option( 'qdiscuss_version', QDISCUSS_VERSION );
 		self::create_cache_dir();
@@ -101,12 +105,13 @@ class Bridge {
 	 			if($table == 'config'){
 	 				self::seed_config();
 	 			}
+
+	 			if($table == 'posts'){
+	 				self::seed_discussions();
+	 			}
 	 		}
 	 	}
 	 	
-	 	self::seed_groups();
-	 	self::seed_permissions();
-
 		// be sure the current user has migrated into qdiscuss
 		if(!User::where('username', self::current_user()->user_login)->first()){
 			self::register_user(self::current_user());
@@ -232,6 +237,45 @@ class Bridge {
 		);
 	
 		Setting::insert($settings);
+
+	}
+
+	/**
+	 *  Seed the first discussion data 
+	 *  
+	 * @return void
+	 */
+	public static function seed_discussions()
+	{
+		Discussion::unguard();
+		CommentPost::unguard();
+		Discussion::truncate();
+		CommentPost::truncate();
+
+		$current_user = self::current_forum_user();
+
+		$discussion = Discussion::create([
+		    'title'         => 'Welcome To QDiscuss World',
+		    'start_time'    => date("Y-m-d H:i:s"),
+		    'start_user_id' => $current_user->id,
+		]);
+
+		$post = CommentPost::create([
+             		'discussion_id' => $discussion->id,
+                		'number'        => 1,
+                		'time'          => $discussion->start_time,
+                		'user_id'       => $discussion->start_user_id,
+                		'content'       => "Created by http://colorvila.com"
+            		]);
+
+		$discussion->start_post_id = $post->id;
+	             $discussion->last_time        = $post->time;
+            		$discussion->last_user_id     = $post->user_id;
+            		$discussion->last_post_id     = $post->id;
+            		$discussion->last_post_number = $post->number;
+            		$discussion->number_index     = $post->number;
+
+            		$discussion->save();
 
 	}
 

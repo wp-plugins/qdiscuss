@@ -81,6 +81,8 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 3. Fix the extensions auto-detect issue.
 
+4. Add first discussion content.
+
 = v0.07 =
 
 1. New drop tables process, include dropping the extension's table
