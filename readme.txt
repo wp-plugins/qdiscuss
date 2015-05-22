@@ -81,28 +81,20 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 = v0.0.8 =
 
 1. Fix the post grant permission issue
-
 2. New table field size.
-
 3. Fix the extensions auto-detect issue.
-
 4. Add first discussion content.
 
 = v0.07 =
 
 1. New drop tables process, include dropping the extension's table
-
 2. Add sticky button when add the sticky extension.
-
 
 = v0.06 =
 
 1. Add Extension Mechanism, You can see how to add extension in your QDiscuss forum here: http://colorvila.com/docs/category/qdiscuss/
-
 2. js and css auto-compile
-
 3. Add categories and sticky extension, you can download both freely in http://colorvila.com/qdiscuss-extensions/
-
 
 = v0.0.5 =
 
