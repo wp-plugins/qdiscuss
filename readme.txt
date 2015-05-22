@@ -1,6 +1,6 @@
 === QDiscuss ===
 Contributors: ColorVila Team, zairl23
-Tags: forum, discuss, bbs
+Tags: forum, discuss, bbs, bbpress
 Requires at least: 3.9
 Tested up to: 4.1
 Stable tag: 0.0.8
