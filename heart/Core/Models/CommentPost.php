@@ -14,7 +14,7 @@ class CommentPost extends Post
 	 * @var string
 	 */
 	public static $type = 'comment';
-	
+
 	/**
 	 * The text formatter instance.
 	 *
@@ -119,7 +119,7 @@ class CommentPost extends Post
 		return $value;
 	}
 
-	 /**
+	/**
 	 * Get the content formatter as HTML.
 	 *
 	 * @param  string  $value
@@ -129,7 +129,7 @@ class CommentPost extends Post
 	{
 		return static::$formatter->strip($this->content);
 	}
-	
+
 	/**
 	 * Get text formatter instance.
 	 *
@@ -153,7 +153,7 @@ class CommentPost extends Post
 	/**
 	 * Format a string of post content using the set formatter.
 	 *
-	 * @param  string  $post
+	 * @param  string  $content
 	 * @return string
 	 */
 	protected static function formatContent($post)

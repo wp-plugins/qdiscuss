@@ -72,9 +72,10 @@ class Install {
 	{
 		$current_db_version = get_option( 'qdiscuss_db_version' );
 		$db_updates         = array(
-			'0.0.3' => 'updates/qdiscuss-update-0.0.3.php',	
+			'0.0.3' => 'updates/qdiscuss-update-0.0.3.php',
 			'0.0.6' => 'updates/qdiscuss-update-0.0.6.php',
 			'0.0.8' => 'updates/qdiscuss-update-0.0.8.php',
+			'0.0.9' => 'updates/qdiscuss-update-0.0.9.php',
 		);
 
 		foreach ( $db_updates as $version => $updater ) {

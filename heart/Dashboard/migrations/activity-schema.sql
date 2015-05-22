@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS `_qdiscuss_prefix_activity`;
 CREATE TABLE `_qdiscuss_prefix_activity` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
-  `sender_id` int(10) unsigned DEFAULT NULL,
+  `subject_id` int(10) unsigned DEFAULT NULL,
   `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `data` blob,
   `time` datetime NOT NULL,

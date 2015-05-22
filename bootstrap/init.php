@@ -15,6 +15,8 @@ use Qdiscuss\Core\Search\GambitManager;
 use League\Flysystem\Adapter\Local;
 use Qdiscuss\Core\Events\RegisterDiscussionGambits;
 use Qdiscuss\Core\Events\RegisterUserGambits;
+use Qdiscuss\Extend\NotificationType;
+use Qdiscuss\Extend\ActivityType;
 use Qdiscuss\Extend\Permission;
 use Qdiscuss\App;
 use Qdiscuss\Core;
@@ -40,9 +42,8 @@ class Qdiscuss extends App {
 		$this->setup_permission();
 		$this->register_gambits();
 		$this->setup_models();
-		$this->register_notification();
+		// $this->register_notification();
 		$this->load_extensions();
-
 		$qdiscuss_app['qdiscuss.formatter']->add('linkify', 'Qdiscuss\Core\Formatter\LinkifyFormatter');
 
 		$qdiscuss_bus->mapUsing(function ($command) {
@@ -134,33 +135,28 @@ class Qdiscuss extends App {
 		// 	$formatter->add('basic', 'Qdiscuss\Core\Formatter\BasicFormatter');
 		// 	return $formatter;
 		// });
-	              $qdiscuss_app->bind(
+	             $qdiscuss_app->bind(
 	                            'Qdiscuss\Core\Repositories\DiscussionRepositoryInterface',
 	                            'Qdiscuss\Core\Repositories\EloquentDiscussionRepository'
-	              );
-	              $qdiscuss_app->bind(
+	             );
+	             $qdiscuss_app->bind(
 	                            'Qdiscuss\Core\Repositories\UserRepositoryInterface',
 	                            'Qdiscuss\Core\Repositories\EloquentUserRepository'
-	              );
-	              $qdiscuss_app->bind(
+	             );
+	             $qdiscuss_app->bind(
 	                            'Qdiscuss\Core\Repositories\PostRepositoryInterface',
 	                            'Qdiscuss\Core\Repositories\EloquentPostRepository'
-	              );
-	              $qdiscuss_app->bind(
+	             );
+	             // not work @todo
+	             $qdiscuss_app->bind(
 	                            'Qdiscuss\Core\Repositories\ActivityRepositoryInterface',
 	                            'Qdiscuss\Core\Repositories\EloquentActivityRepository'
-	              );
-	              $qdiscuss_app->bind(
-	                            'Qdiscuss\Core\Repositories\NotificationRepositoryInterface',
-	                            'Qdiscuss\Core\Repositories\EloquentNotificationRepository'
-	              );
-	              $qdiscuss_app->bind(
-	              	'Qdiscuss\Core\Repositories\NotificationRepositoryInterface',
-	              	'Qdiscuss\Core\Repositories\EloquentNotificationRepository'
-	              );
-	              $qdiscuss_app->singleton('Qdiscuss\Core\Notifications\Notifier');
-	              $qdiscuss_app->alias('Qdiscuss\Core\Notifications\Notifier', 'qdiscuss.notifier');
-	              $qdiscuss_app->singleton('qdiscuss.forum', 'Qdiscuss\Core\Models\Forum');
+	             );
+	             $qdiscuss_app->bind(
+	                         'Qdiscuss\Core\Repositories\NotificationRepositoryInterface',
+	                         'Qdiscuss\Core\Repositories\EloquentNotificationRepository'
+	             );
+	             $qdiscuss_app->singleton('qdiscuss.forum', 'Qdiscuss\Core\Models\Forum');
 	}
 
 	public static  function register_post_types()
@@ -278,13 +274,18 @@ class Qdiscuss extends App {
 		$qdiscuss_event->subscribe('Qdiscuss\Core\Handlers\Events\DiscussionMetadataUpdater');
 		$qdiscuss_event->subscribe('Qdiscuss\Core\Handlers\Events\UserMetadataUpdater');
 		// $qdiscuss_event->subscribe('Qdiscuss\Core\Handlers\Events\EmailConfirmationMailer');//neychang comment
-		
-		// todo neychang
-		// $qdiscuss_event->listen('Qdiscuss\Api\Events\SerializeAttributes', function ($event) use ($serializer, $callback) {
-		// 	if ($event->serializer instanceof $serializer) {
-		//               	$callback($event->attributes, $event->model);
-		//             	}
-		// });
+		// 
+		$qdiscuss_event->subscribe('Qdiscuss\Core\Handlers\Events\DiscussionRenamedNotifier');
+		$qdiscuss_event->subscribe('Qdiscuss\Core\Handlers\Events\UserActivitySyncer');
+
+		$this->extend(
+		            (new NotificationType('Qdiscuss\Core\Notifications\DiscussionRenamedNotification', 'Qdiscuss\Api\Serializers\DiscussionBasicSerializer'))
+		                ->enableByDefault('alert'),
+		             (new ActivityType('Qdiscuss\Core\Activity\PostedActivity', 'Qdiscuss\Api\Serializers\PostBasicSerializer')),
+		             (new ActivityType('Qdiscuss\Core\Activity\StartedDiscussionActivity', 'Qdiscuss\Api\Serializers\PostBasicSerializer')),
+		             (new ActivityType('Qdiscuss\Core\Activity\JoinedActivity', 'Qdiscuss\Api\Serializers\UserBasicSerializer'))
+		);
+
             }
 
             public static function setup_models()
@@ -302,15 +303,15 @@ class Qdiscuss extends App {
 
             public function register_notification()
             {
-            		global $qdiscuss_app, $qdiscuss_event;
+            		//global $qdiscuss_app, $qdiscuss_event;
 
-            		$notifier = $qdiscuss_app->make('Qdiscuss\Core\Notifications\Notifier');
+            		//$notifier = $qdiscuss_app->make('Qdiscuss\Core\Notifications\Notifier');
 
-            		$qdiscuss_app->singleton('qdiscuss.notifier' , function() use ($qdiscuss_app){
-            			return new \Qdiscuss\Core\Notifications\Notifier($qdiscuss_app);
-            		});
+            		// $qdiscuss_app->singleton('qdiscuss.notifier' , function() use ($qdiscuss_app){
+            		// 	return new \Qdiscuss\Core\Notifications\Notifier($qdiscuss_app);
+            		// });
 
-            		$notifier->registerMethod('alert', 'Qdiscuss\Core\Notifications\Senders\NotificationAlerter');
+            		//$notifier->registerMethod('alert', 'Qdiscuss\Core\Notifications\Senders\NotificationAlerter');
             		// $notifier->registerMethod('email', 'Qdiscuss\Core\Notifications\Senders\NotificationEmailer');
 
             		// $notifier->registerType('Qdiscuss\Core\Notifications\Types\DiscussionRenamedNotification', ['alert' => true]);
@@ -319,14 +320,14 @@ class Qdiscuss extends App {
 
             		// add 
             		// $this->notificationType('Qdiscuss\Core\Notifications\Types\DiscussionRenamedNotification', ['alert' => true]);
-            		$this->extend(
-	            		(new Qdiscuss\Extend\NotificationType('Qdiscuss\Core\Notifications\Types\DiscussionRenamedNotification'))->enableByDefault('alert')
-		);
+  		//           		$this->extend(
+	 	//            		(new Qdiscuss\Extend\NotificationType('Qdiscuss\Core\Notifications\Types\DiscussionRenamedNotification'))->enableByDefault('alert')
+		// );
      		
-	            	$qdiscuss_app->bind(
-	            		'Qdiscuss\Core\Repositories\NotificationRepositoryInterface',
-	            		'Qdiscuss\Core\Repositories\EloquentNotificationRepository'
-	        	);
+	         //    	$qdiscuss_app->bind(
+	         //    		'Qdiscuss\Core\Repositories\NotificationRepositoryInterface',
+	         //    		'Qdiscuss\Core\Repositories\EloquentNotificationRepository'
+	        	// );
 
 	            	//$qdiscuss_app->alias('Qdiscuss\Core\Notifications\Notifier', 'qdisucss.notifier');
             }
@@ -337,8 +338,8 @@ class Qdiscuss extends App {
 
             		if($extensions){
             			foreach ($extensions as $extension) {
-            				if (file_exists($file = extensions_path() . '/'. $extension . '/bootstrap.php')) {
-            					require $file;
+            				if (file_exists($file = qd_extensions_path() . '/'. $extension . '/bootstrap.php')) {
+            					require_once($file);
             				}
             			}
             		}

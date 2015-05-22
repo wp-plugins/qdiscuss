@@ -39,7 +39,8 @@ class PostBasicSerializer extends BaseSerializer
 		];
 
 		if ($post->type === 'comment') {
-			$attributes['excerpt'] = str_limit($post->contentPlain, 200);
+			// $attributes['excerpt'] = str_limit($post->contentPlain, 200);
+			$attributes['excerpt'] = str_limit($post->content, 200);//@todo, just hack to show content
 		} else {
 			$attributes['content'] = $post->content;
 		}

@@ -54,7 +54,8 @@ class Bridge {
 	 	self::seed_permissions();
 		add_option( 'qdiscuss_db_version', QDISCUSS_VERSION );
 		add_option( 'qdiscuss_version', QDISCUSS_VERSION );
-		self::create_cache_dir();
+		self::create_qd_dir();
+
 	}
 
 	/**
@@ -310,8 +311,12 @@ class Bridge {
 		$member->save();
 	}
 
-	public static function create_cache_dir()
+	public static function create_qd_dir()
 	{
+		if(!file_exists(qd_extensions_path())){
+			mkdir(qd_extensions_path(), 0777, true);
+		}
+
 		if(!file_exists(qd_storage_path())){
 			mkdir(qd_storage_path(), 0777, true);
 		}

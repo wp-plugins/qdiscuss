@@ -234,7 +234,7 @@ class Dashboard  {
 	public  static function qdiscuss_extensions_page()
 	{
 		$activated_extensions = json_decode(Core::config('extensions_enabled'), true);
-		$extensions_dirs = glob(extensions_path() . '/*', GLOB_ONLYDIR);
+		$extensions_dirs = glob(qd_extensions_path() . '/*', GLOB_ONLYDIR);
 		$extensions = [];
 
 		if($extensions_dirs){
@@ -274,7 +274,7 @@ class Dashboard  {
 			case 'activate':
 				if(!in_array($extension_name, $extensions)){
 					array_push($extensions, $extension_name);
-					if(file_exists($install_file = extensions_path() .  '/' . $extension_name . '/migrations/install.php') && !file_exists($installed_file = extensions_path() . '/'  . $extension_name . '/migrations/installed.php')){
+					if(file_exists($install_file = qd_extensions_path() .  '/' . $extension_name . '/migrations/install.php') && !file_exists($installed_file = qd_extensions_path() . '/'  . $extension_name . '/migrations/installed.php')){
 						include_once($install_file);
 						if(copy($install_file, $installed_file)){
 							@unlink($install_file);
@@ -296,11 +296,11 @@ class Dashboard  {
 			case 'remove':
 				if(in_array($extension_name, $extensions)){
 					unset($extensions[$extension_name]);
-					if(file_exists($uninstall_file = extensions_path() .  $extension_name . '/migrations/uninstall.php')){
+					if(file_exists($uninstall_file = qd_extensions_path() .  $extension_name . '/migrations/uninstall.php')){
 						include_once($uninstall_file);
 					}
 
-					if(file_exists($installed_file = extensions_path() .  $extension_name . '/migrations/installed.php')){
+					if(file_exists($installed_file = qd_extensions_path() .  $extension_name . '/migrations/installed.php')){
 						if(copy($installed_file, $install_file)){
 							@unlink($installed_file);
 						}

@@ -3,31 +3,37 @@
 use Illuminate\Foundation\Application;
 use Qdiscuss\Core\Models\Notification;
 use Qdiscuss\Core\Models\User;
+use Qdiscuss\Api\Serializers\NotificationSerializer;
 
 class NotificationType implements ExtenderInterface
 {
 	protected $class;
+	
+	protected $serializer;
+	
 	protected $enabled = [];
-	public function __construct($class)
+
+	public function __construct($class, $serializer)
 	{
 		$this->class = $class;
+		$this->serializer = $serializer;
 	}
+	
 	public function enableByDefault($method)
 	{
 		$this->enabled[] = $method;
 		return $this;
 	}
+	
 	public function extend()
 	{
-		global $qdiscuss_app;
-		$notifier = $qdiscuss_app['qdiscuss.notifier'];
 		$class = $this->class;
-		$notifier->registerType($class);
 		Notification::registerType($class);
-		foreach ($notifier->getMethods() as $method => $sender) {
-			if ($sender::compatibleWith($class)) {
-				User::registerPreference(User::notificationPreferenceKey($class::getType(), $method), 'boolval', in_array($method, $this->enabled));
-			}
+		User::registerPreference(User::notificationPreferenceKey($class::getType(), 'alert'), 'boolval', in_array('alert', $this->enabled));
+		if ($class::isEmailable()) {
+			User::registerPreference(User::notificationPreferenceKey($class::getType(), 'email'), 'boolval', in_array('email', $this->enabled));
 		}
+		NotificationSerializer::$subjects[$class::getType()] = $this->serializer;
 	}
+	
 }

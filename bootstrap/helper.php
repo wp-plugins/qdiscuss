@@ -32,9 +32,9 @@ if(! function_exists('base_path')){
 	}
 }
 
-if(! function_exists('qd_base_upload_path')){
-	function qd_base_upload_path(){
-		return rtrim(ABSPATH, '/') . DIRECTORY_SEPARATOR .  'wp-content' . DIRECTORY_SEPARATOR  . 'uploads';
+if(! function_exists('qd_base_wp_path')){
+	function qd_base_wp_path(){
+		return rtrim(ABSPATH, '/') . DIRECTORY_SEPARATOR .  'wp-content' . DIRECTORY_SEPARATOR  . 'qdiscuss';
 	}
 }
 
@@ -50,9 +50,8 @@ if(! function_exists('qd_storage_path')){
 	}
 }
  
-if(! function_exists('extensions_path')){
-	function extensions_path(){
-		global $qdiscuss_app;
-		return $qdiscuss_app['path'] . 'extensions';
+if(! function_exists('qd_extensions_path')){
+	function qd_extensions_path(){
+		return qd_base_wp_path() . DIRECTORY_SEPARATOR . 'extensions';
 	}
 }

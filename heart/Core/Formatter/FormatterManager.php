@@ -34,25 +34,25 @@ class FormatterManager
 		unset($this->formatters[$name]);
 	}
 
-    protected function getFormatters()
-    {
-        $sorted = [];
+	protected function getFormatters()
+	{
+		$sorted = [];
 
-        foreach ($this->formatters as $array) {
-            list($formatter, $priority) = $array;
-            $sorted[$priority][] = $formatter;
-        }
+		foreach ($this->formatters as $array) {
+			list($formatter, $priority) = $array;
+			$sorted[$priority][] = $formatter;
+		}
 
-        ksort($sorted);
+		ksort($sorted);
 
-        $result = [];
+		$result = [];
 
-        foreach ($sorted as $formatters) {
-            $result = array_merge($result, $formatters);
-        }
+		foreach ($sorted as $formatters) {
+			$result = array_merge($result, $formatters);
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
 	public function format($text, $post = null)
 	{
@@ -63,15 +63,15 @@ class FormatterManager
 		return $text;
 	}
 
-    public function strip($text)
-    {
-        foreach ($this->getFormatters() as $formatter) {
-            $formatter = $this->container->make($formatter);
-            if (method_exists($formatter, 'strip')) {
-                $text = $formatter->strip($text);
-            }
-        }
+	public function strip($text)
+	{
+		foreach ($this->getFormatters() as $formatter) {
+			$formatter = $this->container->make($formatter);
+			if (method_exists($formatter, 'strip')) {
+				$text = $formatter->strip($text);
+			}
+		}
 
-        return $text;
-    }
+		return $text;
+	}
 }

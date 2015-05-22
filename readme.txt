@@ -3,11 +3,11 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs, bbpress
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.0.8
+Stable tag: 0.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-An amazing forum WordPress Plugin which help you create modern forum on your wordpress site.
+Next-generation Forum Plugin for WordPress which helps you create modern forum on your site.
 
 == Description ==
 
@@ -72,6 +72,11 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 <a href="http://colorvila.com/qdiscuss-plugin">Click to see Live Demo</a>
 
 == Changelog ==
+
+= v0.0.9 =
+
+1. Move the qdiscuss extensions directly into wp-content/qdiscuss/extensions.
+2. New backend process of activity
 
 = v0.0.8 =
 
