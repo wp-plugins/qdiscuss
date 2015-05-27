@@ -37,7 +37,6 @@ class LoginAction extends WebAction
 		} else {
 			$wp_user = DB::select('select * from ' . $wpdb->prefix . 'users' . ' where `ID` = ?', array($user_verify->ID)); 
 			$user = User::where('wp_user_id', $wp_user[0]['ID'])->first();
-			  
 			$access_token = AccessToken::generate($user->id);
 			$access_token->save();
 			setcookie("qdiscuss_remember",  $access_token->id, time() + 60*60*24*365*5, '/');
