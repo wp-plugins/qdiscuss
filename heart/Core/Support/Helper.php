@@ -2,9 +2,27 @@
 
 use Qdiscuss\Core\Models\User;
 use Qdiscuss\Core\Models\Guest;
+use Illuminate\Database\Capsule\Manager as DB; 
 
 trait Helper
 {
+
+	/**
+	 * Generate the random string
+	 * @param  integer $len 
+	 * @return   string
+	 */
+	public static function rand_str($len = 8)
+	{ 
+		$chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz-=/?~!@#$%^&*()"; // characters to build the password from 
+		$string=""; 
+		for (;$len >= 1;$len--) {
+			$position=rand()%strlen($chars);
+			$string.=substr($chars,$position,1); 
+		}
+		
+		return $string; 
+	}
 
 	/**
 	 *  Recompile the css and js file
@@ -14,9 +32,11 @@ trait Helper
 	public static function recompile()
 	{
 		// need add generate proccess
-		$version = file_get_contents(base_path() . 'public/web/forum');
-		@unlink(base_path() . 'public/web/forum-' . $version . '.js');
-		@unlink(base_path() . 'public/web/forum-' . $version . '.css');
+		if (file_exists(base_path() . 'public/web/forum')) {
+			$version = file_get_contents(base_path() . 'public/web/forum');
+			@unlink(base_path() . 'public/web/forum-' . $version . '.js');
+			@unlink(base_path() . 'public/web/forum-' . $version . '.css');
+		}
 	}
 
 	public static function post_data()
@@ -152,6 +172,37 @@ trait Helper
 		$member->save();
 
 		return $member;
+	}
+
+	/**
+	 * Check the extension and the require qdiscussion's version
+	 *
+	 * @param    arrray  $require_versions
+	 * @return    boolean
+	 */
+	public static function check_require($require_versions)
+	{
+		if(count($require_versions) == 1){
+			return QDISCUSS_VERSION == $require_versions['min'];
+		} elseif(count($require_versions) == 2) {
+			return  	QDISCUSS_VERSION >= $require_versions['min'] && QDISCUSS_VERSION <= $require_versions['max'];
+		} else{
+			throw new Exception("Error extension require format", 1);
+		}
+	}
+
+	/**
+	 * Check the table exists or not
+	 *
+	 * @param   $table_name table's name
+	 * @return   boolean 
+	 */
+	public static function table_exists($table_name)
+	{
+		global $wpdb;
+		$prefix = DB::getTablePrefix();
+		$table_name = $prefix . $table_name;
+		return $wpdb->get_var("SHOW TABLES LIKE '$table_name'") == $table_name;
 	}
 
 	public static function runSql($sql_path)

@@ -12,6 +12,7 @@ class DiscussionGambit implements ExtenderInterface
 		$this->class = $class;
 		$this->event = $qdiscuss_event;
 	}
+	
 	public function extend()
 	{
 		$this->event->listen('Qdiscuss\Core\Events\RegisterDiscussionGambits', function ($event) {

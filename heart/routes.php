@@ -14,15 +14,14 @@ $slim_app = new Slim;
 
 global $qdiscuss_endpoint, $qdiscuss_actor, $wpdb, $action, $qdiscuss_config;
 
-$config_table_name = $qdiscuss_config['database']['prefix'] . 'config';
-if($wpdb->get_var("SHOW TABLES LIKE '$config_table_name'") != $config_table_name) {
+if(!Helper::table_exists('config')) {
 	$qdiscuss_endpoint = 'qdiscuss';
 } else {
-	$qdiscuss_endpoint = Setting::getEndPoint();
 	$app = new \Qdiscuss;
 	$app->init();
+	$qdiscuss_endpoint = Setting::getEndPoint();
+	
 	$qdiscuss_actor->setUser(Helper::current_forum_user());
-	// \Qdiscuss\Api\Serializers\BaseSerializer::setActor($qdiscuss_actor);
 }
 
 $login_with_cookie = function() use ($slim_app, $qdiscuss_actor){

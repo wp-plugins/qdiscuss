@@ -1,7 +1,7 @@
 <?php
 	// Change the table's field's size
-	global $wpdb, $qdiscuss_config;
-	$prefix = $qdiscuss_config['database']['prefix'];
+	global $wpdb;
+	$prefix = \Illuminate\Database\Capsule\Manager::getTablePrefix();
 
 	$alter_table_sqls = array(
 		'ALTER TABLE `' . $prefix . 'access_tokens` MODIFY `id` varchar(100) NOT NULL',

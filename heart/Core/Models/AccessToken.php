@@ -1,7 +1,11 @@
 <?php namespace Qdiscuss\Core\Models;
 
+use Qdiscuss\Core\Support\Helper;
+
 class AccessToken extends BaseModel
 {
+    use Helper;
+
     /**
      * The table associated with the model.
      *
@@ -26,7 +30,8 @@ class AccessToken extends BaseModel
     {
         $token = new static;
 
-        $token->id = str_random(40);
+        // $token->id = str_random(40);
+        $token->id = self::rand_str(40);
         $token->user_id = $userId;
 
         return $token;

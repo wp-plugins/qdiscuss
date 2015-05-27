@@ -1,4 +1,4 @@
-<?php namespace Flarum\Extend;
+<?php namespace Qdiscuss\Extend;
 
 use Illuminate\Foundation\Application;
 

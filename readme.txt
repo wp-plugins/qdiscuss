@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs, bbpress
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.0.9
+Stable tag: 0.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,16 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 <a href="http://colorvila.com/qdiscuss-plugin">Click to see Live Demo</a>
 
 == Changelog ==
+
+= v0.1.0 =
+
+1. Fix discussion moved post notice error
+2. Fix discussion stickied post notice error
+3. Add checking the extension's version whether be matched  with the qdisucss's version
+4. Check the categories table exist or not when add categories extension, avoid deleting the categories data.
+5. Fix the bug: can't edit and add category
+6. Add new database migration class
+7. Add potal for new extension: mentions
 
 = v0.0.9 =
 

@@ -12,9 +12,9 @@ class App
 
 	public function __construct()
 	{
-		global $qdiscuss_app, $qdiscuss_event;
-		$this->app = $qdiscuss_app;
-		$this->event = $qdiscuss_event;
+		// global $qdiscuss_app, $qdiscuss_event;
+		// $this->app = $qdiscuss_app;
+		// $this->event = $qdiscuss_event;
 	}
 
 	/**
@@ -30,7 +30,7 @@ class App
 	public function extend()
 	{
 		foreach (func_get_args() as $extender) {
-			$extender->extend($this->app);
+			$extender->extend();
 		}
 	}
 

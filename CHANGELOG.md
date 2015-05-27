@@ -1,5 +1,20 @@
 ### Changelog
 
+#### v0.1.0
+
+1. Fix discussion moved post notice error
+2. Fix discussion stickied post notice error
+3. Add checking the extension's version whether be matched  with the qdisucss's version
+4. Check the categories table exist or not when add categories extension, avoid deleting the categories data.
+5. Fix the bug: can't edit and add category
+6. Add new database migration class
+7. Add potal for new extension: mentions
+
+#### v0.0.9
+
+1. Move the qdiscuss extensions directly into wp-content/qdiscuss/extensions.
+2. New backend process of activity
+
 #### v0.0.8
 
 1. Fix the post grant permission issue

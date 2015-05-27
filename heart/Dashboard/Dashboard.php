@@ -241,20 +241,47 @@ class Dashboard  {
 			foreach ($extensions_dirs as $dir) {
 				if(file_exists($dir . '/extension.json')){
 					$extension_file = file_get_contents($dir . '/extension.json');
-					$extension_file_key = basename($dir); 
-					$extensions[$extension_file_key] =  json_decode($extension_file, true);
+					$extension_file_key = basename($dir);
+					$extension_info = json_decode($extension_file, true);
+					// just fit for version 0.0.2, after updating to v0.0.3 @todo delete this codes
+					if($extension_info['version'] == '0.0.2' || $extension_info['version'] == '0.0.1'){
+						$extension_info['require']['Qdiscuss'] = array(
+							"min" => "0.0.9"
+						);
+					}
+					$extensions[$extension_file_key] = $extension_info;
 					//array_push($extensions, json_decode($extension_file, true));
 				}
 			}
 		}
-
+		
 		if($activated_extensions){
-			foreach ($extensions as $key=>&$ext) {
+			$need_update_extension = [];
+			foreach ($extensions as $key => &$ext) {
 				if(in_array($key, $activated_extensions)){
-					$ext['is_activated'] = 1;
+					if(self::check_require($ext['require']['Qdiscuss'])){
+						$ext['status'] = 1;// is_activated
+					}else{
+						// Setting::setValue('extensions_enabled', json_encode(array_diff($activated_extensions, [$key])));
+						array_push($need_update_extension, $key);
+						$ext['status'] = 2;// need updated
+						// add compile css and js file
+						self::recompile();
+					}
 				}else{
-					$ext['is_activated'] = 0;
+					if(self::check_require($ext['require']['Qdiscuss'])){
+						$ext['status'] = 0;// not_activated
+					}else{
+						// Setting::setValue('extensions_enabled', json_encode(array_diff($activated_extensions, [$key])));
+						array_push($need_update_extension, $key);
+						$ext['status'] = 2;// need updated
+						// add compile css and js file
+						self::recompile();
+					}
 				}
+			}
+			if ($need_update_extension) {
+				Setting::setValue('extensions_enabled', json_encode(array_diff($activated_extensions, $need_update_extension)));
 			}
 		}
 
@@ -267,7 +294,7 @@ class Dashboard  {
 		$extension_name = $data['extension_name'];
 		$setting_method = $data['setting_method'];
 
-		$extensions = json_decode(DB::table('config')->where('key', 'extensions_enabled')->pluck('value'), true);
+		$extensions = json_decode(Core::config('extensions_enabled'), true);
 		if(!$extensions) $extensions = [];
 
 		switch ($setting_method) {

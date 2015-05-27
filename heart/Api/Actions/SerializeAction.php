@@ -10,7 +10,7 @@ use Tobscure\JsonApi\Criteria;
 use Slim\Http\Response;
 use Illuminate\Http\JsonResponse;
 
-abstract class SerializeAction implements ActionInterface
+abstract class SerializeAction extends JsonApiAction
 {
 	/**
 	 * The name of the serializer class to output results with.
@@ -65,40 +65,27 @@ abstract class SerializeAction implements ActionInterface
 	/**
 	 * Handle an API request and return an API response.
 	 *
-	 * @param \Qdiscuss\Api\Request $request
-	 * @return \Qdiscuss\Api\Response
+	 * @param \Flarum\Api\Request $request
+	 * @return \Flarum\Api\Response
 	 */
-	public function handle(Request $request)
+	public function respond(Request $request)
 	{
 		$request = static::buildJsonApiRequest($request);
 
-		try {
-			$data = $this->data($request, $response = new JsonApiResponse);
-		} catch (ValidationFailureException $e) {
-			$errors = [];
-			foreach ($e->getErrors()->getMessages() as $field => $messages) {
-				$errors[] = [
-					'detail' => implode("\n", $messages),
-					'path' => $field
-				];
-			}
-			return new JsonResponse(['errors' => $errors], 422);
-		} catch (PermissionDeniedException $e) {
-			var_dump(Response(null, 401));exit;
-		}
+		$data = $this->data($request, $response = new JsonApiResponse);
 
 		$serializer = new static::$serializer($request->actor, $request->include, $request->link);
 
 		$response->content->setData($this->serialize($serializer, $data));
-		
+
 		return $response;
 	}
 
 	/**
 	 * Get the data to be serialized and assigned to the response document.
 	 *
-	 * @param \Qdiscuss\Api\JsonApiRequest $request
-	 * @param \Qdiscuss\Api\JsonApiResponse $response
+	 * @param \Flarum\Api\JsonApiRequest $request
+	 * @param \Flarum\Api\JsonApiResponse $response
 	 * @return array
 	 */
 	abstract protected function data(JsonApiRequest $request, JsonApiResponse $response);
@@ -113,20 +100,10 @@ abstract class SerializeAction implements ActionInterface
 	abstract protected function serialize(SerializerInterface $serializer, $data);
 
 	/**
-	 *  Get the post params
-	 *  
-	 * @return array
-	 */
-	protected function postData()
-	{
-		return json_decode(file_get_contents("php://input"), true);
-	}
-
-	/**
 	 * Extract parameters from the request input and assign them to the
 	 * request, restricted by the action's specifications.
 	 *
-	 * @param \Qdiscuss\Api\Request $request
+	 * @param \Flarum\Api\Request $request
 	 * @return void
 	 */
 	protected static function buildJsonApiRequest(Request $request)
@@ -183,8 +160,8 @@ abstract class SerializeAction implements ActionInterface
 	 * Add pagination links to a JSON-API response, based on input parameters
 	 * and the default parameters of this action.
 	 *
-	 * @param \Qdiscuss\Api\JsonApiResponse $response
-	 * @param \Qdiscuss\Api\JsonApiRequest $request
+	 * @param \Flarum\Api\JsonApiResponse $response
+	 * @param \Flarum\Api\JsonApiRequest $request
 	 * @param string $url The base URL to build pagination links with.
 	 * @param integer|boolean $total The total number of results (used to build
 	 *     a 'last' link), or just true if there are more results but how many
@@ -216,3 +193,4 @@ abstract class SerializeAction implements ActionInterface
 		}
 	}
 }
+

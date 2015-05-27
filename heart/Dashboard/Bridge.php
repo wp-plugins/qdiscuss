@@ -76,6 +76,7 @@ class Bridge {
 	public static function uninstall()
 	{
 		self::drop_tables();
+		self::delete_dirs();
 		delete_option( 'qdiscuss_db_version' );
 		delete_option( 'qdiscuss_version' );
 	}
@@ -87,8 +88,8 @@ class Bridge {
 	 */
 	public static function create_tables()
 	{
-	 	global $wpdb, $qdiscuss_config;
-		$prefix = $wpdb->prefix . $qdiscuss_config['database']['qd_prefix'];
+	 	global $wpdb;
+		$prefix = DB::getTablePrefix();
 	 	
 	 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	 	foreach (self::$table_names as $table) {
@@ -127,12 +128,12 @@ class Bridge {
 	 */
 	public static function drop_tables()
 	{
-	 	global $wpdb, $qdiscuss_config;
+	 	global $wpdb;
 
-		$prefix = $qdiscuss_config['database']['prefix'];
+		$prefix = DB::getTablePrefix();
 	 	// $tables = self::$table_names;
 	 	// another method tp drop table, but some danger here, so not use it below
-	 	$like_name = '%' .  $qdiscuss_config['database']['qd_prefix'] .'%';
+	 	$like_name = '%' .  $prefix .'%';
 	 	$qd_table_names = array_pluck($wpdb->get_results("SHOW TABLES LIKE '" . $like_name . "'", ARRAY_A), 'Tables_in_' . DB_NAME .' (' .  $like_name . ')');
 	 	
 	 	foreach ($qd_table_names as $table) {
@@ -140,6 +141,15 @@ class Bridge {
 	 		DB::statement($sql);
 	 	}
 	 	
+	}
+
+	/**
+	 *  Delete Files which QDiscuss created
+	 */
+	public static function delete_dirs()
+	{
+		global $qdiscuss_app;
+		$qdiscuss_app['files']->deleteDirectory(qd_base_wp_path());
 	}
 
 	/**

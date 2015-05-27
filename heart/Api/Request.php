@@ -20,7 +20,7 @@ class Request
 	
 	public function get($key, $default = null)
 	{
-		return isset($this->input[$key]) ? $this->input[$key] : $default;
+		return array_get($this->input, $key, $default);
 	}
 
 	public function all()

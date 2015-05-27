@@ -8,9 +8,6 @@ class EloquentNotificationRepository implements NotificationRepositoryInterface
 {
     public function findByUser(User $user, $limit = null, $offset = 0)
     {
-        global $wpdb, $qdiscuss_config;
-
-        // $prefix = $wpdb->prefix . $qdiscuss_config['database']['qd_prefix'];//just fix the table prefix in DB::raw by neychang
         $prefix = DB::getTablePrefix();
         $primaries = Notification::select(DB::raw('MAX(id) AS id'), DB::raw('SUM(is_read = 0) AS unread_count'))
             ->where('user_id', $user->id)

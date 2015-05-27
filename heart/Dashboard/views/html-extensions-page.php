@@ -9,20 +9,37 @@
 	 		<tr>
 	 			<th><?php _e('Name'); ?></th>
 	 			<th><?php _e('Description'); ?></th>
+	 			<th><?php _e('Version'); ?></th>
 	 			<th><?php _e('Apply'); ?></th>
 	 		</tr>
 	 		<?php foreach ($extensions as $key=>$extension) :?>
 		 	<tr>
 			 	<td><?php echo $extension['name']; ?></td>
 			         	<td><?php echo $extension['description'];?></td>
-			              <td>
-				              <?php if ($extension['is_activated'] == 0) :?>
+			         	<td>
+			         		<?php echo $extension['version'];
+			         		if($extension['status'] == 2) :
+			         			if($max_version = $extension['require']['Qdiscuss']['max']) :
+				         			$version_content =  ' (Need QDiscuss version >= ' . $extension['require']['Qdiscuss']['min'];
+				         			$version_content .=  ' and <= ' .  $max_version;
+				         			$version_content .= ')';
+						else :
+							$version_content = '(Need QDiscuss version == ' . $extension['require']['Qdiscuss']['min'] . ')';
+						endif;
+						echo $version_content;
+					endif;
+					?>
+			         	</td>
+			             <td>
+				             <?php if ($extension['status'] == 0) :?>
 				              	<a class="save-extensions-setting" data-setting-data="setting_method=activate&extension_name=<?php echo $key; ?>" href="#"><?php echo 'Activate'; ?></a>
-				              <?php else : ?>
+				             <?php elseif ($extension['status'] == 1) : ?>
 				              	<a class="save-extensions-setting"  data-setting-data="setting_method=deactivate&extension_name=<?php echo $key; ?>" href="#"><?php echo 'Deactivate'; ?></a>
-				              	
-				              <?php endif ;?>
-			              </td>
+				             <?php // @todo add remove button if nessary ?>
+					<?php elseif ($extension['status'] == 2) : ?>
+						<a class=""><?php echo 'Your current QDisucss version is ' . QDISCUSS_VERSION. ', please check the extension and QDiscuss version, and update them' ; ?></a>
+				             <?php endif ;?>
+			             </td>
 			</tr>
 		 	<?php endforeach; ?>
 	 	<?php else :?>
