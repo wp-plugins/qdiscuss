@@ -11,7 +11,7 @@ Next-generation Forum Plugin for WordPress which helps you create modern forum o
 
 == Description ==
 
-QDiscuss is based on the work of Flarum http://flarum.org, which is a standalone and modern PHP forum script. And thanks for the GREAT job of Toby. We re-constructed the backend code to make it completely a native plugin for WordPress. Flarum and QDiscuss is still at the early development stage, for security reasons, please do not use it in your online product.
+QDiscuss is based on the work of Flarum http://flarum.org, which is a standalone and modern PHP forum script. And thanks for the GREAT job of Toby. We re-constructed the backend code to make it completely a native plugin for WordPress. 
 
 QDiscuss is a modern designed, well-architected, powerful forum plugin that is easy to use,  with which you can easily add a forum to your site and allow your members to start their own conversations. 
 
