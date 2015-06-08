@@ -17,10 +17,9 @@ class UserSerializer extends UserBasicSerializer
 	 */
 	protected function attributes($user)
 	{
-		global $qdiscuss_actor;
 		$attributes = parent::attributes($user);
 
-		$actorUser = $qdiscuss_actor->getUser();
+		$actorUser = $this->actor->getUser();
 		$canEdit = $user->can($actorUser, 'edit');
 
 		$attributes += [

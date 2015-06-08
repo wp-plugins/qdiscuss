@@ -20,11 +20,10 @@ abstract class BaseSerializer extends SerializerAbstract
 	 */
 	protected static $relationships = [];
 
-	public function __construct($actor, $include = null, $link = null)
+	public function __construct(Actor $actor, $include = null, $link = null)
 	{
 		parent::__construct($include, $link);
-		global $qdisuss_actor;
-		$this->actor = $qdiscuss_actor;
+		$this->actor = $actor;
 	}
 
 	/**

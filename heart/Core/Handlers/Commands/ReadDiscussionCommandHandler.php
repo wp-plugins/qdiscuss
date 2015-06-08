@@ -20,11 +20,14 @@ class ReadDiscussionCommandHandler
     {
         $user = $command->user;
 
-        if (! $user->exists) {
-            throw new PermissionDeniedException;
-        }
+       $discussion = $this->discussions->findOrFail($command->discussionId, $user);
 
-        $discussion = $this->discussions->findOrFail($command->discussionId, $user);
+        // Allow recording guest view discussion's counts
+       // if (! $user->exists) {
+       //     throw new PermissionDeniedException;
+      // }
+       $discussion->refreshViewCounts();
+       $discussion->save();
 
         $state = $discussion->stateFor($user);
         $state->read($command->readNumber);

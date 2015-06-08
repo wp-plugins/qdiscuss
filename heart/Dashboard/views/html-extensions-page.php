@@ -18,7 +18,9 @@
 			         	<td><?php echo $extension['description'];?></td>
 			         	<td>
 			         		<?php echo $extension['version'];
-			         		if($extension['status'] == 2) :
+			         		if ($extension['version'] == '0.0.3') : 
+			         			echo '';
+			         		elseif ($extension['status'] == 2) :
 			         			if($max_version = $extension['require']['Qdiscuss']['max']) :
 				         			$version_content =  ' (Need QDiscuss version >= ' . $extension['require']['Qdiscuss']['min'];
 				         			$version_content .=  ' and <= ' .  $max_version;
@@ -31,7 +33,9 @@
 					?>
 			         	</td>
 			             <td>
-				             <?php if ($extension['status'] == 0) :?>
+			             		<?php if($extension['version'] == '0.0.3') : 
+			         			echo 'Please update to 0.0.4'; ?>
+				              <?php elseif ($extension['status'] == 0) :?>
 				              	<a class="save-extensions-setting" data-setting-data="setting_method=activate&extension_name=<?php echo $key; ?>" href="#"><?php echo 'Activate'; ?></a>
 				             <?php elseif ($extension['status'] == 1) : ?>
 				              	<a class="save-extensions-setting"  data-setting-data="setting_method=deactivate&extension_name=<?php echo $key; ?>" href="#"><?php echo 'Deactivate'; ?></a>

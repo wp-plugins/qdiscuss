@@ -218,13 +218,21 @@ class Dashboard  {
 
 		$set_value = Setting::getValueByKey($key);
 
+		$language_files = [];
+		$installed_language_files = glob(qd_language_path() . '/*.json');
+		if ($installed_language_files) {
+			foreach ($installed_language_files as $file) {
+				array_push($language_files, str_replace('.json', '', basename($file)));
+			}
+		}
+
 		include __DIR__ . "/views/html-config-settings.php";
 	}
 
 	
 	public static function qdiscuss_settings_page()
 	{
-		$settings = DB::table('config')->whereIn('key', ['forum_title', 'forum_welcome_title', 'forum_description', 'forum_endpoint'])->lists('value', 'key');
+		$settings = DB::table('config')->whereIn('key', ['forum_title', 'forum_welcome_title', 'forum_description', 'forum_endpoint', 'forum_language'])->lists('value', 'key');
 		
 		$endpoint = Setting::getEndPoint();
 		

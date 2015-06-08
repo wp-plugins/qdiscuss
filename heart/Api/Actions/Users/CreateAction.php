@@ -38,8 +38,7 @@ class CreateAction extends BaseCreateAction
      */
     public function __construct(Dispatcher $bus, Forum $forum)
     {
-        global $qdiscuss_bus;
-        $this->bus = $qdiscuss_bus;
+        $this->bus = $bus;
         $this->forum = $forum;
     }
 

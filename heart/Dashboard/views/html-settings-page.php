@@ -16,7 +16,12 @@
 			<?php foreach ($settings as $key => $value) :?>
 			<tr>
 				<td><?php echo $key; ?></td>
-				<td><?php echo $value; ?></td>
+				<td>
+					<?php 
+						echo $value;
+						if ($key == 'forum_language') echo ' (Contribute to <a href="https://github.com/ColorVila/QDiscuss-languanges">Translation Project of QDiscuss</a>).' ;
+					?>
+				</td>
 				<td><a href="<?php echo admin_url() . 'admin.php?page=qdiscuss-config-settings&key=' . $key; ?>"><?php _e('Edit'); ?></a></td>
 			</tr>
 			<?php endforeach; ?>

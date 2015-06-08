@@ -3,15 +3,13 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs, bbpress
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.1.0
+Stable tag: 0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Next-generation Forum Plugin for WordPress which helps you create modern forum on your site.
 
 == Description ==
-
-QDiscuss is based on the work of Flarum http://flarum.org, which is a standalone and modern PHP forum script. And thanks for the GREAT job of Toby. We re-constructed the backend code to make it completely a native plugin for WordPress. 
 
 QDiscuss is a modern designed, well-architected, powerful forum plugin that is easy to use,  with which you can easily add a forum to your site and allow your members to start their own conversations. 
 
@@ -74,6 +72,29 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 <a href="http://colorvila.com/qdiscuss-plugin">Click to see Live Demo</a>
 
 == Changelog ==
+
+= v0.2 =
+
+1. Create service provider mechanism and core application container for better code's structure.
+2. Add two middweares login_with_cookie and login_with_header for more security, if you server is apache. some more config settings you should follow:
+please add this line `SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1` in your wordpress's .htaccess file.
+for example:
+	# BEGIN WordPress
+	<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /qdiscuss/
+	RewriteRule ^index\.php$ - [L]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule . /qdiscuss/index.php [L]
+	SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+	</IfModule>
+	# END WordPress
+3. Fix the logout issue
+4. Inject the Slim package into  QDiscuss's Container's router part
+5. Add view counts of discussion
+6. Add Muti-Languages support, welcome to contribute to Tanslation Project Of QDiscuss: https://github.com/ColorVila/QDiscuss-languanges.
+7. New extension: "markdown editor" is here: http://colorvila.com/qdiscuss-extensions/
 
 = v0.1.0 =
 

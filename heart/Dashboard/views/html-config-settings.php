@@ -10,7 +10,20 @@
 			<p><?php echo $key; ?></p>		
 		 	
 		 	<p><strong><?php _e('Value'); ?>:</strong></p>
-			<p><textarea name="<?php echo $key; ?>" rows="2" cols="30" ><?php echo $set_value; ?></textarea></p>
+			<p>
+			<?php 
+				if ($key == 'forum_language') :
+					echo '<select name="forum_language">';
+					foreach ($language_files as $language) :
+						if ($language == $set_value) echo '<option selected value="' . $language . '">' . $language .'</option>';
+						else echo '<option value="' . $language . '">' . $language .'</option>';
+					endforeach;
+					echo '</select>';
+				else :
+					echo '<textarea name="<?php echo $key; ?>" rows="2" cols="30" ><?php echo $set_value; ?></textarea>';
+				endif;
+			?>
+			</p>
 			<p>
 			<?php 
 				if($key == 'forum_endpoint') : 

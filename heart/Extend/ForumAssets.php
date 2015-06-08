@@ -1,6 +1,6 @@
 <?php namespace Qdiscuss\Extend;
 
-use Illuminate\Foundation\Application;
+use Qdiscuss\Application;
 
 class ForumAssets implements ExtenderInterface
 {
@@ -11,10 +11,9 @@ class ForumAssets implements ExtenderInterface
 		$this->files = $files;
 	}
 
-	public function extend()
+	public function extend(Application $app)
 	{
-		global $qdiscuss_event;
-		$qdiscuss_event->listen('Qdiscuss\Forum\Events\RenderView', function ($event) {
+		$app['events']->listen('Qdiscuss\Forum\Events\RenderView', function ($event) {
 			$event->assets->addFile($this->files);
 		});
 	}

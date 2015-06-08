@@ -23,9 +23,7 @@ class DiscussionSearcher implements SearcherInterface
 
 	public function __construct(GambitManager $gambits, DiscussionRepositoryInterface $discussions, PostRepositoryInterface $posts)
 	{
-		// $this->gambits = $gambits;neychang
-		global $qdiscuss_app;
-		$this->gambits = $qdiscuss_app['qdiscuss.discussions.gambits'];
+		$this->gambits = $gambits;
 		$this->discussions = $discussions;
 		$this->posts = $posts;
 	}

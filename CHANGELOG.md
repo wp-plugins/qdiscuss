@@ -1,5 +1,36 @@
 ### Changelog
 
+#### v0.2
+
+1. Create service provider mechanism and core application container for better code's structure
+
+2. Add two middweares login_with_cookie and login_with_header for more security, if you server is apache. some more config setting you should folllow:
+please add this line `SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1` in your wordpress's .htaccess file
+
+for example:
+
+	# BEGIN WordPress
+	<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /qdiscuss/
+	RewriteRule ^index\.php$ - [L]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule . /qdiscuss/index.php [L]
+	SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+	</IfModule>
+	# END WordPress
+
+3. Fix the logout issue
+
+4. Inject the Slim package into  QDiscuss's Container's router part
+
+5. Add view counts of discussion
+
+6. Add Muti-Languages support, welcome to contribute to [Tanslation Project Of QDiscuss](https://github.com/ColorVila/QDiscuss-languanges)
+
+7. New extension: "markdown editor" is here: http://colorvila.com/qdiscuss-extensions/
+
 #### v0.1.0
 
 1. Fix discussion moved post notice error

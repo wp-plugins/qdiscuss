@@ -1,6 +1,7 @@
 <?php namespace Qdiscuss\Extend;
 
 use Closure;
+use Qdiscuss\Application;
 
 class SerializeAttributes implements ExtenderInterface
 {
@@ -15,12 +16,9 @@ class SerializeAttributes implements ExtenderInterface
 		$this->callback = $callback;
 	}
 	
-	public function extend()
+	public function extend(Application $app)
 	{
-		// @todo for that neychang not working
-		global $qdiscuss_event;
-
-		$qdiscuss_event->listen('Qdiscuss\Api\Events\SerializeAttributes', function ($event) {
+		$app['events']->listen('Qdiscuss\Api\Events\SerializeAttributes', function ($event) {
 			if ($event->serializer instanceof $this->serializer) {
 				call_user_func_array($this->callback, [&$event->attributes, $event->model, $event->serializer]);
 			}

@@ -29,7 +29,7 @@ class EloquentUserRepository implements UserRepositoryInterface
     {
         $query = User::where('id', $id);
 
-        return $this->scopeVisibleForUser($query, $user)->firstOrFail();
+        return $query->firstOrFail();
     }
 
     /**

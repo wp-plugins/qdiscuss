@@ -17,11 +17,10 @@ class DiscussionSerializer extends DiscussionBasicSerializer
 	 */
 	protected function attributes($discussion)
 	{
-		global $qdiscuss_actor;
 
 		$attributes = parent::attributes($discussion);
 
-		$user = $qdiscuss_actor->getUser();
+		$user = $this->actor->getUser();
 		$state = $discussion->stateFor($user);
 
 		$attributes += [
@@ -36,7 +35,8 @@ class DiscussionSerializer extends DiscussionBasicSerializer
 			'isSticky' =>  $discussion->is_sticky ? (bool) $discussion->is_sticky : false,// add neychang @todo to delete
 			'canSticky' =>  (bool) $discussion->can($user, 'sticky'), // add neychang @todo to delete
 			'readTime'       => $state && $state->read_time ? $state->read_time->toRFC3339String() : null,
-			'readNumber'     => $state ? (int) $state->read_number : 0
+			'readNumber'     => $state ? (int) $state->read_number : 0,
+			'viewCounts'   => (int) $discussion->view_counts,
 		];
 
 		return $this->extendAttributes($discussion, $attributes);

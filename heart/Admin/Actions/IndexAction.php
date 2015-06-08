@@ -2,35 +2,34 @@
 
 use Qdiscuss\Core\Models\User;
 use Qdiscuss\Core\Models\Setting;
-use Qdiscuss\Core\Repositories\EloquentUserRepository as UserRepositoryInterface;
+use Qdiscuss\Core\Repositories\UserRepositoryInterface;
 use Qdiscuss\Api\Serializers\UserSerializer;
 use Qdiscuss\Core\Actions\BaseAction;
 use Qdiscuss\Core\Support\Helper;
 use Qdiscuss\Forum\Events\RenderView;
+use Qdiscuss\Core\Support\Actor;
 
 class IndexAction extends BaseAction
 {
 	use Helper;
 
-	public function __construct()
+	public function __construct(Actor $actor, UserRepositoryInterface $user)
 	{
-		$this->user = new UserRepositoryInterface;
-		global $qdiscuss_actor;
-		$qdiscuss_actor->setUser(self::current_forum_user());
-		// \Qdiscuss\Api\Serializers\BaseSerializer::setActor($qdiscuss_actor);
+		$this->actor = $actor;
+		$this->user = $user ;
 	}
 
 	public function get()
 	{
-		global $qdiscuss_actor, $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_welcome_title, $qdiscuss_desc;
+		global $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_welcome_title, $qdiscuss_desc;
 
 		if($user = $this->is_logined()){
 		              $user = explode('|', $user);
 		              $user_name = $user[0];
 		              $user_info = User::where('username', $user_name)->first();
 
-			$user = $this->user->findOrFail($user_info->id, $qdiscuss_actor->getUser());
-			 $serializer = new UserSerializer($qdiscuss_actor, ['groups']);
+			$user = $this->user->findOrFail($user_info->id, $this->actor->getUser());
+			 $serializer = new UserSerializer($this->actor, ['groups']);
 			$document = $this->document()->setData($serializer->resource($user));
 			$data = json_decode($this->respondWithDocument($document), true);
 

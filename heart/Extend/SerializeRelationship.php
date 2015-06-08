@@ -1,6 +1,6 @@
 <?php namespace Qdiscuss\Extend;
 
-use Illuminate\Foundation\Application;
+use Qdiscuss\Application;
 use Closure;
 
 class SerializeRelationship implements ExtenderInterface
@@ -21,7 +21,7 @@ class SerializeRelationship implements ExtenderInterface
 		$this->child = $child;
 	}
 	
-	public function extend()
+	public function extend(Application $app)
 	{
 		$parent = $this->parent;
 		$parent::addRelationship($this->name, function ($serializer) {

@@ -15,8 +15,7 @@ class Schema extends Facade {
 	 */
 	public static function connection($name)
 	{
-		global $qdiscuss_app;
-		return $qdiscuss_app['db']->connection($name)->getSchemaBuilder();
+		return app('db')->connection($name)->getSchemaBuilder();
 	}
 
 	/**
@@ -26,8 +25,7 @@ class Schema extends Facade {
 	 */
 	protected static function getFacadeAccessor()
 	{
-		global $qdiscuss_app;
-		return $qdiscuss_app['db']->connection()->getSchemaBuilder();
+		return app('db')->connection()->getSchemaBuilder();
 	}
 
 }

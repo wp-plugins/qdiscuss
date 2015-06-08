@@ -1,6 +1,6 @@
 <?php namespace Qdiscuss\Extend;
 
-use Illuminate\Foundation\Application;
+use Qdiscuss\Application;
 
 class ApiInclude implements ExtenderInterface
 {
@@ -17,7 +17,7 @@ class ApiInclude implements ExtenderInterface
 		$this->status = $status;
 	}
 
-	public function extend()
+	public function extend(Application $app)
 	{
 		foreach ((array) $this->actions as $action) {
 			$parts = explode('.', $action);

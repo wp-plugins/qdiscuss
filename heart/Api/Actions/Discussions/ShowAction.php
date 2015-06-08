@@ -1,5 +1,7 @@
 <?php namespace Qdiscuss\Api\Actions\Discussions;
 
+use Qdiscuss\Core\Commands\ReadDiscussionCommand;
+use Illuminate\Contracts\Bus\Dispatcher;
 use Qdiscuss\Core\Repositories\DiscussionRepositoryInterface;
 use Qdiscuss\Core\Repositories\PostRepositoryInterface;
 use Qdiscuss\Api\Actions\SerializeResourceAction;
@@ -70,11 +72,13 @@ class ShowAction extends SerializeResourceAction
 	/**
 	 * Instantiate the action.
 	 *
+	 * @param \Illuminate\Contracts\Bus\Dispatcher $bus
 	 * @param \Qdiscuss\Core\Repositories\DiscussionRepositoryInterface $discussions
 	 * @param \Qdiscuss\Core\Repositories\PostRepositoryInterface $posts
 	 */
-	public function __construct(DiscussionRepositoryInterface $discussions, PostRepositoryInterface $posts)
+	public function __construct(Dispatcher $bus, DiscussionRepositoryInterface $discussions, PostRepositoryInterface $posts)
 	{
+		$this->bus = $bus;
 		$this->discussions = $discussions;
 		$this->posts = $posts;
 	}
@@ -103,6 +107,10 @@ class ShowAction extends SerializeResourceAction
 
 			$discussion->posts = $this->getPosts($request, ['discussion_id' => $discussion->id])->load($relations);
 		}
+
+		$this->bus->dispatch(
+		           new ReadDiscussionCommand($discussion->id, $user, 1)
+		);
 
 		return $discussion;
 	}

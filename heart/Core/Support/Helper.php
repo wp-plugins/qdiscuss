@@ -2,6 +2,7 @@
 
 use Qdiscuss\Core\Models\User;
 use Qdiscuss\Core\Models\Guest;
+use Qdiscuss\Core\Models\AccessToken;
 use Illuminate\Database\Capsule\Manager as DB; 
 
 trait Helper
@@ -22,6 +23,20 @@ trait Helper
 		}
 		
 		return $string; 
+	}
+
+	/**
+	 * Create cookie when user login in or register by the WP portal
+	 *
+	 * @param  Qdiscuss\Core\Model\User $user
+	 * @return   Qdiscuss\Core\Model\AccessToken $access_token
+	 */
+	public static function create_cookie($user)
+	{
+		$access_token = AccessToken::generate($user->id);
+		$access_token->save();
+		setcookie("qdiscuss_remember",  $access_token->id, time() + 60*60*24*365*5, '/');
+		return $access_token;
 	}
 
 	/**

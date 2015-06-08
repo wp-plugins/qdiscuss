@@ -14,8 +14,7 @@ class StartDiscussionCommandHandler
 
     public function __construct(Dispatcher $bus)
     {
-        global $qdiscuss_bus;
-        $this->bus =  $qdiscuss_bus; 
+        $this->bus =  $bus; 
     }
 
     public function handle($command)

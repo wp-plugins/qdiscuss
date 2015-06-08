@@ -8,40 +8,42 @@ use Qdiscuss\Core\Models\Setting;
 use Qdiscuss\Core\Support\Helper;
 use Qdiscuss\Forum\Events\RenderView;
 use Qdiscuss\Api\Request as ApiRequest;
+use Qdiscuss\Core\Support\Actor;
+use Qdiscuss\Core;
+use Qdiscuss\Core\Support\LanguageManager;
+use Qdiscuss\Forum\Events\LanguageSupport;
 
 class IndexAction extends BaseAction
 {
 	use Helper;
 
-	public function __construct()
+	public function __construct(Actor $actor, EloquentUserRepository $user)
 	{
-		global $qdiscuss_actor;
-		$this->user = new EloquentUserRepository;
-		$qdiscuss_actor->setUser(self::current_forum_user());
+		$this->user = $user;
+		$this->actor = $actor;
 	}
 
 	public function get()
 	{
-		global $qdiscuss_app, $qdiscuss_actor, $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_welcome_title, $qdiscuss_desc;
+		global $qdiscuss_app, $qdiscuss_endpoint, $qdiscuss_tittle, $qdiscuss_welcome_title, $qdiscuss_desc;
 		$qdiscuss_title = Setting::getForumTitle();
 		$qdiscuss_welcome_title = Setting::getWelcomeTitle();
 		$qdiscuss_desc = Setting::getForumDescription();
 
-		// if(($user = $qdiscuss_actor->getUser()) && $user->exists) {
+		// if(($user = $this->actor->getUser()) && $user->exists) {
 		if($user = self::is_logined()){
 			$user = explode('|', $user);
 			$user_name = $user[0];
 
 			if($user_info = User::where('username', $user_name)->first()){
-				$user = $this->user->findOrFail($user_info->id, $qdiscuss_actor->getUser());
+				$user = $this->user->findOrFail($user_info->id, $this->actor->getUser());//@todo
 			}else{
-				global $qdiscuss_actor;
 				$user = self::register_user(get_user_by('login', $user_name));
-				$qdiscuss_actor->setUser($user);
+				$this->actor->setUser($user);
 			}
 
 			$response = app('Qdiscuss\Api\Actions\Users\ShowAction')
-				->handle(new ApiRequest(['id' => $user->id], $qdiscuss_actor))
+				->handle(new ApiRequest(['id' => $user->id], $this->actor))
 				->content->toArray();
 
 			$data = [$response['data']];
@@ -57,6 +59,8 @@ class IndexAction extends BaseAction
 		    	$session = [];
 		}
 
+		$root = __DIR__.'/../../..';
+
 		$config = array(
 			'base_url' =>  get_site_url() . '/' . $qdiscuss_endpoint,
 			'api_url' => get_site_url() . '/' . $qdiscuss_endpoint,
@@ -65,22 +69,26 @@ class IndexAction extends BaseAction
 			'welcome_message' => $qdiscuss_desc,
 		);
 
+		$languageManager = new LanguageManager;
+		event(new LanguageSupport($languageManager));
+		$language = $languageManager->getLanguageFilesConent();
+
+		// var_dump($language);exit;
+
 		$assetManager = app('qdiscuss.forum.assetManager');
-		$root = __DIR__.'/../../..';
+		
 		$assetManager->addFile([
 			$root.'/front/js/forum/dist/app.js',
 			$root.'/front/less/forum/app.less'
 		]);
 
 		// event(new RenderView($view, $assetManager, $this));
-		event(new RenderView($data, $assetManager, $qdiscuss_actor));
+		event(new RenderView($data, $assetManager, $this->actor));
 
 		$styles = array($assetManager->getCSSFiles());
 		$scripts =  array($assetManager->getJSFiles());
-
 		header("Content-Type: text/html; charset=utf-8");
-		echo include(__DIR__ . '/../Views/index.php');
-		exit();
+		include(__DIR__ . '/../Views/index.php');
 	}
 	
 }

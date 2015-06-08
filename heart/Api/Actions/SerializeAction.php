@@ -65,8 +65,8 @@ abstract class SerializeAction extends JsonApiAction
 	/**
 	 * Handle an API request and return an API response.
 	 *
-	 * @param \Flarum\Api\Request $request
-	 * @return \Flarum\Api\Response
+	 * @param Qdiscuss\Api\Request $request
+	 * @return Qdiscuss\Api\Response
 	 */
 	public function respond(Request $request)
 	{
@@ -84,8 +84,8 @@ abstract class SerializeAction extends JsonApiAction
 	/**
 	 * Get the data to be serialized and assigned to the response document.
 	 *
-	 * @param \Flarum\Api\JsonApiRequest $request
-	 * @param \Flarum\Api\JsonApiResponse $response
+	 * @param Qdiscuss\Api\JsonApiRequest $request
+	 * @param Qdiscuss\Api\JsonApiResponse $response
 	 * @return array
 	 */
 	abstract protected function data(JsonApiRequest $request, JsonApiResponse $response);
@@ -103,7 +103,7 @@ abstract class SerializeAction extends JsonApiAction
 	 * Extract parameters from the request input and assign them to the
 	 * request, restricted by the action's specifications.
 	 *
-	 * @param \Flarum\Api\Request $request
+	 * @param Qdiscuss\Api\Request $request
 	 * @return void
 	 */
 	protected static function buildJsonApiRequest(Request $request)
@@ -160,8 +160,8 @@ abstract class SerializeAction extends JsonApiAction
 	 * Add pagination links to a JSON-API response, based on input parameters
 	 * and the default parameters of this action.
 	 *
-	 * @param \Flarum\Api\JsonApiResponse $response
-	 * @param \Flarum\Api\JsonApiRequest $request
+	 * @param Qdiscuss\Api\JsonApiResponse $response
+	 * @param Qdiscuss\Api\JsonApiRequest $request
 	 * @param string $url The base URL to build pagination links with.
 	 * @param integer|boolean $total The total number of results (used to build
 	 *     a 'last' link), or just true if there are more results but how many

@@ -7,9 +7,6 @@ class UploadAvatarCommand
 {
     public $userId;
 
-    /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     */
     public $file;
 
     public $actor;

@@ -3,11 +3,14 @@
 use Qdiscuss\Core\Models\Permission as PermissionModel;
 use Qdiscuss\Extend\SerializeAttributes;
 use Qdiscuss\Core\Support\Helper;
+use Qdiscuss\Application;
 
 class Permission implements ExtenderInterface
 {
 	protected $permission;
+
 	protected $serialize = false;
+	
 	protected $grant = [];
 
 	public function __construct($permission)
@@ -27,20 +30,18 @@ class Permission implements ExtenderInterface
 		return $this;
 	}
 
-	public function extend()
+	public function extend(Application $app)
 	{
-		global $qdiscuss_app, $qdiscuss_actor;
-		$qdiscuss_actor->setUser(Helper::current_forum_user());// @todo to delete neychang
 		PermissionModel::addPermission($this->permission);
 		list($entity, $permission) = explode('.', $this->permission);
 		if ($this->serialize) {
 			$extender = new SerializeAttributes(
 				'Qdiscuss\Api\Serializers\\'.ucfirst($entity).'Serializer',
-				function (&$attributes, $model, $serializer) use ($permission, $qdiscuss_actor) {
-					$attributes['can'.ucfirst($permission)] = (bool) $model->can($qdiscuss_actor->getUser(), $permission);
+				function (&$attributes, $model, $serializer) use ($permission) {
+					$attributes['can'.ucfirst($permission)] = (bool) $model->can($serializer->actor->getUser(), $permission);
 				}
 			);
-			$extender->extend();
+			$extender->extend($app);
 		}
 		foreach ($this->grant as $callback) {
 			$model = 'Qdiscuss\Core\Models\\'.ucfirst($entity);

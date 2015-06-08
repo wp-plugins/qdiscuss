@@ -17,6 +17,7 @@ CREATE TABLE `_qdiscuss_prefix_discussions` (
   `last_user_id` int(10) unsigned DEFAULT NULL,
   `last_post_id` int(10) unsigned DEFAULT NULL,
   `last_post_number` int(10) unsigned DEFAULT NULL,
+  `view_counts` int(10) unsigned DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

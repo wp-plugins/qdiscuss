@@ -17,14 +17,15 @@ class Bridge {
  		"groups",
  		"permissions",
  		"users_groups",
- 		"users",
  		"access_tokens",
+ 		"users",
  		"users_discussions",
  		"discussions",
  		"posts",
  		"notifications",
  		"activity",
  		"config",
+ 		"attachments",
  		"migrations",
  	);
 
@@ -101,7 +102,7 @@ class Bridge {
 	 			dbDelta($new_sql);
 
 	 			if($table == 'users'){
-	 				self::register_user(self::current_user());
+	 				$user = self::register_user(self::current_user());
 	 			}
 
 	 			if($table == 'config'){
@@ -116,7 +117,8 @@ class Bridge {
 	 	
 		// be sure the current user has migrated into qdiscuss
 		if(!User::where('username', self::current_user()->user_login)->first()){
-			self::register_user(self::current_user());
+			$user = self::register_user(self::current_user());
+			self::create_cookie($user);
 		}
 		
 	}
@@ -148,8 +150,7 @@ class Bridge {
 	 */
 	public static function delete_dirs()
 	{
-		global $qdiscuss_app;
-		$qdiscuss_app['files']->deleteDirectory(qd_base_wp_path());
+		app('files')->deleteDirectory(qd_base_wp_path());
 	}
 
 	/**
@@ -245,6 +246,7 @@ class Bridge {
 			array("key" => "forum_description", "value" => "An Amazing Forum Plugin Base On WordPress By <a href='http://colorvila.com'>ColorVila</a>"),
 			array("key" => "forum_endpoint", "value" => "qdiscuss"),
 			array("key" => "extensions_enabled", "value" => '[]'),
+			array("key" => "forum_language", "value" => 'en'),
 		);
 	
 		Setting::insert($settings);
@@ -291,35 +293,35 @@ class Bridge {
 
 	}
 
-	public static function register_user($user)
-	{
-		$role = self::get_user_role($user->ID);
-		$member  =User::register($user->user_login, $user->user_email, '', $user->ID);
-		$member->save();
-		$member->activate();
-		switch ($role) {
-			case 'administrator':
-				$member->groups()->sync([1]);
-				break;
-			case 'editor':
-				$member->groups()->sync([3]);
-				break;
-			case 'author':
-				$member->groups()->sync([3]);
-				break;
-			case 'contributor':
-				$member->groups()->sync([3]);
-				break;
-			case 'subscriber':
-				$member->groups()->sync([3]);
-				break;
-			default:
-				$member->groups()->sync([3]);
-				break;
-		}
+	// public static function register_user($user)
+	// {
+	// 	$role = self::get_user_role($user->ID);
+	// 	$member  =User::register($user->user_login, $user->user_email, '', $user->ID);
+	// 	$member->save();
+	// 	$member->activate();
+	// 	switch ($role) {
+	// 		case 'administrator':
+	// 			$member->groups()->sync([1]);
+	// 			break;
+	// 		case 'editor':
+	// 			$member->groups()->sync([3]);
+	// 			break;
+	// 		case 'author':
+	// 			$member->groups()->sync([3]);
+	// 			break;
+	// 		case 'contributor':
+	// 			$member->groups()->sync([3]);
+	// 			break;
+	// 		case 'subscriber':
+	// 			$member->groups()->sync([3]);
+	// 			break;
+	// 		default:
+	// 			$member->groups()->sync([3]);
+	// 			break;
+	// 	}
 
-		$member->save();
-	}
+	// 	$member->save();
+	// }
 
 	public static function create_qd_dir()
 	{
@@ -347,11 +349,12 @@ class Bridge {
 			$qd_field = 'username';
 		}
 
-		if(!User::where($qd_field, $username)->first()){
+		if($user = User::where($qd_field, $username)->first()){
+			self::create_cookie($user);
+		} else {
 			$user = get_user_by('login', $username);
 			self::register_user($user);
 		}
-		
 	}
 
 

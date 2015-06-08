@@ -1,6 +1,6 @@
 <?php namespace Qdiscuss\Extend;
 
-use Illuminate\Foundation\Application;
+use Qdiscuss\Application;
 use Qdiscuss\Core\Models\Notification;
 use Qdiscuss\Core\Models\User;
 use Qdiscuss\Api\Serializers\NotificationSerializer;
@@ -25,7 +25,7 @@ class NotificationType implements ExtenderInterface
 		return $this;
 	}
 	
-	public function extend()
+	public function extend(Application $app)
 	{
 		$class = $this->class;
 		Notification::registerType($class);

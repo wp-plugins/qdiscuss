@@ -1,8 +1,8 @@
 <?php namespace Qdiscuss\Extend;
 
-use Illuminate\Foundation\Application;
+use Qdiscuss\Application;
 
 interface ExtenderInterface
 {
-	public function extend();
+	public function extend(Application $app);
 }

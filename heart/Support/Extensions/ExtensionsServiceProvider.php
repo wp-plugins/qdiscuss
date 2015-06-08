@@ -1,7 +1,8 @@
 <?php namespace Qdiscuss\Support\Extensions;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Capsule\Manager as DB; 
+use Illuminate\Database\Capsule\Manager as DB;
+use Qdiscuss\Core;
 
 class ExtensionsServiceProvider extends ServiceProvider
 {
@@ -22,11 +23,17 @@ class ExtensionsServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$extensions = json_decode(DB::table('config')->where('key', 'extensions_enabled')->pluck('value'), true);
+		if (! Core::isInstalled() ){
+			return ;
+		}
+		
+		$extensions = json_decode(Core::config('extensions_enabled'), true);
 
-		foreach ($extensions as $extension) {
-			if ($extension['is_activated'] == 1 && file_exists($file = extensions_path().'/'.$extension.'/bootstrap.php')) {
-				require $file;
+		if($extensions){
+			foreach ($extensions as $extension) {
+				if (file_exists($file = qd_extensions_path() . '/'. $extension . '/bootstrap.php')) {
+					require_once($file);
+				}
 			}
 		}
 	}

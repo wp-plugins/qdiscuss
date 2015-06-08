@@ -1,6 +1,6 @@
 <?php namespace Qdiscuss\Core\Support;
 
-use Illuminate\Filesystem\Filesystem;
+use Qdiscuss\Support\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Cache;
 use Less_Parser;

@@ -20,8 +20,7 @@ class DeleteAction extends BaseDeleteAction
      */
     public function __construct(Dispatcher $bus)
     {
-        global $qdiscuss_bus;
-        $this->bus = $qdiscuss_bus;
+        $this->bus = $bus;
     }
 
     /**

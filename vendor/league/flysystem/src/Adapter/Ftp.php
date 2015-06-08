@@ -301,17 +301,25 @@ class Ftp extends AbstractFtpAdapter
      */
     public function getMetadata($path)
     {
-        $listing = ftp_rawlist($this->getConnection(), $path);
+        $connection = $this->getConnection();
+
+        if (empty($path)) {
+            return ['type' => 'dir', 'path' => ''];
+        }
+
+        if (@ftp_chdir($connection, $path) === true) {
+            $this->setConnectionRoot();
+
+            return ['type' => 'dir', 'path' => $path];
+        }
+
+        $listing = ftp_rawlist($connection, $path);
 
         if (empty($listing)) {
             return false;
         }
 
         $metadata = $this->normalizeObject($listing[0], '');
-
-        if ($metadata['path'] === '.') {
-            $metadata['path'] = $path;
-        }
 
         return $metadata;
     }

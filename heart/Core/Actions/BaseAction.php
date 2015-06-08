@@ -12,8 +12,7 @@ abstract class BaseAction extends Action{
 
 	public function __construct(Actor $actor, Dispatcher $bus)
 	{
-		global $qdiscuss_actor;
-		$this->actor = $qdiscuss_actor;
+		$this->actor = $actor;
 		$this->bus = $bus;
 	}
 

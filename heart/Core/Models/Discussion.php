@@ -25,7 +25,8 @@ class Discussion extends BaseModel
 		'last_time'        => 'date',
 		'last_user_id'     => 'integer',
 		'last_post_id'     => 'integer',
-		'last_post_number' => 'integer'
+		'last_post_number' => 'integer',
+		'view_counts'   => 'integer',
 	];
 
 	/**
@@ -158,6 +159,17 @@ class Discussion extends BaseModel
 	{
 		$this->comments_count = $this->comments()->count();
 
+		return $this;
+	}
+
+	/**
+	 * Refresh the discussion's view counts.
+	 * 
+	 * @return $this
+	 */
+	public function refreshViewCounts()
+	{
+		$this->view_counts = ++$this->view_counts;
 		return $this;
 	}
 

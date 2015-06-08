@@ -29,4 +29,4 @@ use Illuminate\Database\Capsule\Manager as DB;
 	$permission_sql = file_get_contents(__DIR__."/../migrations/" . "permissions-schema.sql");
 	DB::statement(preg_replace("/_qdiscuss_prefix_/", $prefix, $permission_sql));
 	\Qdiscuss\Dashboard\Bridge::seed_permissions();
-	\Qdiscuss\Dashboard\Bridge::create_cache_dir();
+	\Qdiscuss\Dashboard\Bridge::create_qd_dir();

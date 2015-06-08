@@ -12,9 +12,8 @@ class Request
 	
 	public function __construct(array $input, Actor $actor, $httpRequest = null)
 	{
-		global $qdiscuss_actor;
 		$this->input = $input;
-		$this->actor = $qdiscuss_actor;
+		$this->actor = $actor;
 		$this->http = $httpRequest;
 	}
 	

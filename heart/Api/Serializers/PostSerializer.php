@@ -17,9 +17,8 @@ class PostSerializer extends PostBasicSerializer
 	 */
 	protected function attributes($post)
 	{
-		global $qdiscuss_actor;
 		$attributes = parent::attributes($post);
-		$user = $qdiscuss_actor->getUser();
+		$user = $this->actor->getUser();
 
 		unset($attributes['content']);
 

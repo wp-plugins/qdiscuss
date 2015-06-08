@@ -1,6 +1,6 @@
 <?php namespace Qdiscuss\Extend;
 
-use Illuminate\Foundation\Application;
+use Qdiscuss\Application;
 
 class EventSubscribers implements ExtenderInterface
 {
@@ -11,11 +11,10 @@ class EventSubscribers implements ExtenderInterface
 		$this->subscribers = $subscribers;
 	}
 
-	public function extend()
+	public function extend(Application $app)
 	{
-		global $qdiscuss_event;
 		foreach ((array) $this->subscribers as $subscriber) {
-			$qdiscuss_event->subscribe($subscriber);
+			$app['events']->subscribe($subscriber);
 		}
 	}
 }

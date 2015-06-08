@@ -1,6 +1,6 @@
 <?php namespace Qdiscuss\Extend;
 
-use Illuminate\Foundation\Application;
+use Qdiscuss\Application;
 
 class DiscussionGambit implements ExtenderInterface
 {
@@ -8,14 +8,12 @@ class DiscussionGambit implements ExtenderInterface
 
 	public function __construct($class)
 	{
-		global $qdiscuss_event;
 		$this->class = $class;
-		$this->event = $qdiscuss_event;
 	}
 	
-	public function extend()
+	public function extend(Application $app)
 	{
-		$this->event->listen('Qdiscuss\Core\Events\RegisterDiscussionGambits', function ($event) {
+		$app['events']->listen('Qdiscuss\Core\Events\RegisterDiscussionGambits', function ($event) {
 			$event->gambits->add($this->class);
 		});
 	}
