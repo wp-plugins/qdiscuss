@@ -103,6 +103,7 @@ class Bridge {
 
 	 			if($table == 'users'){
 	 				$user = self::register_user(self::current_user());
+	 				self::create_cookie($user);
 	 			}
 
 	 			if($table == 'config'){
