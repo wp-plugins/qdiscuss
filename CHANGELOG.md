@@ -1,5 +1,11 @@
 ### Changelog
 
+#### v0.3.1
+
+1. Auto config the .htaccess file when activate qdiscuss.
+2. Limit the image width at the discussion page.
+
+
 #### v0.3
 
 1. Fix the guest can't see user's activity issue.

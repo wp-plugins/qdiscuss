@@ -232,6 +232,49 @@ trait Helper
 	 	dbDelta($new_sql);
 	}
 
+	public static function check_rule_exsist($rule)
+	{
+		if (file_exists(ABSPATH . '/.htaccess')) {
+			$a = extract_from_markers(ABSPATH . '/.htaccess', 'WordPress');
+		
+			return in_array($rule, $a);
+		} else {
+			return false;
+		}
+		
+	}
+
+	public static function write_rule_to($rule)
+	{
+		if (file_exists(ABSPATH . '/.htaccess')) {
+			$old_rules = extract_from_markers(ABSPATH . '/.htaccess', 'WordPress');
+			if (self::check_rule_exsist($rule)) {
+				return true;
+			} else {
+				array_push($old_rules, $rule);
+				return insert_with_markers(ABSPATH . '/.htaccess', 'WordPress', $old_rules);
+			}
+		} else {
+			return false;
+		}
+	}
+
+	public static function delete_rule($rule)
+	{
+		if (file_exists(ABSPATH . '/.htaccess')) {
+			$old_rules = extract_from_markers(ABSPATH . '/.htaccess', 'WordPress');
+			if (self::check_rule_exsist($rule)) {
+				$new_rules = array_diff($old_rules, [$rule]);
+				return insert_with_markers(ABSPATH . '/.htaccess', 'WordPress', $new_rules);
+			} else {
+				array_push($old_rules, $rule);
+				return insert_with_markers(ABSPATH . '/.htaccess', 'WordPress', $old_rules);
+			}
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * Get either a Gravatar URL or complete image tag for a specified email address.
 	 *

@@ -56,7 +56,7 @@ class Bridge {
 		add_option( 'qdiscuss_db_version', QDISCUSS_VERSION );
 		add_option( 'qdiscuss_version', QDISCUSS_VERSION );
 		self::create_qd_dir();
-
+		self::write_rule_to('SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1');
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Bridge {
 	 */     
 	public static function deactivate()
 	{
-                    	// nothing to do
+                    	// nothing to
 	}
 
 	/**
@@ -80,6 +80,7 @@ class Bridge {
 		self::delete_dirs();
 		delete_option( 'qdiscuss_db_version' );
 		delete_option( 'qdiscuss_version' );
+		self::delete_rule('SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1');
 	}
 
 	/**
