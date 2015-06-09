@@ -152,12 +152,12 @@ $router->group('/' . $qdiscuss_endpoint, $login_with_cookie(), function() use ($
 	|--------------------------------------------------------------------------
 	*/
 	// List activity
-	$router->get('/activity',  $login_with_header(), function() use($action) {
+	$router->get('/activity',  function() use($action) {
 		return $action('Qdiscuss\Api\Actions\Activity\IndexAction');exit;
 	});
 
 	// List notifications for the current user
-	$router->get('/notifications', $login_with_header(), function() use($action) {
+	$router->get('/notifications', function() use($action) {
 		return $action('Qdiscuss\Api\Actions\Notifications\IndexAction');exit;
 	});
 
@@ -219,7 +219,7 @@ $router->group('/' . $qdiscuss_endpoint, $login_with_cookie(), function() use ($
 	});
 
 	// Create a post
-	$router->post('/posts', $login_with_header(), $login_with_header(), function() use ($action){
+	$router->post('/posts', $login_with_header(), function() use ($action){
 		return $action('Qdiscuss\Api\Actions\Posts\CreateAction');exit;
 	});
 

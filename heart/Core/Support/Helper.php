@@ -198,7 +198,7 @@ trait Helper
 	public static function check_require($require_versions)
 	{
 		if(count($require_versions) == 1){
-			return QDISCUSS_VERSION == $require_versions['min'];
+			return QDISCUSS_VERSION >= $require_versions['min'];
 		} elseif(count($require_versions) == 2) {
 			return  	QDISCUSS_VERSION >= $require_versions['min'] && QDISCUSS_VERSION <= $require_versions['max'];
 		} else{

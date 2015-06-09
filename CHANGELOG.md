@@ -1,5 +1,9 @@
 ### Changelog
 
+#### v0.3
+
+1. Fix the guest can't see user's activity issue.
+
 #### v0.2
 
 1. Create service provider mechanism and core application container for better code's structure
@@ -27,7 +31,7 @@ for example:
 
 5. Add view counts of discussion
 
-6. Add Muti-Languages support, welcome to contribute to [Tanslation Project Of QDiscuss](https://github.com/ColorVila/QDiscuss-languanges)
+6. Add Muti-Languages support, welcome to contribute to [Translation Project Of QDiscuss](https://github.com/ColorVila/QDiscuss-languanges)
 
 7. New extension: "markdown editor" is here: http://colorvila.com/qdiscuss-extensions/
 

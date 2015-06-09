@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs, bbpress
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.2
+Stable tag: 0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,10 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 == Changelog ==
 
+= v0.3 =
+
+1. Fix the guest can't see user's activity issue.
+
 = v0.2 =
 
 1. Create service provider mechanism and core application container for better code's structure.
@@ -93,7 +97,7 @@ for example:
 3. Fix the logout issue
 4. Inject the Slim package into  QDiscuss's Container's router part
 5. Add view counts of discussion
-6. Add Muti-Languages support, welcome to contribute to Tanslation Project Of QDiscuss: https://github.com/ColorVila/QDiscuss-languanges.
+6. Add Muti-Languages support, welcome to contribute to Translation Project Of QDiscuss: https://github.com/ColorVila/QDiscuss-languanges.
 7. New extension: "markdown editor" is here: http://colorvila.com/qdiscuss-extensions/
 
 = v0.1.0 =
