@@ -20,7 +20,7 @@
 					endforeach;
 					echo '</select>';
 				else :
-					echo '<textarea name="<?php echo $key; ?>" rows="2" cols="30" ><?php echo $set_value; ?></textarea>';
+					echo "<textarea name=" .$key . " rows='2' cols='30'>" . $set_value . "</textarea>";
 				endif;
 			?>
 			</p>

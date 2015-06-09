@@ -1,5 +1,9 @@
 ### Changelog
 
+####  v0.3.2 
+
+1. Fixed: can not edit the config settings at backend
+
 #### v0.3.1
 
 1. Auto config the .htaccess file when activate qdiscuss.
