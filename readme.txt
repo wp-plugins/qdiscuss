@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs, bbpress
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.3.2
+Stable tag: 0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,12 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 == Changelog ==
 
+= v0.4 = 
+
+1. Add auto-update extension process, and can auto-install the QDisucss extension in WordPress backend
+2. Add German lanuage support
+3. Fix the user role setting problem
+
 = v0.3.2 =
 
 1. Fixed: can not edit the config settings at backend
@@ -89,20 +95,7 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 = v0.2 =
 
 1. Create service provider mechanism and core application container for better code's structure.
-2. Add two middweares login_with_cookie and login_with_header for more security, if you server is apache. some more config settings you should follow:
-please add this line `SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1` in your wordpress's .htaccess file.
-for example:
-	# BEGIN WordPress
-	<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /qdiscuss/
-	RewriteRule ^index\.php$ - [L]
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule . /qdiscuss/index.php [L]
-	SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
-	</IfModule>
-	# END WordPress
+2. Add two middweares login_with_cookie and login_with_header for more security.
 3. Fix the logout issue
 4. Inject the Slim package into  QDiscuss's Container's router part
 5. Add view counts of discussion

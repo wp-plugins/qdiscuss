@@ -386,4 +386,46 @@ class Filesystem {
 	{
 		return $this->deleteDirectory($directory, true);
 	}
+
+	/**
+	 * Dowload file from the remote url
+	 *
+	 * @param  string  $download_url
+	 * @param  string  $path
+	 * @return  void
+	 */
+	public function download($download_url, $path)
+	{
+		$ch = curl_init($download_url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$data = curl_exec($ch);
+
+		curl_close($ch);
+
+		file_put_contents($path, $data);
+	}
+
+	/**
+	 * unzip the zip file
+	 *
+	 * @param  string  $filePath
+	 * @param  string  $extractPath
+	 * @param  string  $fileName
+	 * @return  void
+	 */
+	public function unzip($filePath, $extractPath, $fileName)
+	{
+		$zip = new \ZipArchive;
+		$res = $zip->open($filePath);
+		
+		if ($res === TRUE) {
+			if ($this->exists($extractPath)) $this->deleteDirectory($extractPath . DIRECTORY_SEPARATOR . $fileName);
+			$zip->extractTo($extractPath);
+			$zip->close();
+			$this->delete($filePath);
+		} else {
+			die('file is not here');
+		}
+	}
 }

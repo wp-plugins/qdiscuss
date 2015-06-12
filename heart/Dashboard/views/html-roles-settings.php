@@ -5,7 +5,7 @@
  	<h3>Role Setting</h3>
 
  	<p><a href="<?php echo admin_url() . 'admin.php?page=qdiscuss-users';?>">Back</a></p>
- 	<form id="qdiscuss-settings-form" name="qdiscuss-settings-form" action="" enctype="multipart/form-data" method="POST">
+ 	<form id="qdiscuss-roles-settings-form" name="qdiscuss-roles-settings-form" action="" enctype="multipart/form-data" method="POST">
  		<h2><?php echo $user->username ? $user->username : $user->user_login; ?></h2>
 
  		<p><strong><?php _e('Email'); ?>:</strong><?php echo $user->email ? $user->email : $user->user_email; ?></p>
@@ -21,9 +21,13 @@
 		 		<?php endforeach;  ?>   			
 		 	</select>
 		</p>
+		<p>
+			<input type="hidden" name='user_id' value='<?php echo $user_id;?>' />
+			<input type="hidden" name='wp_user_id' value='<?php echo $wp_user_id;?>' />
+		</p>
 	 	
 	 	<p class="clear"></p>
-	 	<p class="submit"><input class="button button-primary" type="submit" value="Save" ></input></p>
+	 	<p ><div id="save-roles-config-setting" class="button button-primary">Save</div></p>
 	</form>
 </div>
 

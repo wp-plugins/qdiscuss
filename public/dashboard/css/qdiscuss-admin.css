@@ -75,3 +75,10 @@ table.background-white{
 .qd-fixed{
 	/*position:fixed;*/
 }
+.small {
+	font-size: 0.618em;
+}
+
+#qd-extensions li a{
+	cursor:pointer;
+}

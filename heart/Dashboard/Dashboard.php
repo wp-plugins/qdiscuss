@@ -33,14 +33,24 @@ class Dashboard  {
 	{		
 		// Admin Script
 		wp_enqueue_script(
+			'qdiscuss-admin-vue',
+			plugins_url( 'public/dashboard/js/vue.min.js', __DIR__.'/../../../'),
+			array(),
+			QDISCUSS_VERSION,
+			true
+		);
+
+		wp_enqueue_script(
 			'qdiscuss-admin',
 			plugins_url( 'public/dashboard/js/qdiscuss-admin.js', __DIR__.'/../../../'),
 			array(),
-			QDISCUSS_VERSION
+			QDISCUSS_VERSION,
+			true
 		);
 
 		wp_localize_script( 'qdiscuss-admin', 'qdiscuss_admin_params', array(
 			'config_settings_redirect' =>  './admin.php?page=qdiscuss-settings',
+			'roles_settings_redirect' =>  './admin.php?page=qdiscuss-users',
 			'extensions_settings_redirect' => './admin.php?page=qdiscuss-extensions',	
 		));
 
@@ -328,6 +338,28 @@ class Dashboard  {
 					self::recompile();
 				}
 				break;
+			case 'update':
+				$download_url = $data['download_url'];
+				$path = qd_upload_path() . DIRECTORY_SEPARATOR . $extension_name . '.zip';
+				app('files')->download($download_url, $path);
+				app('files')->unzip($path, qd_extensions_path(), $extension_name);
+				if(in_array($extension_name, $extensions)){
+					$extensions = array_diff($extensions, [$extension_name]);
+					// add compile css and js file
+					self::recompile();
+				}
+				break;
+			case 'install':
+				$download_url = $data['download_url'];
+				$path = qd_upload_path() . DIRECTORY_SEPARATOR . $extension_name . '.zip';
+				app('files')->download($download_url, $path);
+				app('files')->unzip($path, qd_extensions_path(), $extension_name);
+				if(in_array($extension_name, $extensions)){
+					$extensions = array_diff($extensions, [$extension_name]);
+					// add compile css and js file
+					self::recompile();
+				}
+				break;
 			case 'remove':
 				if(in_array($extension_name, $extensions)){
 					unset($extensions[$extension_name]);
@@ -410,72 +442,35 @@ class Dashboard  {
 		$wp_user_id = $_GET['wp_user_id'];
 		$qdiscuss_roles = Group::all();
 
-		if($_POST){
-			if(!$user_id){
-				$user = self::register_user(get_user_by('id', $wp_user_id));
-			}else{
-				$user = User::find($user_id);
-			}
-
-			if($group_id = $_POST['qdiscuss_group']){
-				if($user->groups[0]->id != $group_id) {
-					$user->groups()->sync([$group_id]);
-				}
-			}
-
-			$user_id = $user->id;
-			if($user_id){
-				$user = User::find($user_id);
-			}else{
-				$user = get_user_by('id', $wp_user_id);
-			}
-			
-
-			include __DIR__ . "/views/html-roles-settings.php";exit();
-
-		}
-
 		if($user_id){
 			$user = User::find($user_id);
 		}else{
 			$user = get_user_by('id', $wp_user_id);
 		}
 		
-
 		include __DIR__ . "/views/html-roles-settings.php";
 
 	}
 
-	public static function register_user($user)
+	public static function qdiscuss_ajax_roles_settings_save()
 	{
-		$role = self::get_user_role($user->ID);
-		$member  =User::register($user->user_login, $user->user_email, '', $user->ID);
-		$member->save();
-		$member->activate();
-		switch ($role) {
-			case 'administrator':
-				$member->groups()->sync([1]);
-				break;
-			case 'editor':
-				$member->groups()->sync([3]);
-				break;
-			case 'author':
-				$member->groups()->sync([3]);
-				break;
-			case 'contributor':
-				$member->groups()->sync([3]);
-				break;
-			case 'subscriber':
-				$member->groups()->sync([3]);
-				break;
-			default:
-				$member->groups()->sync([3]);
-				break;
+		wp_parse_str(stripslashes($_POST['data']), $data);
+		$user_id = $data['user_id'];
+		$wp_user_id = $data['wp_user_id'];
+		$qdiscuss_roles = Group::all();
+
+		if (!$user_id) {
+			$user = self::register_user(get_user_by('id', $wp_user_id));
+		} else {
+			$user = User::find($user_id);
 		}
 
-		$member->save();
+		if ($group_id = $data['qdiscuss_group']) {
+			if($user->groups[0]->id != $group_id) {
+				$user->groups()->sync([$group_id]);
+			}
+		}
 
-		return $member;
+		die('1');
 	}
-
 }

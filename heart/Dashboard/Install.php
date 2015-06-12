@@ -77,6 +77,7 @@ class Install {
 			'0.0.8' => 'updates/qdiscuss-update-0.0.8.php',
 			'0.0.9' => 'updates/qdiscuss-update-0.0.9.php',
 			'0.2'    => 'updates/qdiscuss-update-0.2.php',
+			'0.4'    => 'updates/qdiscuss-update-0.4.php',
 		);
 
 		foreach ( $db_updates as $version => $updater ) {

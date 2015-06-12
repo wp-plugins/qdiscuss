@@ -266,9 +266,6 @@ trait Helper
 			if (self::check_rule_exsist($rule)) {
 				$new_rules = array_diff($old_rules, [$rule]);
 				return insert_with_markers(ABSPATH . '/.htaccess', 'WordPress', $new_rules);
-			} else {
-				array_push($old_rules, $rule);
-				return insert_with_markers(ABSPATH . '/.htaccess', 'WordPress', $old_rules);
 			}
 		} else {
 			return false;

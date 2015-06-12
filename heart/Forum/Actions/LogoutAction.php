@@ -16,7 +16,7 @@ class LogoutAction
 	public function get()
 	{
 		global $qdiscuss_endpoint;
-		
+
 		$user = $this->actor->getUser();
 
 		if (Helper::is_logined()) {
@@ -27,6 +27,8 @@ class LogoutAction
 		unset($_COOKIE['qdiscuss_remember']);
 		setcookie('qdiscuss_remember', null, -1, '/');
 		wp_logout();
-		header("Location: " . get_site_url() . "/" . $qdiscuss_endpoint);exit();
+		
+		header("Location: " . get_site_url() . "/" . $qdiscuss_endpoint);
+		exit;
 	}
 }
