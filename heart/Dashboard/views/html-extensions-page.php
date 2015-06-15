@@ -24,7 +24,7 @@
 			         	<td>{{description}}</td>
 			         	<td v-model="version">{{version}}</td>
 			         	<td>
-			         		<a v-on="click: onClick" href="#" data-setting-data="setting_method={{ (status == 1) ? 'deactivate' : '' }}{{ (status == 0 || !status) ? 'activate' : '' }}{{ (status == 3) ? 'update' : '' }}&extension_name={{name}}&download_url={{download_url}}"  class="save-extensions-setting">
+			         		<a v-on="click: onClick(status, $event)" href="#"  data-id={{name}} data-setting-data="setting_method={{ (status == 1) ? 'deactivate' : '' }}{{ (status == 0 || !status) ? 'activate' : '' }}{{ (status == 3) ? 'update' : '' }}&extension_name={{name}}&download_url={{download_url}}"  class="save-extensions-setting">
 		         				{{ (status == 1) ? 'Deactivate' : '' }}
 		         				{{ ((status == 0 || !status) && (version > '0.0.3')) ? 'Activate' : '' }}
 		         				{{ (version <= '0.0.3' || status == 3) ? 'Update' : '' }}

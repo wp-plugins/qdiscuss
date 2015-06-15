@@ -3,13 +3,13 @@
 Plugin Name: QDiscuss
 Plugin URI: http://colorvila.com/qdiscuss-plugin
 Description: Next-generation Forum Plugin for WordPress
-Version: 0.4
+Version: 0.4.1
 Author: ColorVila Team
 Author URI: http://colorvila.com/qdiscuss-plugin
 */
 if(PHP_VERSION < '5.4') die(' PHP_VERSION need >= 5.4, please upgrade your PHP');
 
-const QDISCUSS_VERSION = '0.4';
+const QDISCUSS_VERSION = '0.4.1';
 define('QDISCUSS_URI', plugin_dir_url( __FILE__));
 
 require __DIR__ . '/vendor/autoload.php';

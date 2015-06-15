@@ -1,3 +1,5 @@
+var qd_manager_server = qd_manager_server ? qd_manager_server : 'http://colorvila.com/extension-manager';
+var installedExtensions = installedExtensions ? installedExtensions : {};
 jQuery(function ($) {
 
 	$('#save-config-setting').click(function() {
@@ -111,7 +113,7 @@ InstantExtentions(function (result) {
 			}
 		},
 		methods: {
-			onClick: function(e){
+			onClick: function(status, e){
 				jQuery(function ($) {
 					var data = {
 						type: 'post',
@@ -121,6 +123,12 @@ InstantExtentions(function (result) {
 					};
 
 					$(e.target).html('Saving ...');
+					
+					if (status == 3) {
+						$.post(qd_manager_server + '/count/' + $(e.target).data('id'), function(response){
+							console.log(response);
+						});
+					}
 
 					$.post(ajaxurl, data, function(response) {
 						if (response==1) {

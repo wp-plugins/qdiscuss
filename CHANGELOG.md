@@ -1,5 +1,11 @@
 ### Changelog
 
+#### v0.4.1
+
+1. Update de.json for Geman language support
+2. Fix the qd_manager_server not found error
+3. Add counting the extension update time
+
 #### v0.4 
 
 1. Add auto-update extension process, and can auto-install the QDisucss extension in WordPress backend
