@@ -3,6 +3,7 @@
 #### v0.4.2
 
 1. Enhancement : View count, when view count > 1000 : 1k
+2. Fix: creating discussion without title issue
 
 #### v0.4.1
 
