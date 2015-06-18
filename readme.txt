@@ -73,6 +73,10 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 == Changelog ==
 
+= v0.4.2 =
+
+1. Enhancement : View count, when view count > 1000 : 1k
+
 = v0.4.1 =
 
 1. Update de.json
