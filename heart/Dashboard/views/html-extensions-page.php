@@ -11,9 +11,9 @@
 			<li class="online-list"><a  v-on="click: onActive('.installed-list', $event)" class="small" class="online-list">Browser All Extensions</a></li>
 		</ul>
 		<hr>
+		<?php if($extensions) :?>
 		<div id="qd-spinning"></div>
 	 	<table class="form-table installed-extensions-table">
-	 	<?php if($extensions) :?>
 	 		<tr>
 	 			<th><?php _e('Name'); ?></th>
 	 			<th><?php _e('Description'); ?></th>
@@ -36,11 +36,10 @@
 			         		</a>
 			         	</td>
 			</tr>
-	 	<?php else :?>
-	 		<p>No extension installed yet! Click 'the Browser All Extensions' tab above or just Browser <a target='blank' href="http://colorvila.com/qdiscuss-extensions/">All our Extensions</a> for QDiscuss now!</p>
-	 	<?php endif;?>
 	 	</table>
-		
+		<?php else :?>
+			<p>No extension installed yet! Click 'the Browser All Extensions' tab above or just Browser <a target='blank' href="http://colorvila.com/qdiscuss-extensions/">All our Extensions</a> for QDiscuss now!</p>
+		<?php endif;?>
 		<p></p>
 		<p></p>
 		<div id="online-extensions" class="online-extensions-table" style="display: none;">

@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs, bbpress
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.4.3
+Stable tag: 0.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,10 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 <a href="http://colorvila.com/qdiscuss-plugin">Click to see Live Demo</a>
 
 == Changelog ==
+
+= v 0.4.4 = 
+
+1. If not extension installed, not show the spinning.
 
 = v0.4.3 =
 

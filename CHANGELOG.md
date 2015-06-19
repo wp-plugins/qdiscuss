@@ -1,5 +1,9 @@
 ### Changelog
 
+#### v0.4.4
+
+1. If not extension installed, not show the spinning.
+
 #### v0.4.3
 
 1. Add Simplied Chinese language translation.
