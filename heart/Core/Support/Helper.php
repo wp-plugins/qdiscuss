@@ -160,7 +160,7 @@ trait Helper
 	public static function register_user($user)
 	{
 		$role = self::get_user_role($user->ID);
-		$member  =User::register($user->user_login, $user->user_email, '', $user->ID);
+		$member  =User::register($user->user_login, $user->display_name, $user->user_email, '', $user->ID);
 		$member->save();
 		$member->activate();
 		switch ($role) {

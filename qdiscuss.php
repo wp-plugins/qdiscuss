@@ -9,7 +9,7 @@ Author URI: http://colorvila.com/qdiscuss-plugin
 */
 if(PHP_VERSION < '5.4') die(' PHP_VERSION need >= 5.4, please upgrade your PHP');
 
-const QDISCUSS_VERSION = '0.4.2';
+const QDISCUSS_VERSION = '0.4.3';
 define('QDISCUSS_URI', plugin_dir_url( __FILE__));
 
 require __DIR__ . '/vendor/autoload.php';

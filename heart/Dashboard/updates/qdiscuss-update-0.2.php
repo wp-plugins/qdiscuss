@@ -19,7 +19,7 @@ if (!Setting::getValueByKey('forum_language')) {
 	);
 }
 
-Setting::setValue('extensions_enabled', '[]');
+// Setting::setValue('extensions_enabled', '[]');
 
 if (!Schema::hasTable('attachments')) {
 	Schema::create('attachments', function(Blueprint $table){

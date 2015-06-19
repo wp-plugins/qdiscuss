@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs, bbpress
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.4.1
+Stable tag: 0.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,13 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 <a href="http://colorvila.com/qdiscuss-plugin">Click to see Live Demo</a>
 
 == Changelog ==
+
+= v0.4.3 =
+
+1. Add Simplied Chinese language translation.
+2. Add Remove button for processing the uninstallation of QDiscuss's extension.
+3. Add new field display_name and only show the display_name in front, but login should be using the username field, same as WordPress.
+4. Add spinning show before get the extensions data from server.
 
 = v0.4.2 =
 

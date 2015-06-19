@@ -295,36 +295,6 @@ class Bridge {
 
 	}
 
-	// public static function register_user($user)
-	// {
-	// 	$role = self::get_user_role($user->ID);
-	// 	$member  =User::register($user->user_login, $user->user_email, '', $user->ID);
-	// 	$member->save();
-	// 	$member->activate();
-	// 	switch ($role) {
-	// 		case 'administrator':
-	// 			$member->groups()->sync([1]);
-	// 			break;
-	// 		case 'editor':
-	// 			$member->groups()->sync([3]);
-	// 			break;
-	// 		case 'author':
-	// 			$member->groups()->sync([3]);
-	// 			break;
-	// 		case 'contributor':
-	// 			$member->groups()->sync([3]);
-	// 			break;
-	// 		case 'subscriber':
-	// 			$member->groups()->sync([3]);
-	// 			break;
-	// 		default:
-	// 			$member->groups()->sync([3]);
-	// 			break;
-	// 	}
-
-	// 	$member->save();
-	// }
-
 	public static function create_qd_dir()
 	{
 		if(!file_exists(qd_extensions_path())){
@@ -351,10 +321,17 @@ class Bridge {
 			$qd_field = 'username';
 		}
 
-		if($user = User::where($qd_field, $username)->first()){
+		// @todo add a function to migrate the display_name from wordpress, in future can be deleted
+		if ($user = User::where($qd_field, $username)->first()) {
+			if (!$user->display_name) {
+				$wp_user = get_user_by($wp_field, $username);
+				$user->display_name = $wp_user->display_name;
+				$user->save();
+			}
+
 			self::create_cookie($user);
 		} else {
-			$user = get_user_by('login', $username);
+			$user = get_user_by($wp_field, $username);
 			self::register_user($user);
 		}
 	}
@@ -385,6 +362,7 @@ class Bridge {
 		
 		if($user){
 			$user->email = $_POST['email'];
+			$user->display_name = $_POST['display_name'];
 			$user->save();
 		}
 	}

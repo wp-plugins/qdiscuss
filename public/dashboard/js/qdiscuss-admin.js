@@ -32,7 +32,6 @@ jQuery(function ($) {
 jQuery(function ($) {
 	$('#save-roles-config-setting').click(function() {
 		var serializedReturn = $('#qdiscuss-roles-settings-form :input[name][name!="security"][name!="of_reset"]').serialize();
-		console.log(serializedReturn);
 		var data = {
 			type: 'save',
 			action: 'qdiscuss_ajax_roles_settings_save',
@@ -62,6 +61,8 @@ function InstantExtentions(callback) {
 	var request = function() {
 		jQuery(function($){
 			$.get(qd_manager_server + '/get', function(response){
+				$('#qd-spinning').remove();
+				$('.installed-extensions-table').show();
 				callback(response);
 			});
 		});
@@ -137,7 +138,7 @@ InstantExtentions(function (result) {
 							alert('Invalid input, please check and try again!');            
 							window.location = qdiscuss_admin_params.extensions_settings_redirect;
 						} else {
-					        		alert('Error, please Upgrade the extension MANUALLY!');            
+					        	//	alert('Error, please Upgrade the extension MANUALLY!');            
 							window.location = qdiscuss_admin_params.extensions_settings_redirect;
 					   	}
 					});
@@ -160,7 +161,6 @@ InstantExtentions(function (result) {
 				if (status) {
 					return false;
 				} else {
-
 					jQuery(function ($) {
 						var data = {
 							type: 'post',
@@ -182,13 +182,39 @@ InstantExtentions(function (result) {
 								alert('Invalid input, please check and try again!');            
 								window.location = qdiscuss_admin_params.extensions_settings_redirect;
 							} else {
-						        		alert('Error, please Upgrade the extension MANUALLY!');            
+						        	//	alert('Error, please Upgrade the extension MANUALLY!');            
 								window.location = qdiscuss_admin_params.extensions_settings_redirect;
 						   	}
 						});
 					}); 
 				}
 			},
+			onClickRemove: function(e) {
+				if (confirm('Warning:The remove action will delete all the datas related this extension, make sure you have backed up yours datas!')) {
+					jQuery(function ($) {
+						var data = {
+							type: 'post',
+							action: 'qdiscuss_ajax_extensions_settings_save',
+							//  security: nonce,
+							data: $(e.target).data('setting-data')
+						};
+
+						$(e.target).html('Moving ...');
+
+						$.post(ajaxurl, data, function(response) {
+							if (response==1) {
+								window.location = qdiscuss_admin_params.extensions_settings_redirect;
+							} else if(response==2){
+								alert('Invalid input, please check and try again!');            
+								window.location = qdiscuss_admin_params.extensions_settings_redirect;
+							} else {
+						        		// alert('Error, please Upgrade the extension MANUALLY!');            
+								window.location = qdiscuss_admin_params.extensions_settings_redirect;
+						   	}
+						});
+					}); 
+				}
+			}
 		}
 	});
 

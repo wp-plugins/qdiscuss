@@ -67,16 +67,18 @@ class User extends BaseModel
 	 * Register a new user.
 	 *
 	 * @param  string  $username
+	 * @param  string  $display_name
 	 * @param  string  $email
 	 * @param  string  $password
 	 * @param  string  $wp_user_id
 	 * @return  static
 	 */
-	public static function register($username, $email, $password, $wp_user_id)
+	public static function register($username, $display_name, $email, $password, $wp_user_id)
 	{
 		$user = new static;
 
 		$user->username  = $username;
+		$user->display_name = $display_name;
 		$user->email     = $email;
 		$user->password  = '';
 		$user->wp_user_id = $wp_user_id;

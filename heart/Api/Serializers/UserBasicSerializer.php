@@ -23,7 +23,7 @@ class UserBasicSerializer extends BaseSerializer
     {
 
         $attributes = [
-            'username'  => $user->username,
+            'username'  => $user->display_name ? $user->display_name : $user->username,
             'avatarUrl'   => $user->avatar_url,
             // 'avatarUrl' => Helper::get_gravatar($user->email),
         ];

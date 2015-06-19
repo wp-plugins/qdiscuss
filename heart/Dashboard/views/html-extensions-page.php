@@ -7,10 +7,11 @@
 
 	<div id='qd-extensions' class="wrap  qd-wrap">
 		<ul class="subsubsub qd-header qd-fixed">
-			<li v-on="click: onActive('.online-list', $event)" class="installed-list qd-active"><a class="small">Installed Extensions</a></li>
-			<li v-on="click: onActive('.installed-list', $event)" class="online-list"><a class="small" class="online-list">Browser All Extensions</a></li>
+			<li class="installed-list qd-active"><a  v-on="click: onActive('.online-list', $event)"  class="small">Installed Extensions</a></li>
+			<li class="online-list"><a  v-on="click: onActive('.installed-list', $event)" class="small" class="online-list">Browser All Extensions</a></li>
 		</ul>
 		<hr>
+		<div id="qd-spinning"></div>
 	 	<table class="form-table installed-extensions-table">
 	 	<?php if($extensions) :?>
 	 		<tr>
@@ -28,6 +29,10 @@
 		         				{{ (status == 1) ? 'Deactivate' : '' }}
 		         				{{ ((status == 0 || !status) && (version > '0.0.3')) ? 'Activate' : '' }}
 		         				{{ (version <= '0.0.3' || status == 3) ? 'Update' : '' }}
+			         		</a>
+			         		&nbsp;&nbsp;
+			         		<a v-on="click: onClickRemove($event)" href="#" data-id={{name}} data-setting-data="setting_method=remove&extension_name={{name}}" class="save-extensions-setting">
+			         			{{ (status == 0 || !status || status == 3) ? 'Remove' : '' }}
 			         		</a>
 			         	</td>
 			</tr>
@@ -65,6 +70,11 @@
 				</div>
 			</div>
 		</div>
-	 	
 		<?php// include('html-footer.php'); ?>
 	</div>
+	<script>
+		var spinning = document.getElementById('qd-spinning');
+		if (spinning) {
+			var spinner = new Spinner({top: '20em' , left: '50%'}).spin(spinning);
+		}
+	</script>

@@ -82,3 +82,9 @@ table.background-white{
 #qd-extensions li a{
 	cursor:pointer;
 }
+.spinner {
+	display: block;
+}
+.installed-extensions-table {
+	display: none;
+}

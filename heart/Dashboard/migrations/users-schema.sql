@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS `_qdiscuss_prefix_users`;
 CREATE TABLE `_qdiscuss_prefix_users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `display_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `is_confirmed` tinyint(1) NOT NULL DEFAULT '0',
   `confirmation_token` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,

@@ -1,5 +1,12 @@
 ### Changelog
 
+#### v0.4.3
+
+1. Add Simplied Chinese language translation.
+2. Add Remove button for processing the uninstallation of QDiscuss's extension.
+3. Add new field display_name and only show the display_name in front, but login should be using the username field, same as WordPress.
+4. Add spinning show before get the extensions data from server.
+
 #### v0.4.2
 
 1. Enhancement : View count, when view count > 1000 : 1k
@@ -13,7 +20,7 @@
 
 #### v0.4 
 
-1. Add auto-update extension process, and can auto-install the QDisucss extension in WordPress backend
+1. Add auto-update extension process, and can auto-install the QDiscuss extensions in WordPress backend
 2. Add German lanuage support
 3. Fix the user role setting problem
 

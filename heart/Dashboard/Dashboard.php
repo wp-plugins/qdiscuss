@@ -41,6 +41,13 @@ class Dashboard  {
 		);
 
 		wp_enqueue_script(
+			'qdiscuss-admin-spin',
+			plugins_url( 'public/dashboard/js/spin.min.js', __DIR__.'/../../../'),
+			array(),
+			QDISCUSS_VERSION
+		);
+
+		wp_enqueue_script(
 			'qdiscuss-admin',
 			plugins_url( 'public/dashboard/js/qdiscuss-admin.js', __DIR__.'/../../../'),
 			array(),
@@ -361,21 +368,19 @@ class Dashboard  {
 				}
 				break;
 			case 'remove':
-				if(in_array($extension_name, $extensions)){
-					unset($extensions[$extension_name]);
-					if(file_exists($uninstall_file = qd_extensions_path() .  $extension_name . '/migrations/uninstall.php')){
-						include_once($uninstall_file);
-					}
-
-					if(file_exists($installed_file = qd_extensions_path() .  $extension_name . '/migrations/installed.php')){
-						if(copy($installed_file, $install_file)){
-							@unlink($installed_file);
-						}
-					}
-
-					// add compile css and js file
-					self::recompile();
+				if(file_exists($uninstall_file = qd_extensions_path() . '/' . $extension_name . '/migrations/uninstall.php')){
+					include_once($uninstall_file);
 				}
+
+				if(file_exists($extensionDir = qd_extensions_path() . '/' . $extension_name)) {
+					app('files')->deleteDirectory($extensionDir);
+				}
+				
+				if (in_array($extension_name, $extensions)) {
+					unset($extensions[$extension_name]);
+				}
+				// add compile css and js file
+				self::recompile();
 				break;
 			default:
 				# code...
