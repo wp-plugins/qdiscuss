@@ -1,8 +1,13 @@
 ### Changelog
 
+#### v0.4.5
+
+1. Redesign the dashboard style
+
 #### v0.4.4
 
 1. If not extension installed, not show the spinning.
+2. Using Less to manage the dashboard styles.
 
 #### v0.4.3
 

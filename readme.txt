@@ -3,7 +3,7 @@ Contributors: ColorVila Team, zairl23
 Tags: forum, discuss, bbs, bbpress
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 0.4.4
+Stable tag: 0.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,9 +73,14 @@ Better not, Qdiscuss is still on early development, you can wait for a few time 
 
 == Changelog ==
 
+= v0.4.5 =
+
+1. Redesign the dashboard style
+
 = v 0.4.4 = 
 
 1. If not extension installed, not show the spinning.
+2. Using Less to manage the dashboard styles.
 
 = v0.4.3 =
 

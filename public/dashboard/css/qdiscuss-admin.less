@@ -1,0 +1,44 @@
+@active-backgroud-color: #000;
+@active-font-color: #fff;
+@hover-font-color: #0074a2;
+@font-size-small: 0.618em;
+@font-size-header: 1.5em;
+@qd-margin-top: 2em;
+
+.qd-wrap {
+  margin-top: @qd-margin-top;
+}
+ul.subsubsub.qd-header {
+  margin-top: @qd-margin-top;
+}
+.qd-header {
+  font-size: @font-size-header;
+}
+.qd-header > li > a {
+  color: #666;
+  padding: 0 1.5em;
+}
+.qd-header > li > a:hover {
+  color: @hover-font-color;
+}
+.qd-header > li.qd-active {
+  background: @active-backgroud-color;
+}
+.qd-header > li.qd-active > a {
+  color: @active-font-color;
+}
+table.background-white {
+  background-color: inherit;
+}
+.small {
+  font-size: @font-size-small;
+}
+#qd-extensions li a {
+  cursor: pointer;
+}
+.spinner {
+  display: block;
+}
+.installed-extensions-table {
+  display: none;
+}

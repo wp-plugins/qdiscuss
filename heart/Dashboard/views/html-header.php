@@ -1,4 +1,4 @@
-<ul class="subsubsub qd-header qd-fixed">
+<!-- <ul class="subsubsub qd-header qd-fixed">
 	<?php 
 		$items =  \Qdiscuss\Dashboard\Dashboard::$header_menus;
 		foreach ($items as $value) :
@@ -9,4 +9,4 @@
 </ul>
 <div class="qd-header">
 	<hr>
-</div>
+</div> -->

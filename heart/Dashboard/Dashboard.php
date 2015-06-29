@@ -24,6 +24,8 @@ class Dashboard  {
 		array('name' => 'Q&A', 'url' => './admin.php?page=qdiscuss-qas')
 	);
 
+	public static $pages = [];
+
 	/**
 	 * Loading the gereral admin scripts and styles files
 	 * 
@@ -32,14 +34,6 @@ class Dashboard  {
 	public static function qdiscuss_enqueue_admin()
 	{		
 		// Admin Script
-		wp_enqueue_script(
-			'qdiscuss-admin-vue',
-			plugins_url( 'public/dashboard/js/vue.min.js', __DIR__.'/../../../'),
-			array(),
-			QDISCUSS_VERSION,
-			true
-		);
-
 		wp_enqueue_script(
 			'qdiscuss-admin-spin',
 			plugins_url( 'public/dashboard/js/spin.min.js', __DIR__.'/../../../'),
@@ -77,7 +71,7 @@ class Dashboard  {
 	{
 		global  $wp_version;
 
-		$pages = array();
+		// $pages = array();
 		
 		$menu_icon = 'dashicons-star-filled';
 		if ( version_compare( $wp_version, '3.8', '<' ) )
@@ -85,7 +79,7 @@ class Dashboard  {
 
 		$title = 'QDiscuss';
 		$menu_slug = 'qdiscuss-settings';
-		$pages[] = add_menu_page(
+		self::$pages[] = add_menu_page(
 			$title,
 			$title,
 			'add_users',
@@ -94,7 +88,7 @@ class Dashboard  {
 			$menu_icon
 		);
 
-		$pages[] = add_submenu_page(
+		self::$pages[] = add_submenu_page(
 			$menu_slug, 
 			'Users', 
 			'Users', 
@@ -103,8 +97,8 @@ class Dashboard  {
 			array('\Qdiscuss\Dashboard\Dashboard', 'qdiscuss_users_page')
 		);
 
-		$pages[] = add_submenu_page(
-			'admin.php', 
+		self::$pages[] = add_submenu_page(
+			$menu_slug, 
 			'Extensions', 
 			'Extensions', 
 			'manage_options', 
@@ -112,7 +106,7 @@ class Dashboard  {
 			array('\Qdiscuss\Dashboard\Dashboard', 'qdiscuss_extensions_page')
 		);			
 
-		$pages[] = add_submenu_page(
+		self::$pages[] = add_submenu_page(
 			'admin.php', 
 			'role setting', 
 			'role setting', 
@@ -121,7 +115,7 @@ class Dashboard  {
 			array('\Qdiscuss\Dashboard\Dashboard', 'qdiscuss_config_settings_page')
 		);
 
-		$pages[] = add_submenu_page(
+		self::$pages[] = add_submenu_page(
 			'admin.php', 
 			'role setting', 
 			'role setting', 
@@ -130,8 +124,8 @@ class Dashboard  {
 			array('\Qdiscuss\Dashboard\Dashboard', 'qdiscuss_roles_settings_page')
 		);
 
-		$pages[] = add_submenu_page(
-			'admin.php', 
+		self::$pages[] = add_submenu_page(
+			$menu_slug, 
 			'qa', 
 			'Q & A', 
 			'manage_options', 
@@ -140,8 +134,7 @@ class Dashboard  {
 		);
 
 
-		$pages = apply_filters( 'qdiscuss_admin_pages', $pages);
-
+		$pages = apply_filters( 'qdiscuss_admin_pages', self::$pages);
 		// foreach ( $pages as $page ) {
 		//         add_action( 'admin_print_styles-' . $page, array('\Qdiscuss\Dashboard\Dashboard', 'qdiscuss_admin_page_styles' ));
 		// }
@@ -275,7 +268,6 @@ class Dashboard  {
 						);
 					}
 					$extensions[$extension_file_key] = $extension_info;
-					//array_push($extensions, json_decode($extension_file, true));
 				}
 			}
 		}
@@ -287,7 +279,6 @@ class Dashboard  {
 					if(self::check_require($ext['require']['Qdiscuss'])){
 						$ext['status'] = 1;// is_activated
 					}else{
-						// Setting::setValue('extensions_enabled', json_encode(array_diff($activated_extensions, [$key])));
 						array_push($need_update_extension, $key);
 						$ext['status'] = 2;// need updated
 						// add compile css and js file
@@ -297,7 +288,6 @@ class Dashboard  {
 					if(self::check_require($ext['require']['Qdiscuss'])){
 						$ext['status'] = 0;// not_activated
 					}else{
-						// Setting::setValue('extensions_enabled', json_encode(array_diff($activated_extensions, [$key])));
 						array_push($need_update_extension, $key);
 						$ext['status'] = 2;// need updated
 						// add compile css and js file
@@ -305,9 +295,9 @@ class Dashboard  {
 					}
 				}
 			}
-			if ($need_update_extension) {
-				Setting::setValue('extensions_enabled', json_encode(array_diff($activated_extensions, $need_update_extension)));
-			}
+			// if ($need_update_extension) {
+			// 	Setting::setValue('extensions_enabled', json_encode(array_diff($activated_extensions, $need_update_extension)));
+			// }
 		}
 
 		include __DIR__."/views/html-extensions-page.php";
